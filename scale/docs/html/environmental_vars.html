@@ -1,0 +1,295 @@
+<html>
+<head>
+   <META HTTP-EQUIV="Description" CONTENT="Scale Compiler Environmental Variables">
+   <META HTTP-EQUIV="Keywords" CONTENT="compiler, compilation, environmental variables">
+   <META NAME="Author" CONTENT="Jim Burrill">
+<title>Scale Compiler Environmental Variables</title>
+</head>
+<body bgcolor="white">
+<h1>Scale Compiler Environmental Variables</h1>
+
+This page documents the environmental variables used when constructing the Scale compile
+and when running the Scale compiler regression tests.  This document assumes a Unix environment and the examples use the <code>csh</code> shell.
+Variables specified in <strong style="color : red">red</strong> are provided by the user.  The other variables should be derived from them.
+
+<h2>Building Scale</h2>
+<p>
+<dl>
+<dt><code style="color : red">CVSROOT</code>
+<dd>This is the absolute pathname of the <code>cvs</code> repository for the Scale compiler.
+<dt><code style="color : red">SCALE</code>
+<dd>Specifies the absolute pathname to the directory for your Scale compiler development.
+    It would normally be something like <code>~/scale</code>.
+<dt><code style="color : red">SCALEHOME</code>
+<dd>Specifies the absolute pathname to the directory for a common Scale compiler development repository.
+    The existance of this repository allows developers to check out only the parts of the Scale compiler that they wish to work on.
+    The class files, binaries, and libraries for the other parts are found through this path.  If you are the sole developer at your site,
+    <code>SCALEHOME</code> can have the same value as <code>SCALE</code>.
+<dt><code style="color : red">SCALEHOSTTYPE</code>
+<dd>Specifies the type of system upon which the Scale compiler will be executed.
+  We are currently set up for the following options:
+<ul>
+<li><code>sparc</code>
+<li><code>alpha</code>
+<li><code>i686</code>
+</ul>
+<dt><code style="color : red">SCALEHOSTNAME</code>
+<dd>Specifies the name of the host system.  It can be the same as <code>SCALEHOSTTYPE</code> if you do not wish to keep separate executable and libraries for differnt systems of the same type.
+<dt><code style="color : red">SCALETARGETTYPE</code>
+<dd>Specifies the target architecture for which the Scale compiler will generate code.
+  We are currently set up for the following options:
+<ul>
+<li><code>sparc</code>
+<li><code>alpha</code>
+<li><code>mips</code>
+</ul>
+<dt><code style="color : red">SCALETARGETNAME</code>
+<dd>Not currently used.
+<dt><code style="color : red">SCALEHOSTOS</code>
+<dd>Not currently used.
+<dt><code style="color : red">SCALETARGETOS</code>
+<dd>Not currently used.
+<dt><code>SCALELIB</code>
+<dd>This is usually set to <code>$SCALE/$SCALERELEASE/$SCALEHOSTNAME/lib</code>.
+<dt><code>SCALEHOMELIB</code>
+<dd>This is usually set to <code>$SCALEHOME/$SCALERELEASE/$SCALEHOSTNAME/lib</code>.
+<dt><code>SCALEBIN</code>
+<dd>This is usually set to <code>$SCALE/$SCALERELEASE/$SCALEHOSTNAME/bin</code>.
+<dt><code>SCALEHOMEBIN</code>
+<dd>This is usually set to <code>$SCALEHOME/$SCALERELEASE/$SCALEHOSTNAME/bin</code>.
+<dt><code style="color : red">LD_LIBRARY_PATH</code>
+<dd>This must specify the pathnames for the libraries needed by the native C compilers, etc.
+    It should include <code>$SCALELIB</code> and <code>$SCALEHOMELIB</code>.
+<dt><code style="color : red">CC</code>
+<dd>Specifies the native compiler to use when compiling the parts of Scale that are written in C.
+<dt><code style="color : red">CFLAGS</code>
+<dd>Specifies any compiler switches, such as <code>-g</code> to use when compiling the parts of Scale that are written in C.
+<dt><code style="color : red">AR</code>
+<dd>Specifies the library archival tool - normal <code>ar</code> is used.
+<dt><code style="color : red">MAKE</code>
+<dd>Specifies the GNU make utility.  <strong>You must use GNU <code>make</code>.</strong>
+<dt><code style="color : red">JAVAHOME</code>
+<dd>Specifies the absolute pathname to the Java&reg; jdk.
+<dt><code style="color : red">JNI_INCLUDES</code>
+<dd>Specifies the absolute pathname to the Java jni include files.
+    Normally, this would be <code>"-I$JAVAHOME/include -I$JAVAHOME/include/xxx"</code>
+where <code>xxx</code> is <code>solaris</code>, <code>alpha</code>, or <code>linux</code>.
+<dt><code>CLASSDEST</code>
+<dd>Specifies where to place the Scale compiler classes produced by the Java&reg; compiler.
+    This is usually set to <code>$SCALE/$SCALERELEASE/classes</code>.
+<dt><code>CLASSPATH</code>
+<dd>Specifies where to find the class files of the Scale compiler.  We do not currently use a Java&reg; <code>jar</code> file for this.
+   This is usually set to <code>"${CLASSPATH}:${SCALE}/${SCALERELEASE}:${SCALE}/${SCALERELEASE}/classes:${SCALEHOME}/${SCALERELEASE}:${SCALEHOME}/${SCALERELEASE}/classes"</code>.
+<dt><code>EDGCPSRC</code>
+<dd>Specifies the absolute pathname to your checked out copies of the source files of the EDG&reg; C frontend.
+    If you are not modifying the frontend, you do not need this environmental variable.
+    It is normally set to <code>"$SCALE/$SCALERELEASE/tools/edgcpfe_2.43/src"</code>.
+<dt><code>EDGCPSRCHOME</code>
+<dd>Specifies the absolute pathname to your sites checked out copies of the source files of the EDG&reg; C frontend.
+    If your site is not modifying the frontend, you do not need this environmental variable.
+    It is normally set to <code>"$SCALEHOME/$SCALERELEASE/tools/edgcpfe_2.43/src"</code>.
+<dt><code>EDGCP_INCLUDES </code>
+<dd>Specifies where to find the <code>.h</code> files for the frontend.
+    This is usually set to <code>"-I$EDGCPSRC -I$EDGCPSRCHOME"</code>.
+<dt><code>EDGFSRC</code>
+<dd>Specifies the absolute pathname to your checked out copies of the source files of the EDG&reg; F77 frontend.
+    If you are not modifying the frontend, you do not need this environmental variable.
+    It is normally set to <code>"$SCALE/$SCALERELEASE/tools/edgffe_1.03/src"</code>.
+<dt><code>EDGFSRCHOME</code>
+<dd>Specifies the absolute pathname to your sites checked out copies of the source files of the EDG&reg; F77 frontend.
+    If your site is not modifying the frontend, you do not need this environmental variable.
+    It is normally set to <code>"$SCALEHOME/$SCALERELEASE/tools/edgffe_1.03/src"</code>.
+<dt><code>EDGF_INCLUDES</code>
+<dd>Specifies where to find the <code>.h</code> files for the frontend.
+    This is usually set to <code>"-I$EDGFSRC -I$EDGFSRCHOME"</code>.
+<dt><code>JAVA</code>
+<dd>Specifies where to find the Java&reg; JVM.  This is usually set to <code>"$JAVAHOME/bin/java"</code>.
+<dt><code>JAVAC</code>
+<dd>Specifies where to find the Java&reg; compiler.  This is usually set to <code>"$JAVAHOME/bin/javac"</code>.
+<dt><code>JAVACFLAGS</code>
+<dd>This is usually set to <code>"-J-Xmx32m -d $CLASSDEST -g"</code>.
+<dt><code>JAVAD</code>
+<dd>Specifies where to find the Java&reg; <code>javadoc</code> tool. This is usually set to <code>"${JAVAHOME/bin/javadoc"</code>.
+<dt><code>JAVADFLAGS</code>
+<dd>This is usually set to <code>"-J-Xmx128m -J-Xms32m"</code>.
+<dt><code>JAVADDEST</code>
+<dd>Specifies where to place the <code>javadoc</code> generated documentation.
+    This is usually set to <code>$SCALE/$SCALERELEASE/doc/html</code>.
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+</dl>
+<p>
+
+<h2>Running the Scale Regression Tests</h2>
+<p>
+When we make a change to the Scale compiler, we run the regression tests to see if the change caused a problem that did not occur before the change.
+If a test fails, we can use it to track down the bug that was introduced by the change.
+<p>
+There are many separate tests that comprise the regression test suite.
+Each test is compiled by Scale and compiled by a native compiler.
+The regression tests compare the output generated from running both versions.
+If there is any difference, the test failed.
+<p>
+These environmental variables are in addition to the ones described above.  They are used when running the regression tests on the compiler.
+You may or may not be able to run these tests.  They are not provided with the normal release of the Scale compiler.
+<dl>
+<dt><code style="color : red">F77</code>
+<dd>Specifies the native compiler to use when compiling the regresion tests that are written in Fortran 77.
+<dt><code style="color : red">DAVINCIHOME</code>
+<dd>Specifies where the DaVinci system can locate its machine-specific run-time modules.
+<dt><code style="color : red">F77FLGS</code>
+<dd>Specifies any compiler switches, such as <code>-g</code> to use when using the native F77 compiler.
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt>
+<dd>
+<dt><code style="color : red">CFP95</code>
+<dd>Specifies where to find the Spec&reg; 95 floating point benchmarks.
+<dt><code style="color : red">CINT95</code>
+<dd>Specifies where to find the Spec&reg; 95 integer benchmarks.
+<dt><code style="color : red">CFP2000</code>
+<dd>Specifies where to find the Spec&reg; 2000 floating point benchmarks.
+<dt><code style="color : red">CINT2000</code>
+<dd>Specifies where to find the Spec&reg; 2000 integer benchmarks.
+<dt><code style="color : red">DISBMK</code>
+<dd>Specifies where to find the DIS benchmarks.
+</dl>
+<p>
+<h2>Example <code>csh</code> Setup Script</h2>
+<pre>
+#!/bin/csh -f
+# This file must be sourced - not executed.
+
+if ($?SCALE == 0) then
+  echo SCALE must be set in your environment.  Exiting.
+  exit
+endif
+
+if ($?SCALERELEASE == 0) then
+  echo SCALERELEASE must be set in your environment.  Exiting.
+  exit
+endif
+
+echo Setting up Scale for developer environment.
+
+setenv SCALEHOME ~scale
+
+if (${?LD_LIBRARY_PATH} == 0) then
+  setenv LD_LIBRARY_PATH
+endif
+
+setenv SCALEHOSTTYPE "unknown"
+if ($MACHINETYPE == "SOLsun") then
+  setenv MANPATH /exp/rcf/comm/forte/SUNWspro/man:/usr/man:$MANPATH
+  setenv LD_LIBRARY_PATH ".:/exp/rcf/comm/forte/SUNWspro/lib:$LD_LIBRARY_PATH"
+  setenv LM_LICENSE_FILE /exp/rcf/comm/forte/SUNWste/license_tools/sunpro.lic,node
+  setenv SCALEHOSTTYPE "sparc"
+  setenv CC "/exp/rcf/comm/forte/SUNWspro/bin/cc -Xc"
+  setenv CFLAGS	"-g -v"
+  setenv F77 "/exp/rcf/comm/forte/SUNWspro/bin/f77 -silent"
+  setenv AR /usr/ccs/bin/ar
+  setenv MAKE /exp/rcf/share/bin/make
+  setenv JAVAHOME     /exp/rcf/share/X11R5/j2sdk1_3_0
+  setenv JNI_INCLUDES "-I$JAVAHOME/include -I$JAVAHOME/include/solaris"
+else if ($MACHINETYPE == "ALPHA") then
+  setenv MANPATH /usr/man:$MANPATH
+  setenv LD_LIBRARY_PATH .:$LD_LIBRARY_PATH
+  setenv SCALEHOSTTYPE "alpha"
+  setenv CC  "cc -std"
+  setenv CFLAGS	"-g -warnprotos"
+  # don't add -msg_disable tags because they aren't portable across cxx versions. -msg_quiet seems to be better
+  setenv F77 f77
+  setenv AR /usr/ccs/bin/ar
+  setenv MAKE /exp/rcf/share/bin/make
+  setenv JAVAHOME     /usr/opt/java131
+  setenv JNI_INCLUDES "-I$JAVAHOME/include -I$JAVAHOME/include/alpha"
+else if ($MACHINETYPE == "i686") then
+  setenv SCALEHOSTTYPE "i686"
+  setenv CC gcc
+  setenv AR /usr/bin/ar
+  setenv MAKE /usr/bin/gmake
+  setenv CFLAGS	-g
+  setenv JAVAHOME     /exp/rcf/share/X11R5/jdk1.3
+  setenv JNI_INCLUDES "-I$JAVAHOME/include -I$JAVAHOME/include/linux"
+endif
+
+setenv SCALEHOSTNAME   `echo $HOST | awk -F. '{print $1}'`
+setenv SCALETARGETTYPE $SCALEHOSTTYPE
+setenv SCALELIB        ${SCALE}/${SCALERELEASE}/${SCALEHOSTNAME}/lib
+setenv SCALEHOMELIB    ${SCALEHOME}/${SCALERELEASE}/${SCALEHOSTNAME}/lib
+setenv SCALEBIN        ${SCALE}/${SCALERELEASE}/${SCALEHOSTNAME}/bin
+setenv SCALEHOMEBIN    ${SCALEHOME}/${SCALERELEASE}/${SCALEHOSTNAME}/bin
+
+setenv LD_LIBRARY_PATH "${LD_LIBRARY_PATH}:${SCALELIB}:${SCALEHOMELIB}"
+set path = ($path $SCALEBIN $SCALEHOMEBIN)
+setenv CVSROOT ${SCALEHOME}/cvs
+
+setenv CLASSDEST $SCALE/$SCALERELEASE/classes
+
+if ($?CLASSPATH == 0) then
+  setenv CLASSPATH
+endif
+
+# the CLASSPATH goes as follows:
+# - the development destination directory
+# - the root of the development hierarchy (needed for looking up .java files)
+# - the main development directory
+# - the root of the main development hierarchy (also for .java files)
+
+setenv CLASSPATH ${CLASSPATH}:${SCALE}/${SCALERELEASE}:${SCALE}/${SCALERELEASE}/classes:${SCALEHOME}/${SCALERELEASE}:${SCALEHOME}/${SCALERELEASE}/classes
+
+setenv EDGCPSRC         ${SCALE}/${SCALERELEASE}/tools/edgcpfe_2.43/src
+setenv EDGCPSRCHOME     ${SCALEHOME}/${SCALERELEASE}/tools/edgcpfe_2.43/src
+setenv EDGCP_INCLUDES   "-I$EDGCPSRC -I$EDGCPSRCHOME"
+setenv EDGFSRC          ${SCALE}/${SCALERELEASE}/tools/edgffe_1.03/src
+setenv EDGFSRCHOME      ${SCALEHOME/${SCALERELEASE}/tools/edgffe_1.03/src
+setenv EDGF_INCLUDES    "-I$EDGFSRC  -I$EDGFSRCHOME"
+
+setenv JAVA             "$JAVAHOME/bin/java"
+setenv JAVAC            "$JAVAHOME/bin/javac"
+setenv JAVACFLAGS       "-J-Xmx32m -d $CLASSDEST -g"
+setenv JAVAD            "${JAVAHOME/bin/javadoc -J-Xmx128m -J-Xms32m"
+setenv JAVADFLAGS       "-J-Xmx128m -J-Xms32m"
+setenv JAVADDEST        $SCALE/$SCALERELEASE/doc/html
+setenv JAVAH            $JAVAHOME/bin/javah
+
+setenv DAVINCIHOME $SCALEHOME/$SCALERELEASE/tools/daVinci/daVinci_V2.1_$MACHINETYPE
+
+setenv CFP95    /exp/rcf/common/pub/spec/benchspec/CFP95
+setenv CINT95   /exp/rcf/common/pub/spec/benchspec/CINT95
+setenv CFP2000  /exp/rcf/common/pub/spec/benchspec/CFP2000
+setenv CINT2000 /exp/rcf/common/pub/spec/benchspec/CINT2000
+setenv DISBMK   /exp/rcf/common/pub/DIS/dis
+
+echo SCALE = $SCALE
+echo "Compiling on $SCALEHOSTTYPE : $SCALEHOSTNAME for $SCALETARGETTYPE"
+echo "Looking for libraries at: $SCALELIB $SCALEHOMELIB"
+echo "Looking for binaries at: $SCALEBIN $SCALEHOMEBIN"
+echo "Using development directory: $SCALE/$SCALERELEASE"
+echo "Using support development directory: $SCALEHOME/$SCALERELEASE"
+echo "Generated classes stored at: $CLASSDEST"
+echo "Looking for classes at: $CLASSPATH"
+echo "Using C compiler: $CC"
+echo "Using F77 compiler: $F77"
+echo "Scale setup complete."
+</pre>
+<hr>
+(<i>Last changed: August 20, 2002</i>.)
+</body>
+</html>

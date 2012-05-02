@@ -1,0 +1,232 @@
+<html>
+<head>
+<title>Scale Backend</title>
+</head>
+<body bgcolor="white">
+
+Generates assembly language output from the {@link
+scale.score.Scribble CFG} representation of a program.
+
+<p>
+The Scale compiler uses object-oriented programming techniques to make
+the implementation of code generators for different ISAs straight
+forward.  Thus far, code generators for Sparc, Alpha, PowerPC, and Mips
+processors have been implemented.
+<p>
+
+A base class for the code generator contains the basic logic to
+transform {@link scale.score.Scribble Scribble} CFG nodes into
+instructions.  Each derived code generator class implements virtual
+methods that the base class uses to perform specific actions such as
+transforming a real value to an integer value or loading a register
+from memory.  As the Scale compiler generates assembly code and uses
+the native assembler to generate object modules, there is a base class
+for generating the assembly code from which specific assembly code
+generators must be derived.
+
+<p>
+
+Each ISA has different instructions.  Each ISA-specific instruction
+format is represented by a different class that is derived from the
+same {@link scale.backend.Instruction instruction base class}.  So
+that the base code generator class can manage the representation of
+branch points, all {@link scale.backend.Branch branch instructions}
+are derived from the same class that is also derived from the base
+instruction class.  For example, the following is a simplified example
+class hierarchy for the Alpha instructions:
+<pre>
+ Instruction <- MemoryInstruction <- LoadInstruction
+                                  <- StoreInstruction
+                                  <- LoadAddressInstruction
+                                  <- BarriorInstruction
+                                  <- FetchInstruction
+             <- IntOpInstruction
+             <- IntOpLitInstruction
+             <- FltOpInstruction <- FltCvtInstruction
+
+             <- Branch <- BranchInstruction
+                       <- JmpInstruction
+</pre>
+
+For the Sparc V8 processor a more simplified example hierarchy is:
+<pre>
+  Instruction <- SparcInstruction <- LoadInstruction
+                                  <- LoadLitInstruction
+                                  <- StoreInstruction
+                                  <- StoreLitInstruction
+                                  <- SethiInstruction
+                                  <- IntOpInstruction
+                                  <- IntOpLitInstruction
+                                  <- FltOpInstruction
+                                  <- FltOp2Instruction
+                                  <- FltCmpInstruction
+
+              <- Branch <- SparcBranch <- BranchCCInstruction
+                                       <- BranchInstruction
+                                       <- CallInstruction
+                                       <- JmplInstruction
+                                       <- JmplLitInstruction
+</pre>
+
+Virtual methods are used to implement the methods required from the
+instruction class by the other parts of the backend.  Register
+allocation, described below, is a good example of how these virtual
+methods are used.
+
+<p>
+
+Some numbers will illustrate how the object-oriented approach has
+worked.  The generic base classes comprise some 3600 non-blank,
+non-comment lines of Java code.  The Alpha specific code is 6600
+non-blank, non-comment lines of Java code.  The Sparc specific code is
+10,800 non-blank, non-comment lines of Java code.  The Mips specific
+code is 5900 non-blank, non-comment lines of Java code.  The generic
+classes and the Alpha specific classes required approximately two
+man-months to implement. The Sparc specific classes also took two
+man-months.  The Mips classes where written by an undergraduate in
+less than two months.  The major complication of the Sparc
+implementation was designing and implementing multi-register values
+for the Sparc V8 processor and the large number of different
+instruction formats; the register-window design of the Sparc processor
+required only four lines of Java code.
+
+<h3>{@link scale.backend.RegisterAllocator Register Allocation Example}</h3>
+
+Object-oriented programming techniques make the inclusion of
+different register allocators a relatively simple matter.  Two
+different concepts represented by two different base classes are the
+basis of register allocation.
+
+<p>
+
+The first is the concept of a register set and is similar to the ideas
+used in the Gnu C compiler.  In Scale, registers are represented by
+integers.  The {@link scale.backend.RegisterSet register set base
+class} specifies operations on those integers.  There is a different
+derived class, that specifies particulars of the register set, defined
+for each ISA.  Registers are either real or virtual with the first <tt>n</tt>
+registers representing the real registers of the ISA.
+
+<p>
+
+The {@link scale.backend.RegisterAllocator second base class}
+represents the basics of register allocation.  It includes the methods
+needed to describe the register usage for a program and the live
+register analysis required by every register allocation algorithm.
+The Scale compiler uses the concept of an infinite register set while
+generating the instructions.  The register allocator derived classes
+implement the algorithms needed to map these virtual registers to the
+real registers of a specific ISA.  These register allocator classes
+are ISA independent.
+
+<p>
+
+The integer value representing a register is used as an index into an
+array where each array element describes the corresponding register.
+Each register has attributes that describe what type of values that
+register may hold.  For virtual registers these attributes are used to
+specify if this register is part of a multi-register set.  This can be
+used to specify that the value spans two or more contiguous registers
+(e.g., 64-bit integers for a 32-bit ISA) or that the value is made up
+of two separable values (e.g., complex values).
+
+<p>
+
+During the live analysis, instructions are <i>linearized</i> so that
+each instruction can be represented, and accessed, by an integer
+value.  Each instruction is visited to generate the needed register
+usage information.  Each instruction class implements a method ({@link
+scale.backend.Instruction#specifyRegisterUsage specifyRegisterUsage})
+that the register allocator calls, passing itself in as an argument to
+the method.  Special, non-code-generating instructions ({@link
+scale.backend.Marker markers}) are inserted by the code generators to
+specify register usage over subroutine calls.
+
+<p>
+
+The register allocator base class implements three methods that the
+instruction class's specifyRegisterUsage method calls.  The first
+method is used to specify, by integer value, the real or virtual
+registers whose values the instruction requires.  The second method
+specifies the registers whose values are generated by the instruction.
+The third method specifies the registers that are modified (clobbered)
+by an instruction.  The result of this is a set of three bit-arrays
+indexed by instruction index and register index.  Liveness is computed
+from this and the result array is transposed to produce an array of
+bit vectors indexed by the register's integer representation.
+
+<p>
+
+Register spilling is also ISA independent.  Each machine dependent
+code generator implements three methods.  The first method is used by
+the register allocator to obtain an opaque location
+specifier (usually on the stack) into which a
+register may be spilled.  The second method is used by the register
+allocator to cause the code generator to insert a store of a register
+to a spill location and the third method is used to reload the
+register.  The second and third methods are passed: the opaque
+location specifier, the register, and the place in the instruction
+stream to insert the operation.  If any registers are spilled, the
+current allocation of virtual registers to real registers is discarded
+and register allocation is performed again.
+
+<h3>Adding a New Code Generator</h3>
+
+Scale is set up so that it does not need to know what code generators
+are available.  It uses the Java reflection capability to find the
+code generator specified.  There are two ways a code generator is
+specified:
+
+<ol>
+<li>The <code>-arch</code> command line parameter is used to specify the target architecture.
+<li>The host architecture specified by <code>System.getProperty("os.arch")</code> is used.
+</ol>
+
+Using replection, Scale tries to load a class named
+<code>scale.backend.arch.ArchGenerator.class</code> where <code>arch
+is the name of the architecture obtained as specified above.  (Note
+that Java class names must start with a capital letter but
+architectures are specified in all lower-case letters.)  For example,
+on an Alpha&reg;, the class {@link scale.backend.alpha.AlphaGenerator
+scale.backend.alpha.AlphaGenerator} class</code> is loaded.
+<p>
+Scale must also be able to find a class name
+<code>scale.backend.arch.ArchMachine.  This class specifies attributes
+of the architecture, such as word size, that are needed prior to code
+generation. For example, on an Alpha&reg;, the {@link
+scale.backend.alpha.AlphaMachine scale.backend.alpha.AlphaMachine}
+class</code> is loaded.
+
+<p>
+To add these two classes, and any others required, add a new directory
+to the scale/backend directory whose name is the architecture name and
+place the classes in it.  (You can use the <code>xyz</code> directory
+to obtain template classes for the four required classes.)
+
+<p>
+The code generator class must be derived from the {@link
+scale.backend.Generator scale.backend.Generator} class and the machine
+class must be derived from {@link scale.common.Machine
+scale.common.Machine} class. Use the other code generators as a guide in
+building a new one.  Keep in mind that the design for the code
+generators assumed a register load/operate/store (RISC) model;
+building a code generator for a CISC-type architecture may prove to be
+much more difficult.
+<p>
+
+If there are multiple variants on the same architecture (e.g., SparcV8
+& SparcV9), modifications may be required to the {@link
+scale.common.Machine#setup scale.common.Machine setup()} method.  You
+may also add extensions as in <code>-arch alpha/bwx</code>.  These
+<i>extensions</i> are passed to the {@link
+scale.common.Machine#determineArchitecture scale.common.Machine
+determineArchitecture()} method.
+
+<p>
+The classes defined for the architecture's instructions must be
+derived from the {@link scale.backend.Instruction scale.backend
+Instruction} class.  Any branch instruction must be derived from the
+{@link scale.backend.Branch scale.backend Branch} class.
+
+</body>
+</html>

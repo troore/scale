@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Scale Backend Code Generator Templates</title>
+</head>
+<body bgcolor="white">
+
+This package provides templates that can be used to create a code
+generator for a different architecture.  The classes provided can be
+copied into the new directory for the new architecture and renamed.
+For example, assume you want to create a code generator for the
+HAL9000 system.
+
+<ul>
+
+<li>Create a directory, called <code>hal9000</code>, in the
+<code>scale/backend</code> directory.
+
+<li>Copy the five files from <code>scale/backend/xyz</code> to
+<code>scale/backkend/hal9000</code>.
+
+<li>Rename the five files:
+
+<table cols=3>
+<tbody>
+<tr><td>XyzGenerator.java  </td><td>&rArr;</td><td>Hal9000Generator.java</td>
+<tr><td>XyzAssembler.java  </td><td>&rArr;</td><td>Hal9000Assembler.java</td>
+<tr><td>XyzRegisterSet.java</td><td>&rArr;</td><td>Hal9000RegisterSet.java</td>
+<tr><td>XyzMachine.java    </td><td>&rArr;</td><td>Hal9000Machine.java</td>
+<tr><td>Makefile           </td><td>&rArr;</td><td>Makefile</td>
+</tbody>
+</table>
+
+<li>Edit the files, replacing all occurances of <code>xyz</code> with
+<code>hal9000</code> and replacing all occurances of <code>Xyz</code>
+with <code>Hal9000</code>
+
+<li>Write the missing code for the methods in each class.
+
+<li>Add any additional classes required such as classes for the
+instructions of the HAL9000 system.
+
+<li>Edit the Makefile file to add the additional classes.
+
+<li>Edit the <code>scale/backend/Makefile</code> file to add the <code>hal9000</code> directory.
+
+<li>Compile the classes in the directory.
+</ul>
+
+You can test this backend by using <code>-arch hal9000</code> as a
+parameter to the Scale compiler.
+<p>
+
+Note - all the current code generators are for <i>RISC</i>-style
+architectures.  There may be existing assumptions in the base classes
+in <code>scale/backend</code> that assume that the architecture is
+byte-addressable and that the architeture follows
+<i>load/operate/store</i> model.  It may be difficult to develop code
+generators for word-addressable systems and <i>CISC</i>-style systems.
+
+</body>
+</html>

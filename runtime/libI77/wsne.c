@@ -1,0 +1,26 @@
+#include "f2c.h"
+#include "fio.h"
+#include "lio.h"
+
+integer
+s_wsne(cilist *a)
+{
+  int n;
+
+  if(n = c_le(a))
+    return(n);
+
+  f__reading   = 0;
+  f__external  = 1;
+  f__formatted = 1;
+  f__putn      = t_putc;
+  L_len        = LINE;
+  f__donewrec  = x_wSL;
+
+  if ((f__curunit->uwrt != 1) && f__nowwriting(f__curunit))
+    return err(a->cierr, errno, "namelist output start");
+
+  x_wsne(a);
+
+  return e_wsle();
+}

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Scale Types</title>
+</head>
+<body bgcolor="white">
+Provides for describing the types of expressions and variables.
+The {@link scale.clef.type.Type Type} class is the base class for all types.
+<p>
+Most types in Scale are unique - that is, there is only one instance of a 32-bit signed integer type.
+Because they are unique, the == operator may be used to compare them.
+<p>
+Two types are not unique: {@link scale.clef.type.RefType RefType} and 
+{@link scale.clef.type.IncompleteType IncompleteType}.  These two types contain 
+links to the actual type.
+The RefType allows names and attributes to be attached to a type.  
+For example, a structure name or the 
+<tt>const</tt> attribute.  The IncompleteType is used for forward referencing as in a structure that has 
+a field of type pointer-to its own type.
+<p>
+All classes that that require type information such as 
+{@link scale.clef.expr.Expression expressions} 
+and {@link scale.clef.decl.Declaration declarations} support two methods:
+<dl>
+<dt>getType()<dd>return the type of the object, and
+<dt>getCoreType()<dd>return the "core type" of the object.
+</dl>
+The difference between these two methods is that <tt>getCoreType()</tt> returns the most basic type.
+That is, if the type is modified by a name or attribute, or if it was originally incomplete, 
+<tt>getCoreType()<tt> accesses the un-modified base type.  For example, for
+<pre>
+  typedef int int32;
+  const int32 x;
+</pre>
+<tt>getCoreType()</tt> applied to the variable <tt>x</tt> would return the type instance for
+an <tt>int</tt>.
+<p>
+It is very important to use the correct method.  For example, for
+<pre>
+  typedef int int32a;
+  const int32a x;
+  typedef int int32b;
+  const int32b y;
+</pre>
+the types returned by <tt>getType</tt> for <tt>x</tt> and <tt>y</tt> would not be identical.
+However, the types returned by <tt>getCoreType</tt> would be identical.
+</body>
+</html>

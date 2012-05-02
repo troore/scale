@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>Scale Compiler &amp; Other Tools</title>
+</head>
+<body bgcolor="white">
+This package contains the main class of the Scale compiler and other utility programs.
+<h2>{@link scale.test.Scale Scale}</h2>
+Executes the Scale compiler.
+<h2>{@link scale.test.CC CC}</h2>
+Executes the Scale compiler using command line switches similar to the <code>cc</code> Unix command.
+<h2>{@link scale.test.LOC LOC}</h2>
+Calculates lines of source code.
+<h2>{@link scale.test.Stats Stats}</h2>
+Reads log files and generates tables from them.  The log files are generated using the Scale compiler and the -stat command line switch.
+<h2>{@link scale.test.TestGen TestGen}</h2>
+Generates makefiles to perform experiments on the Scale compiler.
+<h2>Regression Testing</h2>
+
+The development of Scale has been a collaborative effort among many
+individuals.  Both faculty, professional staff, and students have
+contributed to the effort.  We have set up an environment to
+make the collaboration as easy as possible.  
+
+<p>
+
+Individuals have their own copies of those parts of the Scale system
+that they are working on.  There is also a central repository,
+containing all of the class files, object files, and libraries of
+Scale, which is accessed for those parts that an individual may not
+have in their own repository.  Individuals perform their testing in
+their own area without affecting other developers.  When an individual
+is satisfied with some new part or change, they commit that change
+back to the common repository.  Individual developers are encouraged
+to test their changes thoroughly before committing them so as to not
+impact other developers who use files from the central repository.
+
+<p>
+
+The source-code-utility (CVS) handles many of the conflicts when a
+change is committed by not allowing changes to be committed until
+there are no detectable conflicts with what is in the repository.  At
+other times, an individual will update their current copy from the
+central repository.  At that time the source-code-utility informs them
+of any detectable conflicts.
+
+<p>
+
+Obviously the source-code-utility can not detect such problems as the
+introduction of a logic error or even syntactical errors.  For these
+problems, we have automated a regression test system that performs a
+validity check of the Scale system every time that the central
+repository is changed.
+
+<p>
+
+Every night a scheduled process checks to see if any source files in
+the central repository have been updated.  If so, a complete build of
+the Scale system is performed in the repository creating all new
+class, object, and library files.  Then, if the build completes
+without error, a series of benchmarks is processed using the Scale
+compiler.  These same benchmarks are compiled using the native C and
+Fortran compilers.  The output from the Scale-generated executables is
+compared to the output obtained from native-generated executables.
+Any discrepancies are noted and e-mail is sent to all developers
+showing which benchmarks ran and which did not run correctly.  We
+currently have 51 benchmarks in the regression test including most
+SPEC95 benchmarks.
+
+<p>
+
+<h3>Problems in Regression Testing</h3>
+
+Problems can still occur.  For example, not every combination of
+compiler switches is checked; the regression tests are performed with
+all optimizations enabled and a specific alias analysis selected.
+Quite often we have found that a particular optimization hides a
+problem in some other part of the compiler.  Periodically, we obtain
+timings for various combinations and find that there are various
+problems that have to be fixed.  For example, we studied the effect of
+the different alias analysis methods on the various optimizations.
+Over six hundred tests were run for that study and numerous compiler
+bugs were removed before the study had obtained a complete set of
+timings.
+
+<p>
+
+Another defect in our regression testing is that it does not detect
+when we take a step backwards.  Sometimes some great idea we have for
+an improvement makes very little or even a negative difference in the
+quality of the generated code.  Our regression testing system is not
+able to detect this.
+
+<p>
+
+Not all the capabilities of the compiler are checked.  For example, we
+initially generated C code from the internal abstract syntax tree
+form.  This C code was then put through regression testing.  Later,
+we generated C code from the control flow graph representation of the
+benchmarks.  Now, we generate assembly code from the control flow
+graph and no longer do regression testing on the C-code generation
+logic.  If and when we generate object modules directly, the assembly
+language generation logic may not be tested.  We do, however, run the
+regression tests for all the different ISA-specific code generators.
+
+<h3>Experiments</h3>
+
+To support more thorough testing and various studies, we have
+developed a set of programs to aid us.  One {@link scale.test.TestGen
+program} generates makefiles and other scripts.  With it, we can
+specify which combinations of optimizations, and other compiler
+switches we want to compare for what set of benchmarks on what
+computers.  This program can be used to generate scripts to check the
+progress of the experiment.  Other scripts can be generated to collect
+the log files from the experiments, remove files, and perform other
+tasks related to the experiment.  Obviously, with multiple
+compilations and executions occurring on multiple systems, there could
+be a lot of opportunity for interference when generating log files.
+To avoid any interference, we use a complex set of pathnames, created
+from the selected options, for the files that are generated.  This
+results in very complex makefile files and scripts.
+
+<p>
+
+The Scale system uses simple counters to collect {@link
+scale.common.Statistics statistics}: how many instances of this class
+were created, how many times was this process invoked, how many
+control-flow nodes were deleted, etc.  (The makefile files generate
+the timing statistics.)  In order that statistics may be easily added
+to a class without impacting other classes, the Scale system uses
+reflection to allow a specific statistic to be registered at execution
+time.  Once a statistic is registered, the Scale system displays it in
+the log file automatically at appropriate times in the compilation.
+
+<p>
+
+Another {@link scale.test.Stats program} processes the generated log
+files by extracting the statistics and putting the result in tabular
+form according to a configuration file.  The result can be generated
+in text, LaTeX&copy;, csv, or HTML form.
+</body>
+</html>

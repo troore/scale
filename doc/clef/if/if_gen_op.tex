@@ -1,0 +1,1071 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\Section{Generating Expressions}\label{sec:op}
+
+This section shows the interface routines used to specify expressions.
+Note that the interface implementation is responsible for identifying
+type specific versions of the operators.
+
+Operators can represent user-defined functions in languages which
+allow operators to be overloaded (\eg C++).  In the generation
+interface, operators represent only language defined operators, not
+overloaded operators.  Users should translate overloaded operators to
+function calls.
+
+Tables~\ref{tab:ops1},~\ref{tab:ops2}, and~\ref{tab:ops3} show the
+correspondences between the interface's routines and operators of a few
+languages.  This table shows correspondences between operators which
+programmers may use and the routines of the generation interface.
+However, user code may use operators which the programmer cannot
+directly use (\eg C/C++ implicitly truncate real numbers but users of
+this interface must explicitly call a conversion routine).
+
+\input{if/if_gen_op_tab.tex}
+
+Operators are first divided by the types of their arguments and then
+by their type of function.  Calls to overloaded operators are
+represented as routine calls, since user-defined operators may not fit
+neatly in our categories.  
+
+The generation interface does not have any rules for type conversion.
+Therefore, user code is responsible for inserting explicit type
+conversions.  Unless otherwise stated, binary operators require both
+operands to be of the same type, and operators return an entity of the
+same type as their operands.
+
+%==============================================================================
+\Subsection{Base Expressions}
+
+A base expression is an expression without subexpressions.  Some base
+expressions are listed in following sections with related operators.
+
+%------------------------------------------------------------------------------
+\subsubsection{Identifier Reference}
+\interface{void}{ExpIdReference}{NameID entity}{}{Expression}
+\begin{functionality}
+This routine represents the use of a declared entity.
+\end{functionality}
+
+\partitle{Scope operators}
+The scope operator allows programmers to access entities which are
+hidden by other uses of the same identifier.  Resolving which
+declared entity is intended by a particular reference is part of semantic
+resolution, and therefore handled by the language parser.  Hence,
+these routines are superfluous and only exist for providing additional
+information to client code.  Note that ultimately user code must call the
+\method{ExpIdReference} routine to gain access the entity's value.
+
+\interface{NameID}{SelectScope}{NameID entity1, NameID entity2}
+	{}{Reference}
+\begin{functionality}
+This operator searches the scope named by \code{entity1} for
+\code{entity2}.  Note that if \code{entity2} is a type, this returns a
+reference to the type's declaration, not the actual type.
+\end{functionality}
+
+\interface{NameID}{SelectGlobalScope}{NameID entity}{}{Reference}
+\begin{functionality}
+This operator searches the global scope named for identifier \code{entity}.
+Note that if \code{entity2} is a type, this returns a
+reference to the type's declaration, not the actual type.
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Literals}
+This section describes routines for expressing literals.  
+
+\interface{void}{ExpLiteral}{TypeID type, String value}{}{Expression}
+\begin{functionality}
+Literals are difficult to handle since we may be cross compiling.
+Hence, all literals are transfered across the interface as a String
+constant.  Implementations of the interface must be able to convert
+numeric constants from strings to a numeric value.  Equality of
+literals should be determined by comparing numeric values, rather than
+string values.
+\end{functionality}
+
+%%--
+%\interface{void}{ExpConstruct}{}{Type t, Expression literal}{Expression}
+%\begin{functionality}
+%This routine constructs an unnamed entity of a given type from a
+%literal value(s).  This routine handles the invocation of a type
+%\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{No Expression}
+
+This section describes the special value, \node{NoExpression}.  This
+node represents that an optional expression has not been specified.
+This node may only replace a genuine expression node in those cases
+where it is explicitly permitted.  This node does not correspond to
+any source language construct.  
+
+%--
+\interface{void}{ExpNoexpression}{}{}{Expression}
+\begin{functionality}
+This routine pushes a special expression node onto the stack.  The
+implementation is capable of distinguishing this special expression
+node as not representing a valid expression.
+\end{functionality}
+
+%==============================================================================
+\Subsection{Expression Ordering Operators}
+The operators represented by routines in this section serve only order
+and structure other expressions.  The functions of these operators are
+independent of they type of their arguments.
+
+\interface{void}{ExpSeries}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine implementes C/C++'s comma operator.
+\end{functionality}
+
+\interface{void}{ExpParentheses}{}{Expression e}{Expression}
+\begin{functionality}
+This routine indicates that the programmer enclosed the associated
+expression in parentheses.  The generation interface does not need
+parentheses to override precendence rules.  However also specify the
+order in which computations are performed.  This information may be
+useful to optimizations which affect expression ordering.  
+\end{functionality}
+
+\partitle{Aggregation} 
+Some languages allow instances of aggregate and array types to be
+assigned to by aggrregate values.  These routines allow the
+structuring of expressions into aggregate expressions.  Every
+aggregate element has a position associated with it.  The generation
+interface only supports positional specification of aggregate
+elements.  User code must convert keyword specifications to positional
+specifications.  
+
+%--
+\interface{void}{ExpPositionSingle}{}{Expression e}{Position}
+\begin{functionality}
+This routine builds a \node{Position} node that represents a single
+position.  
+\end{functionality}
+%--
+\interface{void}{ExpPositionRange}{}{Bounds b}{Position}
+\begin{functionality}
+This routine builds a \node{Position} node that represents a range of
+positions.  
+\end{functionality}
+%--
+\interface{void}{ExpPositionAny}{}{Bounds b}{Position}
+\begin{functionality}
+This routine builds a \node{Position} node that represents any
+position.  This value corresponds to Ada's \key{others} construct in
+an aggregate.  Any has lower priority than other positions; it fills
+in those positions that no other aggregation element does.
+\end{functionality}
+
+%--
+\interface{void}{ExpAggregationElement}{}
+	{Position p, Expression e}{AggregationElement}
+\begin{functionality}
+This routine builds an element of an aggregation.  Each aggregation
+element must specify its position in the final data type, but its
+position may be a range or \emph{any}.
+\end{functionality}
+
+%--
+\interface{void}{ExpAggregationBegin}{}{Type t}{Type t}
+\interface{void}{ExpAggregationEnd}{}{Type t, \manyPops}{Expression}
+\begin{functionality}
+\befunc{ExpAggregation}{\node{AggregationElement}}  The resulting expression is
+of type \args{t}.  Note that the type can be restricted to nodes of
+\node{CompositeType} type.  
+\end{functionality}
+
+%==============================================================================
+\Subsection{Assignment Operators}\label{sec:assignOp}
+
+%The assignment operator works on all types.  For singleton types, it
+%performs a simple copy, and for aggregate types, it does a component
+%by component copy.  C/C++ does not allow arrays to be assigned as a
+%whole, so the assignment operator uses Modula-3 semantics for array
+%assignment.  
+
+%--
+\interface{void}{ExpAssignSimple}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine works for all datatypes.  It performs a simple bit copy
+of \code{e1} (rvalue) into \code{e2} (lvalue) for
+\method{bitsize}\code{(e2)} bits.  This routine is best used for
+singleton values, and the other assignment routines for aggregates and
+arrays.  Note that for all assignment operators, we push the rvalue
+before lvalue.
+\end{functionality}
+%--
+\interface{void}{ExpAssignComponents}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine does a component-wise copy for aggregates and arrays.
+Hence, this routine is sensitive to the types of its arguments.  This
+routine requires array arguments to be of the same shape and size and
+will insert code to ensure run-time compliance, which is to say that
+it follows Modula-3 semantics.
+\end{functionality}
+%--
+\interface{void}{ExpAssignFixedString}{LengthFunction l}
+	{Expression e1, Expression e2, Expression padding}{Expression}
+\begin{functionality}
+This routine provides string-like assignment for fixed sized arrays
+(\eg static and open arrays).  This function allows
+assignment of arrays of unequal lengths.  If the source expression is
+longer than the target, only enough elements are copied to fill the
+target.  If the target expression is longer than the source
+expression, then the target expression is padded.
+\begin{Parameters}
+\Param{l} Indicates how to determine the the dynamic length of a
+string.  The value is an element of an enumerated type:
+\EnumOptions{LengthFunction}{cFixedLength, cTerminated}
+\begin{Description}
+\item [cFixedLength] Use the fixed length of \code{e1}.  This option is
+for use with arrays with a fixed size at the point of assignment.  For
+example, Modula-3 open arrays always have their length fixed before
+any assignments may be done to the array.
+\item [cTerminated] The array size is determined by an embedded
+termination value, which is assumed to be zero.  This value would be
+appropriate for C/C++, if they had this type of assignment.
+\end{Description}
+\Param{e1} Target of the assignment.
+\Param{e2} Source value for the assignment.
+\Param{padding} Value with which to pad \code{e1} if \code{e1} is
+longer than \code{e2}. 
+\end{Parameters}
+
+\end{functionality}
+
+%==============================================================================
+\Subsection{Numeric Operators}
+\oparg{Numeric}{integer, float, or fixed point} To provide support for
+C/C++, the generation interface allows numeric operators to be applied
+to pointers as well, in which case their bit patterns are
+interpreted as integers.
+
+Some routines which operate on numeric types behave differently
+depending on its arguments' types.  The generation interface has
+several options in how to discriminate between these behaviors.  One
+solution is to provide provide a separate version of the routine for
+each possible argument type, but this approach creates needless
+additional routines.  Another solution is to give appropriate routines
+a type parameter, but this approach provides redundant information to
+the implementation, since it needs type information to handle
+expressions (\eg declare temporaries).  A third solution is to require
+implementations to extract type information from an operator's
+arguments.  Though this approach requires implementations to extract
+information user code already has, it is unlikely to create additional
+work and greatly simplifies the interface.  Note, that the interface
+requires user code to do complete type conversion; therefore, unless
+otherwise stated both arguments must be of the same type.
+
+Different languages have different semantics for overflow, underflow,
+and divide-by-zero error conditions.  Both C/C++ and Modula-3 leave
+error handling for these conditions implementation dependent, but Ada
+requires them to be caught.  The routines representing operators with
+possible error conditions accept an extra argument which indicates the
+desired semantics.  Its value comes the following enumerated type:
+\EnumOptions{ErrorHandling}{cImplementationDefined, cCatchError}
+\begin{Description}
+\item[cImplementationDefined] This value indicates that the
+implementation is free to do as it chooses.
+\item[cCatchError] This value indicates that these errors should be caught.
+\end{Description}
+
+\subsubsection{Arithmetic Operators}
+
+\interface{void}{ExpPositive}{}{Expression e}{Expression}
+\interface{void}{ExpNegative}{}{Expression e}{Expression}
+\interface{void}{ExpAbsoluteValue}{}{Expression e}{Expression}
+\interface{void}{ExpMinimum}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpMaximum}{}{Expression e1, Expression e2}{Expression}
+
+\interface{void}{ExpAddition}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpSubtraction}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpMultiplication}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpDivision}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpModulus}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpRemainder}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+
+\begin{functionality}
+The generation interface defines remainder and modulus as follows:
+\begin{itemize}
+\item Remainder truncates towards zero, and the sign of
+its result equals the sign of its right operand.
+\item Modulus truncates towards negative infinity, and the sign of its
+result equals the sign of its left operand. 
+\end{itemize}
+C/C++ (\%) and Modula-3's (\key{MOD}) modulus operators actually
+implement the interface's remainder function.  The generation
+interface's modulus supports Ada semantics.
+\end{functionality}
+
+\interface{void}{ExpExponentiation}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpPreDecrement}{ErrorHandling eh}
+	{Expression e}{Expression}
+\interface{void}{ExpPreIncrement}{ErrorHandling eh}
+	{Expression e}{Expression}
+\interface{void}{ExpPostDecrement}{ErrorHandling eh}
+	{Expression e}{Expression}
+\interface{void}{ExpPostIncrement}{ErrorHandling eh}
+	{Expression e}{Expression}
+
+\subsubsection{Relational Operators}
+The operands to these operators are of Numeric type, but the resulting
+value is of Boolean type.
+
+\interface{void}{ExpEquality}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpNotEqual}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpGreater}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpGreaterEqual}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpLess}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpLessEqual}{}{Expression e1, Expression e2}{Expression}
+
+\subsubsection{Bitwise Operators}
+Bit operators (see also Section~\ref{sec:compoundAssignOp}) interpret their
+arguments as a bit pattern.  Hence, no special handling exists for
+real types. 
+
+%--
+\interface{void}{ExpBitComplement}{}{Expression e}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitAnd}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitXor}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitOr}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitShiftLeft}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitShiftRight}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Compound Assignment Operators}\label{sec:compoundAssignOp}
+These operators perform two simpler operations in a single step.  The
+second operation is a simple assignment.  
+
+%--
+\interface{void}{ExpMultiplicationAssignment}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpDivisionAssignment}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpRemainderAssignment}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpAdditionAssignment}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpSubtractionAssignment}{ErrorHandling eh}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitShiftRightAssignment}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitShiftLeftAssignment}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitAndAssignment}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitXorAssignment}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpBitOrAssignment}{}
+{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+
+%==============================================================================
+\subsection{Boolean Operators}\label{sec:logicOp}
+\oparg{Boolean}{boolean} C/C++ specify that logical operators can
+accept arguments of integral type but still return arguments of
+logical type.  Since the generation interface does not permit logical
+operators to have integral operands, user code must type convert
+integral operands to boolean type.
+
+Nevertheless, boolean values are considered to be an integer subrange,
+so that Numeric \method{equality} and \method{inequality} apply to
+boolean types.
+
+\interface{void}{ExpTrue}{}{}{Expression}
+\interface{void}{ExpFalse}{}{}{Expression}
+\begin{functionality}
+\method{True} and {false} act as through they are an enumerated type
+with false equal to zero and true equal to one.  Hence, the type
+conversion routines for enumerated types may be used on these values.
+\end{functionality}
+
+\interface{void}{ExpNot}{}{Expression e}{Expression}
+\interface{void}{ExpAnd}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpOr}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpAndConditional}{}{Expression e1, Expression e2}{Expression}
+\interface{void}{ExpOrConditional}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+The \method{*Conditional} forms implement short circuit semantics.
+Hence, C and C++ should use these forms.
+\end{functionality}
+
+\interface{void}{ExpExpressionIf}{}{Expression e1, Expression e2, Expression e3}
+	{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+
+%==============================================================================
+\Subsection{Pointer Operators}
+\oparg{Pointer}{pointer}  For equality and inequality, pointers are
+treated as bit patterns (\ie a Numeric type).
+
+\interface{void}{ExpAddress}{}{Expression e}{Expression}
+\interface{void}{ExpDereference}{}{Expression e}{Expression}
+\interface{void}{ExpNil}{}{}{Expression}
+\begin{functionality}
+This routine generates a \emph{nil} pointer value.  Modula-3 has an
+explicit nil value.  C++ specifies that when the integer value zero is
+converted to a pointer it becomes the nil pointer value (regardless of
+bit representation).
+\end{functionality}
+
+%==============================================================================
+\Subsection{Aggregate Operators}
+In each of the routines with parameters, the first argument is of
+aggregate type, and the second argument is of field or routine type.
+
+\interface{void}{ExpThis}{}{}{Expression}
+\begin{functionality}
+This routine returns a pointer to the current object.  It is only
+valid inside of a method.
+\end{functionality}
+
+%--
+\interface{void}{ExpSelect}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpSelectIndirect}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpSelectRelative}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+%--
+\interface{void}{ExpSelectRelativeIndirect}{}{Expression e1, Expression e2}
+	{Expression}
+\begin{functionality}
+\cxxOp
+\end{functionality}
+
+%==============================================================================
+\Subsection{Array Operators}
+This section describes the operators available for manipulating
+arrays.  Some array operators (\eg \method{assignment} and
+\method{deleteArray}) may be found in other sections.
+
+%------------------------------------------------------------------------------
+\subsubsection{Subscripting}
+Some source languages supply multiple dimension subscripts, while
+others, such as C++, require repeated application of a one-dimensional
+subscript operator.  The generation interface supports both
+approaches.  Multiple dimension subscripts may be composed using the
+\method{index} routines.  For single dimensional subscripts, either
+of the \method{subscript} routines may be used.
+
+\interface{void}{ExpIndexBegin}{}{}{}
+\interface{void}{ExpIndexEnd}{}{\manyPops}{Indicies}
+\begin{functionality}
+\befunc{ExpIndex}{\node{Expression}}
+\end{functionality}
+\interface{void}{ExpSubscript}{bool boundsChecking}
+	{Expression e, Indicies i}{Expression}
+\begin{functionality}
+This routine represents a subscript operation.  Some languages require
+subscript bound checks while other languages do not.  The
+\code{boundsChecking} parameter allows user code to select between
+these two choices.
+\end{functionality}
+
+\interface{void}{ExpSubscript1d}{bool boundsChecking}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine is a short-cut for when only one dimension is specified.
+Some languages require subscript bound checks while other languages do
+not.  The \code{boundsChecking} parameter allows user code to select
+between these two choices.
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{String Array Operators}
+
+%--
+\interface{void}{ExpArrayEquality}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine returns true if the two arrays (\code{e1} and \code{e2})
+have the same size and their elements are equal.  
+\end{functionality}
+
+%--
+\interface{void}{ExpArrayInequality}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+This routine is the complement of \method{arrayEquality}.  
+\end{functionality}
+
+%--
+\interface{void}{ExpArrayGreater}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\fortranOp
+\end{functionality}
+%--
+\interface{void}{ExpArrayGreaterEqual}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\fortranOp
+\end{functionality}
+%--
+\interface{void}{ExpArrayLess}{}{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\fortranOp
+\end{functionality}
+%--
+\interface{void}{ExpArrayLessEqual}{}
+	{Expression e1, Expression e2}{Expression}
+\begin{functionality}
+\fortranOp
+\end{functionality}
+%--
+\interface{void}{ExpSlice}{}
+	{Expression s, Expression b, Expression e}{Expression}
+\begin{functionality}
+This routine extracts a contiguous section (\ie substring) of a one
+dimensional array.  
+\begin{Parameters}
+\Param{s} The array to be operated on.
+\Param{l} The beginning position of the substring.
+\Param{e} The ending position of the substring.
+\end{Parameters}
+\end{functionality}
+%--
+\interface{void}{ExpRemainingSlice}{}{Expression s, Expression l}{Expression}
+\begin{functionality}
+This routine extracts the substring of elements from position \code{l}
+to the end of the one dimensional array.
+\begin{Parameters}
+\Param{s} The array to be operated on.
+\Param{l} The beginning position of the substring.
+\end{Parameters}
+\end{functionality}
+%--
+\interface{void}{ExpConcatenation}{}{Expression s1, Expression s2}{Expression}
+\begin{functionality}
+\fortranOp
+Concatentation is performed into a temporary variable.
+\end{functionality}
+
+%==============================================================================
+\Subsection{Set Operators}
+
+%--
+\interface{void}{ExpSetEquality}{}{Expression se}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpUnion}{}{Expression se1, Expression se2}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpDifference}{}{Expression se1, Expression se2}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpIntersection}{}{Expression se1, Expression se1}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpSymmetricDifference}{}{Expression se1, Expression se2}
+	{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpSubset}{}{Expression se1, Expression se2}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpSuperset}{}{Expression se1, Expression se2}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpElement}{}{Expression e, Expression se}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+
+%==============================================================================
+\Subsection{Call Operators}
+Call operators represent calls to routines.  These calls may
+be either function calls or method calls.
+
+\interface{void}{ExpPositionalArgument}{}{Expression e}{Argument}
+\interface{void}{ExpNamedArgument}{Identifier name}{Expression e}{Argument}
+\begin{functionality}
+Arguments may be either positional or named.  C++ uses only positional
+arguments, but Modula-3 and Ada use both.  Note that
+\method{positionalArgument} really only type converts from
+\node{Expression} to \node{Argument}.  
+\end{functionality}
+
+%--
+\interface{void}{ArgumentsBegin}{}{}{}
+%--
+\interface{void}{ArgumentsEnd}{}{\manyPops}{ArgumentList}
+\begin{functionality}
+\befunc{ExpArguments}{\node{Argument}}
+\end{functionality}
+
+\interface{void}{ExpCallFunction}{}{Expression function, ArgumentList al}
+	{Expression}
+\interface{void}{ExpCallMethod}{}{Expression object, Expression
+	method, ArgumentList al}{Expression}
+\begin{functionality}
+This routine generates the representation for a method invocation.
+The \code{object} parameter represents the object associate with
+the method.  The \code{method} formal is the name of the method
+being called (It should be an \node{IdReference} node).
+
+\end{functionality}
+
+%==============================================================================
+\Subsection{Heap Operators}
+The behavior of heap operators are affected by several compilation
+unit attributes (see Section~\ref{sec:compilationUnit}).  The
+allocation operators call constructors, if appropriate.  The
+delete operators call destructors, if appropriate.  In addition,
+implementations of the interface must be aware of whether or not
+garbage collection is being used.
+
+\interface{void}{ExpAllocate}{TypeID type}{}{Expression}
+\interface{void}{ExpAllocateDefault}{TypeID type}{Expression e}
+	{Expression}
+\begin{functionality}
+This routine is used when the allocation has a default value.
+For a class object with an initializer, the expression \code{e} is a
+function call to the class' initializer.
+\end{functionality}
+\interface{void}{ExpAllocatePlacement}{TypeID type}{Expression e,
+	Expression p}{Expression}
+\begin{functionality}
+This routine allows both a default and a placement parameter (for C++).
+The argument \code{p} is a placement list parameter.
+\end{functionality}
+\interface{void}{ExpAllocateOpenArray}{TypeID type}{Indicies i}
+	{Expression}
+\begin{functionality}
+This routine allocates an open array (as found in Modula-3), and sets
+the size of the array in each dimension.
+\end{functionality}
+\interface{void}{ExpAllocateSettingFields}{TypeID type}
+	{ArgumentList al}{Expression}
+\begin{functionality}
+This routine allocates an aggregate entity and then uses the
+positional arguments specified in \code{al} to initialize the entity.
+\end{functionality}
+
+\interface{void}{ExpDelete}{}{}{Expression e}
+\interface{void}{ExpDeleteArray}{}{}{Expression e}
+\begin{functionality}
+This routine implements the semantics of C++'s delete array operator.
+Note that we do not support C++'s archaic number of elements parameter
+to the delete array operator.
+\end{functionality}
+
+%==============================================================================
+\Subsection{Type Operators}
+
+\subsubsection{Type Query Operators}
+%--
+\interface{void}{ExpBytesizeVariable}{}{Expression variable}{Expression}
+\begin{functionality}
+This routine implements the Modula-3 \key{bytesize} operator as well as the
+C/C++ \key{sizeof} operator.
+\end{functionality}
+%--
+\interface{void}{ExpBytesizeType}{TypeID type}{}{Expression}
+\begin{functionality}
+This routine implements the Modula-3 \key{bytesize} operator as well as the
+C/C++ \key{sizeof} operator.
+\end{functionality}
+%--
+\interface{void}{ExpBitsizeVariable}{}{Expression variable}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpBitsizeType}{TypeID type}{}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpAdrsizeVariable}{}{Expression variable}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpAdrsizeType}{TypeID type}{}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+
+%--
+\interface{void}{ExpIstype}{TypeID type}{Type t}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpNarrow}{TypeID type}{Type t}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpTypecode}{}{Expression e}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpNumber}{}{Expression e}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpFirst}{}{Expression e}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+%--
+\interface{void}{ExpLast}{}{Expression e}{Expression}
+\begin{functionality}
+\modulaOp
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Type Conversion Operators}
+
+Type conversion rules vary substantially between languages.  Hence,
+user code is responsible for ensuring that all implicit conversions
+are made explicit.  
+
+Some languages provide a fixed set of type conversions, but C++ allows
+users to define conversion routines for classes.  Hence in the
+generation interface, a type conversion is a triple consisting of the
+expression to be converted, the type to which it is to be converted,
+and a routine for performing the conversion.  For language defined
+conversions, the generation interface provides an enumerated list of
+recognized conversions.  The elements of the following enumeration
+follow Modula-3 semantics:
+\EnumOptions{ConversionRoutines}{cReal, cFloor, cCeiling, cRound,
+	cTruncate, cOrdinal, cEnumerationValue, cLoophole, cCast, cComplex}
+
+\interface{void}{ExpTypeConversion}{TypeID type, NameID routine}
+	{Expression e}{Expression}
+\interface{void}{ExpTypeConversion}{TypeID type, ConversionRoutines cr}
+	{Expression e}{Expression}
+
+\todo{
+(*----------------------------------------------------------- expressions ---*)
+
+(*  The code to evaluate expressions is generated by calling the
+    procedures listed below.  Each procedure corresponds to an
+    instruction for a simple stack machine.  Values in the stack
+    have a type and a size.  Operations on the stack values are
+    also typed.  Type mismatches may cause bad code to be generated
+    or an error to be signaled.  Explicit type conversions must be used.
+
+    Integer values on the stack, regardless of how they are loaded,
+    are sign-extended to full-width values.  Similarly, word values
+    on the stack are always zero-extened to full-width values.
+    
+    The expression stack must be empty at each label, jump, or call.
+    The stack must contain exactly one value prior to a conditional
+    or indexed jump.
+
+    All addresses are byte addresses.  There is no boolean type;  boolean
+    operators yield [0..1].
+
+    Operations on word values are performed MOD the word size and are
+    not checked for overflow.  Operations on integer values may or may not
+    cause checked runtime errors depending on the particular code generator.
+
+    The operators are declared below with a definition in terms of
+    what they do to the execution stack.  For example,  ceiling(Reel)
+    returns the ceiling, an integer, of the top value on the stack,
+    a real:  s0.I := CEILING (s0.R).
+
+    Unless otherwise indicated, operators have the same meaning as in
+    the Modula-3 report.
+*)
+
+(*-------------------------------------------------------------- literals ---*)
+
+load_nil     ();                         (*push; s0.A := NIL*)
+load_integer (READONLY i: Target.Int);   (*push; s0.I := i *)
+load_float   (READONLY f: Target.Float); (*push; s0.t := f *)
+
+(*------------------------------------------------------------ arithmetic ---*)
+
+(* when any of these operators is passed t=Type.Word, the operator
+   does the unsigned comparison or arithmetic, but the operands
+   and the result are of type Integer *)
+   
+eq       (t: ZType);   (* s1.I := (s1.t = s0.t); pop *)
+ne       (t: ZType);   (* s1.I := (s1.t # s0.t); pop *)
+gt       (t: ZType);   (* s1.I := (s1.t > s0.t); pop *)
+ge       (t: ZType);   (* s1.I := (s1.t >= s0.t); pop *)
+lt       (t: ZType);   (* s1.I := (s1.t < s0.t); pop *)
+le       (t: ZType);   (* s1.I := (s1.t <= s0.t); pop *)
+add      (t: AType);   (* s1.t := s1.t + s0.t; pop *)
+subtract (t: AType);   (* s1.t := s1.t - s0.t; pop *)
+multiply (t: AType);   (* s1.t := s1.t * s0.t; pop *)
+divide   (t: RType);   (* s1.t := s1.t / s0.t; pop *)
+negate   (t: AType);   (* s0.t := - s0.t *)
+abs      (t: AType);   (* s0.t := ABS (s0.t) (noop on Words) *)
+max      (t: ZType);   (* s1.t := MAX (s1.t, s0.t); pop *)
+min      (t: ZType);   (* s1.t := MIN (s1.t, s0.t); pop *)
+round    (t: RType);   (* s0.I := ROUND (s0.t) *)
+trunc    (t: RType);   (* s0.I := TRUNC (s0.t) *)
+floor    (t: RType);   (* s0.I := FLOOR (s0.t) *)
+ceiling  (t: RType);   (* s0.I := CEILING (s0.t) *)
+cvt_float(t: AType;  u: RType);     (* s0.u := FLOAT (s0.t, u) *)
+div      (t: IType;  a, b: Sign);   (* s1.t := s1.t DIV s0.t;pop*)
+mod      (t: IType;  a, b: Sign);   (* s1.t := s1.t MOD s0.t;pop*)
+
+(* In div and mod, "a" is the sign of s1 and "b" is the sign of s0. *)
+
+(*------------------------------------------------------------------ sets ---*)
+
+(* Sets are represented on the stack as addresses. *)
+
+set_union (s: ByteSize);          (* s2.B := s1.B + s0.B; pop(3) *)
+set_difference (s: ByteSize);     (* s2.B := s1.B - s0.B; pop(3) *)
+set_intersection (s: ByteSize);   (* s2.B := s1.B * s0.B; pop(3) *)
+set_sym_difference (s: ByteSize); (* s2.B := s1.B / s0.B; pop(3) *)
+set_member (s: ByteSize);         (* s1.I := (s0.I IN s1.B); pop *)
+set_eq (s: ByteSize);             (* s1.I := (s1.B = s0.B); pop *)
+set_ne (s: ByteSize);             (* s1.I := (s1.B # s0.B); pop *)
+set_lt (s: ByteSize);             (* s1.I := (s1.B < s0.B); pop *)
+set_le (s: ByteSize);             (* s1.I := (s1.B <= s0.B); pop *)
+set_gt (s: ByteSize);             (* s1.I := (s1.B > s0.B); pop *)
+set_ge (s: ByteSize);             (* s1.I := (s1.B >= s0.B); pop *)
+set_range (s: ByteSize);          (* s2.A[s1.I..s0.I] := 1; pop(3) *)
+set_singleton (s: ByteSize);      (* s1.A [s0.I] := 1; pop(2) *)
+
+(*------------------------------------------------- Word.T bit operations ---*)
+
+not ();  (* s0.I := Word.Not (s0.I) *)
+and ();  (* s1.I := Word.And (s1.I, s0.I); pop *)
+or  ();  (* s1.I := Word.Or  (s1.I, s0.I); pop *)
+xor ();  (* s1.I := Word.Xor (s1.I, s0.I); pop *)
+
+shift        ();  (* s1.I := Word.Shift  (s1.I, s0.I); pop *)
+shift_left   ();  (* s1.I := Word.Shift  (s1.I, s0.I); pop *)
+shift_right  ();  (* s1.I := Word.Shift  (s1.I, -s0.I); pop *)
+rotate       ();  (* s1.I := Word.Rotate (s1.I, s0.I); pop *)
+rotate_left  ();  (* s1.I := Word.Rotate (s1.I, s0.I); pop *)
+rotate_right ();  (* s1.I := Word.Rotate (s1.I, -s0.I); pop *)
+
+extract (sign: BOOLEAN);
+(* s2.I := Word.Extract(s2.I, s1.I, s0.I);
+   IF sign THEN SignExtend s2; pop(2) *)
+
+extract_n (sign: BOOLEAN;  n: INTEGER);
+(* s1.I := Word.Extract(s1.I, s0.I, n);
+   IF sign THEN SignExtend s1; pop(1) *)
+
+extract_mn (sign: BOOLEAN;  m, n: INTEGER);
+(* s0.I := Word.Extract(s0.I, m, n);
+   IF sign THEN SignExtend s0 *)
+
+extract_typecode (equiv: Var);
+(* s0.I := typecode of object pointed to by S0 *)
+
+istype (type: TypeUID; t, f: Label);
+
+insert ();
+(* s3.I := Word.Insert (s3.I, s2.I, s1.I, s0.I); pop(3) *)
+
+insert_n (n: INTEGER);
+(* s2.I := Word.Insert (s2.I, s1.I, s0.I, n); pop(2) *)
+
+insert_mn (m, n: INTEGER);
+(* s1.I := Word.Insert (s1.I, s0.I, m, n); pop(1) *)
+
+(*------------------------------------------------ misc. stack/memory ops ---*)
+
+swap (a, b: Type);
+(* tmp := s1.a; s1.b := s0.b; s0.a := tmp *)
+
+pop (t: Type);
+(* pop(1) discard s0, not its side effects *)
+
+copy_n (t: MType;  overlap: BOOLEAN);
+(* copy s0.I units with 't's size and alignment from s1.A to s2.A; pop(3).
+   'overlap' is true if the source and destination may partially overlap
+   (ie. you need memmove, not just memcpy). *)
+
+copy (n: INTEGER;  t: MType;  overlap: BOOLEAN);
+(* copy 'n' units with 't's size and alignment from s0.A to s1.A; pop(2).
+   'overlap' is true if the source and destination may partially overlap
+   (ie. you need memmove, not just memcpy). *)
+
+zero_n (t: MType);
+(* zero s0.I units with 't's size and alignment starting at s1.A; pop(2) *)
+
+zero (n: INTEGER;  t: MType);
+(* zero 'n' units with 't's size and alignment starting at s0.A; pop(1) *)
+
+(*----------------------------------------------------------- conversions ---*)
+
+loophole (from, two: ZType);
+(* s0.two := LOOPHOLE(s0.from, two) *)
+
+(*---------------------------------------------------- address arithmetic ---*)
+
+add_offset (i: INTEGER);
+(* s0.A := s0.A + i bytes *)
+
+index_address (size: INTEGER);
+(* s1.A := s1.A + s0.I * size; pop  -- where 'size' is in bytes *)
+
+(*------------------------------------------------------- procedure calls ---*)
+
+(* To generate a direct procedure call:
+    
+      cg.start_call_direct (proc, level, t);
+    
+      for each actual parameter i
+          <generate value for parameter i>
+          cg.pop_param ();  -or-  cg.pop_struct();
+        
+      cg.call_direct (proc, t);
+
+   or to generate an indirect call:
+
+      cg.start_call_indirect (t);
+    
+      for each actual parameter i
+          <generate value for parameter i>
+          cg.pop_param ();  -or-  cg.pop_struct();
+
+      If the target is a nested procedure,
+          <evaluate the static link to be used>
+          cg.pop_static_link ();
+
+      <evaluate the address of the procedure to call>
+      cg.call_indirect (t);
+*)
+
+start_call_direct (p: Proc;  lev: INTEGER;  t: Type);
+(* begin a procedure call to procedure 'p' at static level 'lev' that
+   will return a value of type 't'. *)
+
+call_direct (p: Proc;  t: Type);
+(* call the procedure 'p'.  It returns a value of type t. *)
+
+start_call_indirect (t: Type;  cc: CallingConvention);
+(* begin an indirect procedure call that will return a value of type 't'. *)
+
+call_indirect (t: Type;  cc: CallingConvention);
+(* call the procedure whose address is in s0.A and pop s0.  The
+   procedure returns a value of type t. *)
+
+(* Allocate something of type alloc_type *)
+start_alloc_call (t: Type; alloc_type: TypeUID);
+
+(* l_to_r = args are passed from left to right *)
+method_expr (holder, basetype: TypeUID; method: Name);
+
+call_closure (proc: Var; t: Type);
+(* Call closure s0.  Pop s0 *)
+
+pop_param (t: ZType);
+(* pop s0.t and make it the "next" parameter in the current call. *)
+
+pop_struct (s: ByteSize;  a: Alignment);
+(* pop s0.A, it's a pointer to a structure occupying 's' bytes that's
+  'a' byte aligned; pass the structure by value as the "next" parameter
+  in the current call. *)
+
+pop_static_link ();
+(* pop s0.A for the current indirect procedure call's static link  *)
+
+(*------------------------------------------- procedure and closure types ---*)
+
+load_procedure (p: Proc);
+(* push; s0.A := ADDR (p's body) *)
+
+load_static_link (p: Proc);
+(* push; s0.A := (static link needed to call p, NIL for top-level procs) *)
+}

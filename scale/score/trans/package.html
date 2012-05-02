@@ -1,0 +1,309 @@
+<html>
+<head>
+<title>CFG Optimizations</title>
+</head>
+<body bgcolor="white">
+
+This package provides various optimizations that operate on the {@link
+scale.score.Scribble CFG}.
+
+<h2><a name="legal">Does the Optimization Improve the Program</a></h2>
+<p>
+When an optimization considers performing some transformation,
+there are two questions that must be answered:
+<ol>
+<li> Can the transformation be performed?  That is, if the
+transformation is made will the transformed program be correct.  In
+this context a correct program is one that performs as it is coded.
+<li> Should the transformation be performed?  This is a harder
+question to answer because the answer depends on how well the
+transformed program performs.  Does it execute faster?  Does it
+require less space?
+</ol>
+We will call question one the <b style="color:red">legal</b>
+question and question two the <b style="color:red">beneficial</b>
+question.
+<p>
+Because the interactions between optimizations can be very complex,
+some transformations may not appear to be benneficial but may
+enable an optimization that is very beneficial.  One transformation
+may also inhibit a more beneficial transformation.
+<p>
+Most transformations result in an increase in register pressure.
+If the register pressure, for some sequence of generated
+instructions, becomes too great, register spilling results.
+Spilling a register may negate any benefit the transformation may
+otherwise have provided.  If the register pressure becomes large
+enough, the transformed program may perform worse than the
+un-optimized program.
+<p>
+Answering question 2 optimally in any particular context is very
+difficult.  Heuristics are usually used.  Many of the Scale
+optimizations are written to assume that the answer to question two
+is always the same as the answer to question one; if it can be
+done, it will be done.
+<p>
+
+<h2>How to Add a New CFG Optimization</h2>
+
+To add a new optimization to be performed on the CFG representation of
+a user function do:
+
+<ol>
+
+<li>Create the Java class and place it in the
+<code>scale/score/trans</code> directory.  This class must be derived
+from the {@link scale.score.trans.Optimization Optimization} class.
+Note that the {@link scale.score.trans.Inlining Inlining} optimization
+is a special case because it is performed over all functions at the
+same time.  Therefore, it is not derived from the {@link
+scale.score.trans.Optimization Optimization} class.
+
+<li>Make sure that your optimization defines the {@link
+scale.score.trans.Optimization#requiresSSA requiresSSA()} method
+correctly.  This method informs the compiler of the required condition
+for the CFG in order for your optimization to be performed.
+
+<li>Make sure your optimization either leaves the CFG in the same
+state it obtained or executes the {@link
+scale.score.Scribble#invalidSSAForm invalidSSAForm()} method.
+
+<li>Modify the {@link scale.test.Scale Scale} class to add the
+information needed to find and invoke your optimization.
+
+<ol>
+<li>Choose a <i>unique</i> alphabetic letter to represent your optimization.
+<li>Add that letter to the <code>optimizationLetter</code> field.
+
+<li>Add the name of your optimization to the
+<code>optimizationName</code> field in the same position as you added
+your letter in the previous step.
+
+<li>Add the name of your optimization class to the
+<code>optimizationClass</code> field in the same order.
+
+<li>Decide if and in what order your letter should be added to the
+<code>cannedOpts</code> field.  The elements of this array correspond
+to the five optimization levels (i.e., <code>-O0, -O1, -O2, -O3, -O4</code>).
+
+</ol>
+</ol>
+
+<h2>Notes</h2>
+<h3>SSA Form and Optimizations</h3>
+
+Most optimizations are performed on the CFG when it is in {@link
+scale.score.SSA SSA} form.  SSA form provides variable liveness
+information that is not available otherwise.  However, some
+optimizations (e.g., {@link scale.score.trans.GlobalVarReplacement
+GlobalVarReplacement}, {@link scale.score.trans.SFIR SFIR}) require
+non-SSA form because they are not able to easily keep the SSA form
+valid.  Some optimizations don't care either way (e.g., {@link
+scale.score.trans.TreeHeight TreeHeight}, {@link
+scale.score.trans.BasicBlockOps BasicBlockOps}).
+
+<p>
+The SSA form of the CFG is valid if two conditions are met:
+
+<ol>
+
+<li>There is one and only one <i>def</i> of a variable that is in SSA form.
+({@link scale.score.trans.URJ URJ} sometimes violates this rule.
+
+<li>The lexicographical order of the <i>defs</i> of the renamed SSA
+variables is maintained.  ({@link scale.score.trans.PRE PRE} violates
+this rule.)
+
+</ol>
+
+The compiler is designed to allow the user of the compiler to be able
+to specify the order in which the optimizations are performed.  For
+this reason, each optimization is required to specify in what form it
+requires the CFG to be in and what form it leaves the CFG in.
+<p>
+The {@link scale.score.trans.Optimization#requiresSSA requiresSSA()}
+specifies in what form the CFG is required.
+
+<dl>
+<dt>NO_SSA<dd>The optimization requires that the CFG not be in SSA form.
+<dt>IN_SSA<dd>The optimization requires that the CFG be in SSA form.
+<dt>VALID_SSA<dd>The optimization requires that the CFG be in valid SSA form.
+<dt>NA_SSA<dd>The optimization does not require SSA form or non-SSA form.
+</dl>
+
+The compiler assumes that an optimization leaves the CFG in the same
+SSA state as it received it originally.  However, an optimization can
+specify that it made the SSA form invalid (violated one or both of the
+two requirements listed above) by calling the {@link
+scale.score.Scribble#invalidSSAForm invalidSSAForm()} method.
+
+<h3>Spanning the CFG</h3>
+
+Most optimizations have to visit every CFG node.  Scale provides
+several ways of spanning the CFG and there are examples in every
+optimization.
+
+The easiest method is to use a <i>visit</i> pattern.
+For example,
+
+<pre>
+(1)    Stack wl = WorkArea.getStack("xxx");
+(2)    Chord.nextVisit();
+(3)    wl.push(begin);
+(4)    begin.setVisited();
+
+(5)    while (!wl.isEmpty()) { 
+(6)      Chord c = (Chord) wl.pop(); 
+(7)      c.pushOutCfgEdges(wl);
+(8)      ...
+       }
+
+(9)    WorkArea.returnStack(wl);
+</pre>
+
+<ol>
+
+<li>Obtain a {@link scale.common.Stack Stack} to be used as a work
+list.  We use our own version of the stack implementation to avoid the
+overhead of <i>synchronization</i>.  We use the {@link
+scale.common.WorkArea WorkArea} class to obtain previously used stacks
+in order to avoid allocating new stacks and to avoid the allocations
+required to grow the stack.  A unique identification is supplied so
+that if the code fails to return the stack (see (9)), it is possible
+to determine what place in the compiler obtained it.
+
+<li>Since the CFG is a cyclic graph, the spanning algorithm must know
+if a node has been visited.  This statement assigns a unique integer
+value to the spanning.  If a node has been <i>colored</i> with this
+value, it has been visited.
+
+<li>Start with the first node of the CFG.  All CFG have one node that
+has no predecessors.  The {@link scale.score.Scribble#getBegin
+getBegin()} method can be used to obtain this CFG node.
+
+<li>Mark this node as visited.  A node is marked as visited as it is
+placed on the work list.
+
+<li>If the work list is empty, the CFG has been spanned.
+
+<li>Remove a node from the work list.
+
+<li>Place all of this node's successors <i>that have not been
+visited</i> on the worklist. See {@link
+scale.score.chords.Chord#pushOutCfgEdges pushOutCfgEdges()}.
+
+<li>Do the processing required for this node.
+
+<li>Return the stack so it can be used again.
+
+</ol>
+
+It is possible to span the CFG in other orders and there are examples
+of this through out the compiler.  An example is that no CFG node be
+processed before all of it's immediate predecessors have been
+processed. See {@link scale.score.chords.Chord#pushChordWhenReady
+pushChordWhenReady()}.
+<p>
+
+An important thing to remember about the above code example is that
+there is only one <i>color</i> that can be assigned to a CFG node.
+Thus, if the processing in step 8 must also span the CFG, the two
+spanning algorithms will collide.  To overcome this problem, a
+different spanning algorithm can be used for one of them.
+
+<pre>
+    Stack   wl   = WorkArea.getStack("xxx");
+    HashSet done = WorkArea.getSet("xxx");
+
+    wl.push(begin);
+    while (!wl.empty()) {
+      Chord c = (Chord) wl.pop();
+      c.pushOutCfgEdges(wl, done);
+      ...
+    }
+
+    WorkArea.returnStack(wl);
+    WorkArea.returnSet(done);
+</pre>
+
+In this example a set of visited nodes is used in place of
+</i>coloring</i> each node.
+
+<h3>Dominators</h3>
+
+Various optimizations require information on {@link
+scale.score.Domination dominators}.  The compiler computes this
+information the first time it is requested. (See {@link
+scale.score.Scribble#getDomination getDomination()}.)  If an
+optimization changes the CFG by adding or deleting a CFG node, then
+the optimization must either:
+
+<ul>
+
+<li>Update the dominator information using {@link
+scale.score.Domination#addDominatee addDominatee()}, or
+
+<li>Tell the compiler that the domination information is no longer
+valid by calling {@link scale.score.Scribble#recomputeDominators
+recomputeDominators()}.
+
+</ul>
+
+<h3>Dominance Frontier</h3>
+
+Various optimizations require information on the {@link
+scale.score.DominanceFrontier dominance frontier} of a node.  The
+compiler computes this information the first time it is
+requested. (See {@link scale.score.Scribble#getDominanceFrontier
+getDominanceFrontier()}.)  If an optimization changes the CFG by
+changing the dominance frontier of a CFG node, then the optimization
+must tell the compiler that the dominance frontier information is no
+longer valid by calling {@link scale.score.Scribble#recomputeDominators
+recomputeDominators()}.
+
+<h3>References</h3>
+
+Various optimizations require knowing where in the CFG each variable
+is referenced.  The compiler computes this information the first time
+it is requested. (See {@link scale.score.Scribble#getRefs getRefs()}.)
+The {@link scale.score.pred.References References} class provides
+various methods for accessing and updating this information.  An
+optimization can force the compiler to recompute this information as
+well by calling the {@link scale.score.Scribble#recomputeRefs
+recomputeRefs()} method.
+
+<h3>Loops</h3>
+
+The compiler maintains a significant amount of information concerning
+each {@link scale.score.chords.LoopHeaderChord loop} in the CFG.  The
+compiler computes this information the first time it is requested. An
+optimization that changes the loop structure of the CFG (e.g., loop
+fusion, loop permutation} must inform the compiler that this
+information is no longer valid by calling the {@link
+scale.score.Scribble#recomputeLoops recomputeLoops()} method.
+
+<h3>Partial Redundancy Elimination (PRE)</h3>
+
+{@link scale.score.trans.PRE PRE} doesn't do much.  And, it's
+expensive.  It requires an additional constraint on the {@link
+scale.score.SSA SSA} form that is only valid prior to the operation of
+any other optimization.  For that reason, Scale leaves SSA form and
+re-enters it if PRE is used after some other optimization.  PRE is not
+under regression test.
+
+<p>
+{@link scale.score.trans.ValNum Global value numbering} is much more effective.
+<h2>FAQ</h2>
+<p>
+<b>
+Some optimizations don't seem to be effective on Fortran code.
+</b>
+<blockquote>
+The problem may be due to the fact that Fortran passes arguments by
+reference.  If an index variable is passed to a subroutine, it causes
+some optimizations to skip that variable.  Also, if the <code>DO</code> loop is
+controlled by variables passed in as an arguments, Scale may fail
+to find important loop information.
+</blockquote>
+</body>
+</html>

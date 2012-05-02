@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>Scale Abstract Syntax Tree</title>
+</head>
+<body bgcolor="white">
+
+Provides for the Clef Abstract Syntax Tree (AST) form used to
+represent the source language program as closely as possible.  The
+{@link scale.callGraph.CallGraph CallGraph} class is the container for the AST.  The
+{@link scale.clef.Node Node} class is the base class for all nodes of
+the tree.  The nodes are composed of {@link scale.clef.expr.Expression
+expressions}, {@link scale.clef.decl.Declaration declarations}, {@link
+scale.clef.stmt.Statement statements}, and {@link scale.clef.type.Type
+types}.
+
+<p>
+
+The Clef AST is supposed to be language DEPENDENT.  That means that
+you may have to define some additional Clef classes if you want to add
+support for another language such as Ada.  Some of the Clef classes
+are left over from an aborted effort to compile Modula III and C++.
+Don't depend on any Clef classes, that not used for C or Fortran, to
+be correct.
+
+<p>
+
+If you add classes to Clef, you will need to add code for them to the
+scale.clef.Clef2C Clef2C} class as well as other
+classes in the scale.clef package.
+
+<p>
+Each class, descended from the Node class, implements a
+<tt>visit(Predicate p)</tt> method which calls the <tt>visitXXX()</tt>
+method of its arguments class where <tt>XXX</tt> is the its class
+name.  For example, the <tt>AdditionOp</tt> class implements
+
+<pre>
+  public void visit(Predicate p)
+  {
+    p.visitAdditionOp(this);
+  }
+</pre>
+
+In this way the "visit pattern" is implemented and provides a way to
+visit every node of the AST.  Several base classes are implemented for
+the creation of visit algorithms.
+
+<dl>
+<dt>{@link scale.clef.DescendPredicate  DescendPredicate}<dd>which calls the visit method of each class's super class.
+<dt>{@link scale.clef.ErrorPredicate  ErrorPredicate}<dd>which generates an error.
+<dt>{@link scale.clef.Predicate Predicate}<dd>which is the base class of all visit classes.
+</body>
+</html>

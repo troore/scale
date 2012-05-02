@@ -1,0 +1,288 @@
+trips编译命令：
+tcc -O4 -Ws,'-c 4' -Ws,'-r 4' -Ws,'-topology tmax' m.c -o m -save-temps --verbose
+
+verbose结果（以add.c为例）：
+% java -ea -Xmx64m -Xms8m -jar /home/troore/Projects/trips/ttools2/slib/scale.jar  -oa  -quiet -arch trips2 -f scale.score.Scribble.doIfConversion=0 -I/home/troore/Projects/trips/ttools2/usr/include -Ofgjcamnpxnmpibudl -hb backend  -f scale.backend.trips2.Trips2Machine.softwareFDIV=1 -f scale.backend.trips2.HyperblockFormation.unrollForLoops=0 -f scale.backend.trips2.HyperblockFormation.unrollLoops=1 -f scale.backend.trips2.HyperblockFormation.tailDuplicate=0 -f scale.backend.trips2.HyperblockFormation.peelLoops=1 -f scale.score.trans.URJ.inhibitWhileLoops=1 -inl 10 -AA1 -f scale.backend.trips2.Trips2Machine.tcconfigPath=/home/troore/Projects/trips/ttools2/etc/config/default  add.c -dir . 
+% java -Xmx64m -Xms8m -classpath /home/troore/Projects/trips/ttools2/slib/tsch.jar trips.tsch.tsch -l/home/troore/Projects/trips/ttools2/etc/config/default -v3 -m5 -O15 -c 4  -r 4  -topology tmax  /var/tmp/add.til.11532 -o /var/tmp/add.s.11532
+% /home/troore/Projects/trips/ttools2/sbin/tas  /var/tmp/add.s.11532 -o /var/tmp/add.o.11532
+% /home/troore/Projects/trips/ttools2/sbin/tld  -o ./m /home/troore/Projects/trips/ttools2/lib/default/crt0.o  /var/tmp/add.o.11532   -L/home/troore/Projects/trips/ttools2/lib/O4 -L/home/troore/Projects/trips/ttools2/lib/default  -lScale   -lc -lm
+
+简易版scale编译命令（生成til），目前编译参数还不懂其意
+java scale.test.Scale -oa -quiet -arch trips2 m.c -dir .
+
+trips运行命令：
+tmax --blk_num_fastfwd=23700(e.g. 32x32 matrix_multiply) --total_num_x=4 --total_num_y=4 -config trips/tmax/config/tmax_conf.cfg -bpredconfig trips/tmax/config/bpred.2K.tile16 -s -o [记录文件名 e.g. m] [可执行文件名]
+
+调试信息：
+trips/ttools2/tsim_arch -d m > log
+
+
+java scale.test.Scale -help all:
+
+    [-o] - generate .o files - default is false.
+    [-output_assembly] - generate .o files from generated assembly language files - default is false.
+    [-output_c] - generate .o files from generated C language files - default is false.
+    [-S] - generate .s files only - default is false.
+    [-arch string] - generate code for this architecture - default is "i386".
+        alpha  - EV5 processor
+        sparc  - V8 or V9 processor using V8 ABI
+        mips   - incomplete implementation
+        ppc    - G4 processor - under development
+        trips2 - UT TRIPS EDGE architecture - under development
+        Note - if this parameter is not specified the compiler obtains the
+        architecture from the os.arch property.  The architecture (e.g., xxx)
+        is used to find the code generator for that architecture.  There must
+        be a scale.backend.xxx directory and there must ba a xxxMachine class
+        in that directory.
+    [-I [string]+] - specify the user include file directory(s)
+    [-I_ [string]+] - specify the system include file directory(s)
+    [-E] - run just the C pre-processor. - default is false.
+    [-O string] - specify optimizations - default is "tfgjcamnpxmnpibudl".
+        letter optimization
+        ------ ---------------------------------------
+        0      No optimizations
+        1      Same as -O cmnpud
+        2      Same as -O gacmnpibudl
+        3      Same as -O fgjacmnpmxnpibudl
+        4      Same as -O fgjacmnpxmnpibudl
+        a      Array Access Strength Reduction
+        b      Basic Block Optimizations
+        c      Sparse Conditional Constant Propagation
+        d      Dead Variable Elimination
+        e      Partial Redundancy Elimination
+        f      Structure Fields In Registers
+        g      Global Variable Replacement
+        i      Expression Tree Height Reduction
+        j      Loop Unrolling
+        l      Loop Test at End
+        m      Loop Invariant Code Motion
+        n      Global Value Numbering
+        p      Copy Propagation
+        s      None
+        t      Loop Permutation
+        u      Useless Copy Removal
+        x      Scalar Replacement
+    [-inl integer] - specify the inlining code bloat limit - default is 0.
+        0 - none
+        1 - 1% code bloat
+        2 - 2% code bloat
+        3 - 5% code bloat
+        n - n% code bloat
+        The compilation time is a non-linear function of the bloat limit.
+        Use -f scale.score.trans.Inlining.ignoreHeuristics=1 to inhibit
+        the callee complexity filter.
+        
+        If the -M switch is specified, inlining may be performed between source modules.
+    [-inls string] - specify the file to hold inlining status information - default is "".
+    [-data_dependence string] - specify the data dependence testing to use - default is "tibBO".
+        t - use transitive closure
+        i - scalar replacement within inner loops only
+        b - basic test
+        B - Banerjee test
+        O - Omega Library
+    [-cross_module_inlining] - disable cross-module inlining (only applies if -M is selected but -me is not - default is true.
+    [-M] - force multi-compilation - default is false.
+        Scale supports three modes of compiling: single, batch, and
+        multi-compilation.  The compiler can be invoked on a single source file
+        or it can be invoked on multiple source files (batch).  The batch
+        method saves the overhead of establishing the Java environment
+        for each source file that is compiled.  If multiple source files
+        are specified with one invocation of the compiler, multi- (or cross)
+        compiling can be enabled.
+        
+        Multi-compilation converts all the specified source files to AST form
+        before generating the CFG form of the programs.  Once all CFGs have
+        been generated, then the code generators are run.  This allows
+        inter-procedural optimizations to be performed.  Multi-compilation is
+        not recommended because of the very large amount of memory required
+        which results in excessive JVM GCs.
+        
+        Currently, only function inlining can take advantage of multi-compilation
+        by inlining functions across modules.  To support this multi-compilation
+        renames all static functions and variables and makes them global.
+    [-Alias_Analysis integer] - specify alias analysis level - default is 1.
+        0 - No alias analysis,
+        1 - Simple intra-procedural alias analysis,
+        2 - Steensgard intra-procedural alias analyses,
+        3 - Shapiro intra-procedural alias analyses,
+        4 - Simple inter-procedural alias analysis,
+        5 - Steensgard inter-procedural alias analysis,
+        6 - Shapiro inter-procedural alias analysis
+    [-cat integer] - specify the number of categories for Shapiro alias analysis - default is 2.
+    [-A [string]+] - specify annotation file(s)
+    [-inline_complex_ftns] - inline complex functions - default is false.
+    [-L] - enable source line number information. - default is false.
+    [-r string] - limit optimizations, graphic displays, etc to only the source routine
+        specified by this name
+    [-dir string] - specify the directory to place any generated files - default is ".".
+    [-D [string]+] - specify macro definitions for the pre-processor
+    [-U [string]+] - specify macros to be be un-defined by the pre-processor
+        Only pre-processor defined macros can be un-defined.
+    [-g] - generate debug information - default is false.
+    [-naln] - assume non-ANSI C data alignment on indirect references - default is false.
+    [-unsafe] - allow unsafe optimizations - default is false.
+    [-fp_reorder] - allows floating point operations to be reordered during optimizations - default is false.
+        which may affect the results
+    [-hb string] - enable backend hyperblock formation - default is "".
+    [-instruction_scheduling] - enable instruction scheduling - default is true.
+    [-builtin_inlining] - inhibit inlining of certain standard C library routines - default is true.
+    [-peephole_hacker] - perform peephole optimizations - default is true.
+    [-new_parser] - deprecated. - default is false.
+    [-display_macros] - display all macro definitions - default is false.
+        If used with -E, the macro definitions are sent to stdout
+        without the preprocessed text of the program. Otherwise, the
+        macro definitions are placed as comments in the generated C or
+        assembly code.  This switch is ignored if the EDG parser is used.
+    [-c89] - select the C89 dialect of C - default is false.
+    [-c99] - select the C99 dialect of C - default is false.
+    [-gcc] - select the Gnu dialect of C - default is false.
+    [-ckr] - select the K&R dialect of C - default is false.
+    [-ansi] - specify strict ANSI C mode - default is false.
+    [-signed_chars] - specifies whether or not the *char* type is signed - default is true.
+        The -sc switch specifies that type *char* has the same range, representation,
+        and behavior as type *signed char*. The -uc switch specifies that type *char*
+        has the same range, representation, and behavior as type *unsigned char*.
+    [-unsigned_chars] - specifies whether or not the *char* type is signed - default is false.
+        The -sc switch specifies that type *char* has the same range, representation,
+        and behavior as type *signed char*. The -uc switch specifies that type *char*
+        has the same range, representation, and behavior as type *unsigned char*.
+    [-clef_c_before] - generate C code from the Clef AST before optimizeClef has been called - default is false.
+    [-clef_c_after] - generate C code from the Clef AST after optimizeClef has been called - default is false.
+    [-clef_graph_before] - graphically display the Clef AST before the optimizeClef method is called - default is false.
+    [-clef_graph_after] - graphically display the Clef AST after the optimizeClef method is called - default is false.
+    [-scribble_c_before string] - generate C code from the CFG before the specified optimizations (see -O) - default is "".
+        The generated C code can be limited to just one routine by using the -r switch.
+    [-scribble_c_after string] - generate C code from the CFG after the specified optimizations (see -O) - default is "".
+        The generated C code can be limited to just one routine by using the -r switch.
+    [-scribble_graph_before string] - graphically display the CFG before the specified optimizations (see -O) - default is "".
+        The CFG display can be limited to just one routine by using the -r switch.
+    [-scribble_graph_after string] - graphically display the CFG after the specified optimizations (see -O) - default is "".
+        The CFG display can be limited to just one routine by using the -r switch.
+    [-display_call_graphs] - graphically display the call graphs - default is false.
+    [-daVinci] - use the daVinci graphing tool - default is false.
+        The DaVinci graphics package must be installed on your system and the
+        executable must be on your path.  The default is to use the Scale
+        graphing tool.
+    [-vcg] - output graphs to files in VCG format - default is false.
+    [-G string] - specify graphic display options - default is "e".
+        e - high & low expressions
+        l - low expressions only
+        h - high expressions only
+        a - annotations
+        m - may-use links
+        u - use-def links
+        t - types
+        d - data dependence
+        D - domination
+        C - control dependence
+        P - post domination
+        c - Clef
+    [-profile_instrumentation string] - specify the type(s) profiling instrumentation to add to the program - default is "".
+          b - basic block frequencies
+          c - loop instruction counts
+          e - edge frequencies
+          l - loop trip count histogram
+          p - path frequencies
+        
+        At the end of program execution, the executing program dumps the profile
+        to disk in the form of .pft files -- one for each source file.  These
+        are text files that are pretty easy to read.  The files are placed in the
+        directory in which the program is executed.
+        
+        A second run of the compiler with the -profile_guided switch reads in the
+        profile from the .pft files and applies it to each routine.  Currently,
+        all profiling in Scale works only via the multi-compilation route
+        (i.e., using -pi or -pg automatically activates -M).
+        
+        Loop instruction counts statically determine the number of instructions
+        in a loop.  This is used to guide loop unrolling.  This currently is
+        implemented only for the Trips architecture.
+        
+        A loop histogram for a particular loop is a map from slots to
+        frequencies; slots with frequencies of zero are not present in the
+        map.  Each slot corresponds to a single trip count or to a range of trip
+        counts.  Currently, there are 100 slots, numbered 0 through 99. Slots 1 -
+        64 are used for trip counts 1 - 64.  (Note that a trip count of 0 is not
+        possible, since we define the trip count as the number of executions
+        of the loop header, not the loop back edge.  Slot 0 is not used.)
+        Slots 65 - 99 are used for trip counts 65 - 2^41 using the mapping function
+           f(c) = floor(lg(c - 1)) + 59,
+        where c is the trip count, and f(c) is the corresponding slot.
+        
+        Basic block frequencies are used to rank call sites for inlining.
+        Loop histograms are used to select unroll factors for individual loops.
+        Edge frequencies are used for Trips in constructing hyperblocks.
+    [-profile_guided string] - Use profile information, previously generated, as a guide in compiling - default is "".
+        See the -pi switch for a list of instrumentation information that can
+        be used.  Use the -profile_instrumentation switch to instrument
+        the program.
+    [-profile_paths [string]+] - specify the directory/ies to search for profile information
+        Use the -pg switch to use the profile information.
+        Defaults to the directory specified by the -dir switch.
+    [-cc string] - specify the native C compiler to use when the -oc switch is used - default is "cc".
+    [-asm string] - specify the assmebler command to use when the -oa switch is specified - default is "as".
+    [-for string] - a name to use to tag statistical output - see -stat - default is "??".
+    [-wrap_on_overflow string] - use the following integer overflow behavior - default is "all".
+        all      - all integers wrap on overflow (safest, slowest)
+        unsigned - unsigned integers wrap on overflow, signed may not
+        none     - all integers may not wrap on overflow (not valid for C)
+    [-d integer] - set the debug level - default is 0.
+        0 - normal
+        1 - informative messages and validity checks
+        2 - more detailed information
+        3 - brain dump
+    [-t [string]+] - set the classTrace field true for the specified classes - e.g., -t scale.backend.Generator
+    [-f [string]+] - set the specified static members for the specified classes to the
+        specified values - e.g.,
+            -f class.member=3
+        See also the -flag_file switch.
+    [-flag_file string] - load a flag settings file - default is "".
+        A flag settings file contains a list of compiler flags and values
+        with one flag and value per line of the file.  For example, the
+        following lines would set the indicated static members of the indicated
+        classes to the specified value:
+           scale.score.trans.Inlining.ignoreComplexityHeuristic=0
+         scale.score.pp.PPCfg.pgp =1
+           scale.score.Scribble.doIfConversion= 0
+            scale.score.trans.URJ.defaultMinUnrollFactor = 6
+        The compiler reads the file and sets the specified flags to the specified
+        value.  Boolean true and false values are respresented by 1 and 0.
+        See also the -f switch.
+    [-version] - print compiler version - default is false.
+    [-stat integer] - display status at level - default is 0.
+        0 - none
+        1 - normal statistics + compilation progress
+        2 - spawned processes
+        n - undefined.
+    [-stat_file string] - specifies the file to receive the compiler statistics - default is "".
+        The default is stdout.
+    [-clef_display_depth integer] - node display depth - default is 4.
+        The node display depth controls the debugging displays when print
+        statements are added to the compiler that display AST or CFG nodes.
+    [-show_annotation_nodes integer] - show annotations in trace information to this level - default is 0.
+        This controls the depth to which debugging displays show annotations when
+        print statements are added to the compiler that display AST or CFG nodes.
+    [-snap] - deprecated - enable snapshot statistics - default is false.
+    [-quiet] - inhibit informative messages - default is true.
+    [-w] - do not print warning messages - default is false.
+    [-no_warn [string]+] - Tell the compiler to ignore specific warnings - default is "".
+           -nw 166       - disable warning number 166
+           -nw 166 167   - disable warning numbers 166 167
+           -nw all       - disable all warnings
+    [-dummy_aliases] - Assumes that dummy (formal) arguments to procedures share memory - default is false.
+        locations with other dummy arguments or with COMMON variables
+        that are assigned.  These program semantics slow performance and
+        do not strictly obey the FORTRAN-77 Standard.  The default is to
+        assume there are no dummy aliases.
+    [-ignore_heuristics string] - ignore heuristics in the specified optimizations - default is "".
+        Most optimizations increase register pressure which can result in register
+        spilling and degraded performance.  These optimizations employ heuristics
+        to minimize this degraded performance.
+    [-suspend] - wait for the user to give the go ahead - default is false.
+        Clears out any references and waits for the user before terminating
+        the compiler. This switch is provided so that the user can
+        interrogate any tools, such as JMP, that rely on the JVM
+        Profiling Interface.
+    [-files [string]+] - compile the source file(s) specified.  They can be a .c, .f, .ilf, or .ilc files.
+
+

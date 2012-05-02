@@ -1,0 +1,919 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+\Section{Generating Declarations}\label{sec:decl}
+
+This section covers how declarations are handled by the generation
+interface.  Declarations are one way of binding attributes (or values)
+to an identifier (or name).  The generation interface divides a
+declaration into three parts: a name, a value, and miscellaneous
+attributes.  Anonymous declarations exist, but they behave as though
+the system creates a unique identifier for the declaration.  The
+generation interface supports the declaration of types, values (\eg
+variables and record fields), labels, procedures, and exceptions (for
+Modula-3).  The interface also supports a variety of additional
+attributes.
+
+%(*-------------------------------------------------------- runtime hooks ---*)
+
+\todo{
+set_runtime_hook (n: Name;  v: Var;  o: ByteOffset);
+(* declares 'n' as a runtime symbol at location 'ADR(v)+o' *)
+
+get_runtime_hook (n: Name;  VAR v: Var; VAR o: ByteOffset);
+(* returns the location of the runtime symbol 'n' *)
+}
+
+%==============================================================================
+\Subsection{Declaring Types}
+
+%--
+\interface{NameID}{DeclType}{Identifier name}{Type t}{TypeDecl}
+\begin{functionality}
+  This routine creates a new type by making an entry for it in the
+symbol table.  
+
+\emph{Implementation Note:} To support our type matching scheme, this
+routine should perform an extra step.  It should first brand \args{t}
+with a \node{NameBrandType}, and then use the updated type for the
+declaration.  
+\end{functionality}
+
+\interface{NameID}{NameType}{Identifier name, TypeID type}{}{TypeDecl}
+\begin{functionality}
+  This routine creates an alias for a type which may already have an
+entry in the symbol table.  This routine implements the semantics of
+C++'s \key{typedef} construct.  Notice the use of \args{TypeID} rather
+than \node{Type}.
+
+\emph{Implementation Note:} If the type already has a name brand, then
+this name should simply be added to the existing name brand.
+Otherwise, a name brand should be created for it.
+\end{functionality}
+
+%%--
+%\interface{NameID}{DeclAnonType}{}{Type td}{TypeDecl}
+%--
+
+\subsubsection{Forward Declarations}
+%--
+\interface{NameID}{ForwardDeclProcedure}{Identifier
+name}{Signature}{RoutineDecl}
+\begin{functionality}
+In Java terms, this routine has been \textbf{deprecated}.  Use
+\texttt{SpcfyProcedure} instead.
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Opaque Types}
+
+Opaque types are type names for which the full type structure is
+unknown.  Instead, we know that the type is a subtype of the specified
+type.  
+
+Modula-3 distinguishes between an opaque declaration and a partial
+revelation.  This distinction is not important to the generation
+interface, so a single routine exists.  From the generation
+interface's point of view, an opaque declaration creates a name for a
+partially specified type.
+
+Fully revealed opaque types are really just a type declaration, and
+should be represented as such.
+
+Note that implementations will most likely wish to create a special
+type constructor that marks an opaque type as representing the super
+type.
+
+\interface{NameID}{DeclOpaque}{Identifier name, TypeID superType}{}
+	{TypeDecl}
+\begin{functionality}
+This routine handles the declaration of opaque types and partial
+revelations.  An opaque type is a Modula-3 construct whereby a type is
+only specified as being a subtype of another type.  Additional
+information may be provided by partial revelations, which merely
+provide a more specific super type.  
+
+We considered associating partial revelations with the original opaque
+declaration.  However, the interface does not need to do error
+checking, so this associationg is not necessary.  
+
+A complete revelation provides the full type definition, and is
+therefore represented as a normal type declaration.
+
+\emph{Implementation suggestion:} An opaque declaration associates a
+name with a type.  However, the name is not an instance of the type,
+but rather an instance of a subtype of that type.  Hence, we recommend
+creating a \emph{subtype} type constructor.  The symbol table entry
+for an opaque type may then point to a subtype node in the type table.
+Note that the generation interface does not provide any routines to
+directly generate a subtype type node.
+\end{functionality}
+
+%==============================================================================
+\Subsection{Declaring Values}
+
+Many source languages optionally allow programmers to give a default
+value (default value for formal parameters and initial value for
+variables) to a named values in its declaration.  Since the generation
+interface requires an expression corresponding to the default value to
+be on the stack, user code should use the \method{noExpression}
+routine to push a special expression onto the stack.
+
+\emph{Implementation note}: Implementations may choose to represent
+initial values for variables and formals as a simple assignment
+following the declaration.  Since the generation interface is intended 
+to support a variety of intermediate representations, it provides as
+much support for the original syntax as possible and allows
+implementations to choose how best to represent initial values.
+Moreover, an initialization of a C++ reference type is different from
+an assignment to it.
+
+%--
+\interface{NameID}{DeclVariable}{Identifier name}
+	{Type t, Expression initialValue}{ValueDecl}
+\begin{functionality}
+This routine declares a variable.
+\begin{Parameters}
+\Param{name} The variable's name.
+\Param{t} The variable's type.
+\Param{initialValue} The variable's initial value.
+\end{Parameters}
+\end{functionality}
+%--
+%--
+\interface{NameID}{DeclTemporary}{Identifier name}
+	{Type t, Expression initialValue}{ValueDecl}
+\begin{functionality}
+This routine declares a temporary variable.  We provide this
+routine to distinguish programmer declared variables and compiler
+created variables.
+\begin{Parameters}
+\Param{name} The variable's name.
+\Param{t} The variable's type.
+\Param{initialValue} The variable's initial value.
+\end{Parameters}
+\end{functionality}
+%--
+\interface{NameID}{DeclFormal}{Identifier name, Mode m}
+	{Type t, Expression defaultValue}{ValueDecl}
+\begin{functionality}
+This document uses the term \emph{argument} to refer to an actual
+parameter and \emph{formal} to refer to a formal parameter.  
+
+\begin{Parameters}
+\Param{name} The formal's name.
+\Param{m} The formal's parameter mode.
+\Param{t} The formal's type.
+\Param{defaultValue} The formal's default value.
+\end{Parameters}
+
+Implementations of the generation interface must provide an enumerated
+list of parameter mode options, such as the following:
+\EnumOptions{Mode}{cInValue, cValue, cReference, cValueResult, cResult}
+where:
+\begin{Description}
+\item [cInValue] Pass-by-value but the formal's value may not be
+altered.  This mode is used for Ada.
+\item [cValue] Pass-by-value but the formal's value may be altered.
+This mode is the default for Modula-3 and the only one for C/C++.
+\item [cReference] Formal parameter is an alias for the argument.
+Therefore, an update to the formal parameter is a direct update the
+argument (actual parameter) as well.  This mode is the only parameter
+mode for Fortran and represents the \key{var} mode for Modula-3.
+\item [cReadOnly] Pass-by-reference, but the value cannot be updated.
+This mode supports Modula-3's \key{readonly} mode, and is efficient
+for large data structures.
+\item [cValueResult] Represents copy-in and copy-out semantics.  This
+mode is used for Ada's \key{inout} mode. 
+\item [cInOut] Represents Ada's \key{inout} keyword, which allows
+implementations to choose between \textbf{Reference} and
+\textbf{ValueResult}.  
+\item [cResult] Represents Ada's \key{out} mode, which allows
+implementations to choose between \textbf{Reference} and
+\textbf{ValueResult}. 
+\end{Description}
+
+Handling C++'s parameter modes is awkward.  In C++, programmers may
+declare a formal to be constant (\ie pass-by-inValue) or to be a
+reference (\ie pass-by-reference).  Unfortunately, this declaration
+may be buried in the type declaration used in the definition of the
+formal.  These unfortunate declaration semantics requires searching
+through the symbol table to determine the parameter passing mode, and
+would require that clients recognize the duplication and ignore it.
+Hence, the generation interface dictates that for C++, all calls to
+\method{declFormal} should use pass-by-value.
+\end{functionality}
+
+%--
+%\interface{NameID}{DeclAnonymousFormal}{Mode m}
+%	{Type t, Expression defaultValue}{ValueDecl}
+%\begin{functionality}
+%This routine creates an anonymous formal.  Anonymous formals may be
+%used to declare forward declarations and procedure types.  See
+%\method{declFormal} for a more detailed description
+%\end{functionality}
+%--
+\interface{void}{UnknownFormals}{}{}{ValueDecl}
+\begin{functionality}
+This routine indicates that the remainder of a routine's signature has
+an unknown number of formal parameters.  Hence, this routine
+implements C++'s ``...'' construct.
+\end{functionality}
+
+%--
+\interface{void}{AlternateReturnFormal}{}{}{ValueDecl}
+\begin{functionality}
+Fortran provides an unusual version of a return statement called an
+alternate return.  An alternate return returns to one of possibly
+many line numbers, where the possible return locations are provided in
+special procedure parameters.  The Fortran syntax for these special
+parameters is an asterik ($*$), which this routine represents.
+
+Alternate return parameters may occur anywhere in the parameter list;
+however, the alternate return construct views these special parameters
+as forming a simple linear list from 1 to n.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclField}{Identifier name}
+	{Type t, Expression initialValue}{FieldDecl}
+\begin{functionality}
+This routine declares a field, which is a component of an aggregate
+data structure.
+
+\begin{Parameters}
+\Param{name} The field's name.
+\Param{t} The field's type.
+\Param{initialValue} The field's initial value.
+\end{Parameters}
+\end{functionality}
+%--
+%\interface{NameID}{DeclAnonymousField}{}
+%	{Type t, Expression initialValue}{FieldDecl}
+%\begin{functionality}
+%This routine declares an anonymous field, as in C bit fields.  See the
+%\method{declField} routine for more information.
+
+%\begin{Parameters}
+%\Param{t} The field's type.
+%\Param{initialValue} The field's initial value.
+%\end{Parameters}
+%\end{functionality}
+
+%--
+\interface{NameID}{DeclConstant}{Identifier name}
+	{Type td, Expression value}{ConstantDecl}
+\begin{functionality}
+This routine declares a constant value.  A constant value does not
+require storage to be allocated, which is different from other
+declarations with a constant attribute.
+
+\begin{Parameters}
+\Param{name} The constant's name.
+\Param{t} The contant's type.
+\Param{value} The contant's value.
+\end{Parameters}
+\end{functionality}
+
+%(*------------------------------------------------ variable declarations ---*)
+
+%(* Clients must declare a variable before generating any statements or
+%   expressions that refer to it;  declarations of global variables and
+%   temps can be intermixed with generation of statements and expressions.
+
+%   In the declarations that follow:
+
+%|    n: Name            is the name of the variable.  If it's M3ID.NoID, the
+%|                         the back-end is free to choose its own unique name.
+%|    s: ByteSize        is the size in bytes of the declared variable
+%|    a: Alignment       is the minimum required alignment of the variable
+%|    t: Type            is the machine reprentation type of the variable
+%|    m3t: TypeUID       is the UID of the Modula-3 type of the variable,
+%|                       zero is used to represent "void" or "no type"
+%|    in_memory: BOOLEAN specifies whether the variable must have an address
+%|    exported: BOOLEAN  specifies whether the variable must be visible in
+%|                         other compilation units
+%|    init: BOOLEAN      indicates whether an explicit static initialization
+%|                         immediately follows this declaration.
+%|    up_level: BOOLEAN  specifies whether the variable is accessed from
+%|                         nested procedures.
+%|    f: Frequency       is the front-end estimate of how frequently the
+%|                         variable is accessed.
+
+%*)
+
+
+%import_global (n: Name;  s: ByteSize;  a: Alignment;  t: Type;
+%               m3t: TypeUID): Var;
+%(* imports the specified global variable. *)
+
+%declare_segment (n: Name;  m3t: TypeUID): Var;
+%bind_segment (seg: Var;  s: ByteSize;  a: Alignment;  t: Type;
+%              exported, init: BOOLEAN);
+%(* Together declare_segment and bind_segment accomplish what
+%   declare_global does, but declare_segment gives the front-end a
+%   handle on the variable before its size, type, or initial values
+%   are known.  Every declared segment must be bound exactly once. *)
+
+%segment_types (seg: Var);
+
+%declare_global (n: Name;  s: ByteSize;  a: Alignment;  t: Type;
+%                m3t: TypeUID;  exported, init: BOOLEAN): Var;
+%(* declares a global variable. *)
+
+%declare_constant (n: Name;  s: ByteSize;  a: Alignment;  t: Type;
+%              m3t: TypeUID;  exported, init: BOOLEAN): Var;
+%(* declares a read-only global variable *)
+ 
+%declare_local (n: Name;  s: ByteSize;  a: Alignment;  t: Type;
+%               m3t: TypeUID;  in_memory, up_level: BOOLEAN;
+%               f: Frequency): Var;
+%(* declares a local variable.  Local variables must be declared in the
+%   procedure that contains them.  The lifetime of a local variable extends
+%   from the beginning to end of the closest enclosing begin_block/end_block. *)
+
+%declare_param (n: Name;  s: ByteSize;  a: Alignment;  t: Type;
+%               m3t: TypeUID;  in_memory, up_level: BOOLEAN;
+%               f: Frequency): Var;
+%(* declares a formal parameter.  Formals are declared in their lexical
+%   order immediately following the 'declare_procedure' or
+%   'import_procedure' that contains them.  *)
+
+%declare_field (n: Name;  o: BitOffset;  s: BitSize;  t: TypeUID);
+
+%declare_temp (s: ByteSize;  a: Alignment;  t: Type;
+%              in_memory: BOOLEAN): Var;
+%(* declares an anonymous local variable.  Temps are declared
+%   and freed between their containing procedure's begin_procedure and
+%   end_procedure calls.  Temps are never referenced by nested procedures. *)
+
+%free_temp (v: Var);
+%(* releases the space occupied by temp 'v' so that it may be reused by
+%   other new temporaries. *)
+
+\todo{
+(*---------------------------------------- static variable initialization ---*)
+
+(* Global variables may be initialized only once.  All of their init_*
+   calls must be bracketed by begin_init and end_init.  Within a begin/end
+   pair, init_* calls must be made in ascending offset order.  Begin/end
+   pairs may not be nested.  Any space in a global variable that's not
+   explicitly initialized is zeroed.  *)
+
+begin_init (v: Var);
+end_init (v: Var);
+(* must precede and follow any init calls *)
+
+init_int (o: ByteOffset;  READONLY value: Target.Int;  t: Type);
+(* initializes the integer static variable at 'ADR(v)+o' with
+   the low order bits of 'value' which is of integer type 't'. *)
+
+init_proc (o: ByteOffset;  value: Proc);
+(* initializes the static variable at 'ADR(v)+o' with the address
+   of procedure 'value'. *)
+
+init_label (o: ByteOffset;  value: Label);
+(* initializes the static variable at 'ADR(v)+o' with the address
+   of the label 'value'.  *)
+
+init_var (o: ByteOffset;  value: Var;  bias: ByteOffset);
+(* initializes the static variable at 'ADR(v)+o' with the address
+   of 'value+bias'.  *)
+
+init_offset (o: ByteOffset;  var: Var);
+(* initializes the static variable at 'ADR(v)+o' with the integer
+   frame offset of the local variable 'var' relative to the frame
+   pointers returned at runtime in RTStack.Frames *)
+
+init_chars (o: ByteOffset;  value: TEXT);
+(* initializes the static variable at 'ADR(v)+o' with the characters
+   of 'value' *)
+
+init_float (o: ByteOffset;  READONLY f: Target.Float);
+(* initializes the static variable at 'ADR(v)+o' with the
+   floating point value 'f' *)
+}
+
+%==============================================================================
+\Subsection{Declaring Procedures and Methods}
+
+Unlike most other declared entities, procedures are generally not fully
+declared at the point of their declaration.  The generation interface
+refers to a function declaration without a body (\ie a C/C++ prototype
+or a Modula-3 procedure interface) as a \emph{specification}, and a
+function declaration with a body as a \emph{declaration}.  
+
+Hence, the compiler or linker must ultimately resolve all function
+specifications back to their corresponding declarations.  For Modula-3
+this process is straightforward because of the well-structured
+import/export mechanism.  For C/C++, this process is a little more
+work.  
+
+C++ (\cite{ellis:90}, p. 138) and Modula-3 (\cite{Cardelli:95}, p. 27)
+define slightly different type matching rules for procedures.  Since
+the generation interface currently supports only statically typed
+languages and then only when semantic resolution has already been
+done, we ignore these differences.
+
+%\partitle{Overrides}
+%%--
+%\interface{void}{Override}{}{Identifier name, ConstantExpression proc}{Member}
+%	%declare_override (obj: TypeUID; n: Name; offset: BitOffset);
+%%--
+%\interface{void}{OverrideBegin}{}{}{}
+%%--
+%\interface{void}{OverrideEnd}{}{\manyPops}{Overrides}
+%\begin{functionality}
+%\befunc{override}{\node{Overrides}}
+%\end{functionality}
+
+\partitle{Initializers}
+C++ allows a list of initializers to be provided along with
+constructors.  These routines handle the representations of
+initializers.
+
+%--
+\interface{void}{Initializer}{NameID initializedEntity}
+	{ArgumentList al}{Initializer}
+%--
+\interface{void}{InitializersBegin}{}{}{}
+\interface{void}{InitializersEnd}{}{\manyPops}{Initializers}
+\begin{functionality}
+\befunc{Initializers}{ArgumentList}
+\end{functionality}
+%--
+\interface{void}{NoInitializers}{}{}{Initializers}
+\begin{functionality}
+This routine creates an empty initializer list.
+\end{functionality}
+
+\partitle{Routine Specification}
+A specification indicates the name and type of a procedure but does
+not provide its body.  
+
+%--
+\interface{NameID}{SpcfyProcedure}{Identifier name}{Signature s}{RoutineDecl}
+%--
+\interface{NameID}{SpcfyNestedProcedure}
+	{Identifier name, int level, NameID parentRoutine}
+	{Signature s}{RoutineDecl}
+
+%--
+\interface{NameID}{SpcfyMethod}{Identifier name}{Signature s}{RoutineDecl}
+
+%--
+\interface{NameID}{SpcfyFriend}{Identifier name}{Signature s}{RoutineDecl}
+
+%--
+\interface{NameID}{SpcfyTypeConversion}{Identifier name}{Signature s}
+	{RoutineDecl}
+
+%--
+\interface{NameID}{SpcfyConstructor}{Identifier name}
+	{Signature s, Initializers i}{RoutineDecl}
+
+%--
+\interface{NameID}{SpcfyDestructor}{Identifier name}{Signature s}
+	{RoutineDecl}
+
+
+\partitle{Routine Declaration}
+A routine declaration includes the routine's body.  
+
+%--
+%\interface{NameID}{DeclProcedure}{Identifier name}{Signature s, 
+%	Statement body}{RoutineDecl}
+%--
+\interface{NameID}{DeclProcedure}
+	{Identifier name, int level, NameID parentRoutine} 
+	{Signature s, Statement body}{RoutineDecl}
+
+%--
+\interface{NameID}{DeclMethod}{Identifier name, TypeID class}
+	{Signature s, Statement body}{RoutineDecl}
+\begin{functionality}
+The class type is specified if the method is defined outside the
+class.  Otherwise, use \node{NoType}.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclMethodReference}{Identifier name, NameID proc}
+	{Signature s}{RoutineDecl}
+\begin{functionality}
+This routine supports Modula-3 style method definition in which a
+method is defined by a top level procedure.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclOverride}{Identifier name, NameID proc}
+	{Signature s}{RoutineDecl}
+\begin{functionality}
+A Modula-3 override looks a lot like a method definition; however, its
+affects the method table differently.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclTypeConversion}{Identifier name, TypeID class}
+	{Signature s, Statement body}{RoutineDecl}
+\begin{functionality}
+The class type is specified if the method is defined outside the
+class.  Otherwise, use \node{NoType}.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclConstructor}{Identifier name, TypeID class}
+	{Signature s, Initializers, Statement body}{RoutineDecl}
+\begin{functionality}
+The class type is specified if the method is defined outside the
+class.  Otherwise, use \node{NoType}.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclDestructor}{Identifier name, TypeID class}
+	{Signature s, Statement body}{RoutineDecl}
+\begin{functionality}
+The class type is specified if the method is defined outside the
+class.  Otherwise, use \node{NoType}.
+\end{functionality}
+
+%--
+\interface{NameID}{DeclEntry}{Identifier name, NameID enclosingProcedure}
+	{Signature s, Statement s1}{Statement}
+\begin{functionality}
+Fortran~77 allows procedures to have multiple entry points.  The
+handling of variables for multiple entry points is messy at best.  The
+generation interface uses Fortran~77 semantics.  Since each entry can
+have its own argument list, the location (on the stack) of a parameter
+depends upon which entry point into the procedure was called.
+Moreover, parameters for one entry point may not be defined by another
+in which case the latter entry point cannot execute code which refers
+to such parameters.
+
+The operation of this routine is different from most routines in the
+generation interface.  In order to mark where the entry point begins,
+the generation interface requires that the first statement in the body
+of the entry be passed in \code{s1}.  Instead of returning a 
+\node{RoutineDecl} like the other routines in this section, it returns
+a \node{statement}, which is in fact \code{s1}.  The \node{RoutineDecl} 
+created by this routine is accessible through the \code{NameID} 
+returned by this routine.
+\begin{Parameters}
+\Param{name} Name of the entry point.
+\Param{s} Signature of the entry point.
+\Param{enclosingProcedure} The procedure which encloses this entry
+point. 
+\Param{s1} The first statement in entry.  Note that \code{s1} is 
+only the first statement executed, not the entire body of the routine
+as used in other routine declarations.
+\end{Parameters}
+\end{functionality}
+
+
+
+%%--
+%\interface{void}{BeginBody}{}{}{}
+%	%begin_procedure (p: Proc);
+%	%(* begin generating code for the procedure 'p'.  Sets "current 
+%	% procedure" to 'p'.  Implies a begin_block.  *)
+
+%%--
+%\interface{void}{EndBody}{}{}{}
+%	%end_procedure (p: Proc);
+%	%(* marks the end of the code for procedure 'p'.  Sets "current 
+%	% procedure" to NIL.  Implies an end_block.  *)
+
+
+
+
+	%declare_procedure (n: Name;  n_params: INTEGER;  return: Type;
+	%                   lev: INTEGER;  cc: CallingConvention;
+	%                   exported: BOOLEAN;  parent: Proc;
+	%                   ret_type_uid: TypeUID): Proc;
+	%(* declare a procedure named 'n' with 'n_params' formal parameters
+	% at static level 'lev'.  Sets "current procedure" to this procedure.
+	% If the name n is M3ID.NoID, a new unique name will be supplied by the
+	%back-end.  The type of the procedure's result is specifed in 'return'.
+	% If the new procedure is a nested procedure (level > 1) then 'parent'
+	% is the immediately enclosing procedure, otherwise 'parent' is NIL.
+	% The formal parameters are specified by the subsequent 'declare_param'
+	% calls. *)
+%(*----------------------------------------------------------- procedures ---*)
+
+%(* Clients compile a procedure by doing:
+
+%      proc := cg.declare_procedure (...)
+%        ...declare formals...
+%        ...declare locals...
+%      cg.begin_procedure (proc)
+%        ...generate statements of procedure...
+%      cg.end_procedure (...)
+
+%  Nested procedure bodies may be generated before their parent's
+%  begin_procedure, after their parent's end_procedure, or inline
+%  where they occur in the source.  If they are not inline,
+%  note_procedure_origin is used to mark their original source
+%  position.  Runtime flags passed to the front-end determine where
+%  nested procedure bodies are generated.  Back-ends are free to
+%  require any one of these three placements for nested procedures.
+%  (At the moment:  m3cc -> inline,  m3back -> after)
+%*)
+
+%import_procedure (n: Name;  n_params: INTEGER;  return: Type;
+%                  cc: CallingConvention): Proc;
+%(* declare and import the external procedure with name 'n' and 'n_params'
+%   formal parameters.  It must be a top-level (=0) procedure that returns
+%   values of type 'return'.  'lang' is the language specified in the
+%   procedure's <*EXTERNAL*> declaration.  The formal parameters are specified
+%   by the subsequent 'declare_param' calls. *)
+
+%declare_procedure (n: Name;  n_params: INTEGER;  return: Type;
+%                   lev: INTEGER;  cc: CallingConvention;
+%                   exported: BOOLEAN;  parent: Proc;
+%                   ret_type_uid: TypeUID): Proc;
+%(* declare a procedure named 'n' with 'n_params' formal parameters
+%   at static level 'lev'.  Sets "current procedure" to this procedure.
+%   If the name n is M3ID.NoID, a new unique name will be supplied by the
+%   back-end.  The type of the procedure's result is specifed in 'return'.
+%   If the new procedure is a nested procedure (level > 1) then 'parent' is
+%   the immediately enclosing procedure, otherwise 'parent' is NIL.
+%   The formal parameters are specified by the subsequent 'declare_param'
+%   calls. *)
+
+%begin_procedure (p: Proc);
+%(* begin generating code for the procedure 'p'.  Sets "current procedure"
+%   to 'p'.  Implies a begin_block.  *)
+
+%end_procedure (p: Proc);
+%(* marks the end of the code for procedure 'p'.  Sets "current procedure"
+%   to NIL.  Implies an end_block.  *)
+
+%note_procedure_origin (p: Proc);
+%(* note that nested procedure 'p's body occured at the current location
+%   in the source.  In particular, nested in whatever procedures,
+%   anonymous blocks, or exception scopes surround this point. *)
+
+%==============================================================================
+\Subsection{Declaring Exceptions}
+The routines in this section are for declaring exceptions.  Modula-3
+has entities of Exception type; C++ never actually creates an
+exception entity.  Rather than pass an entity of type Exception, when a
+C++ program throws an exception, it passes the arguments to an
+exception handler.
+
+%--
+\interface{NameID}{DeclException}{Identifier name, TypeID type}
+	{}{ExceptionDecl}
+\begin{functionality}
+For exceptions without an argument, use \node{NoType} as the
+\args{type} argument.
+\end{functionality}
+
+	%declare_exception (n: Name;  arg_type: TypeUID;  raise_proc: BOOLEAN;
+	%                     base: Var;  offset: INTEGER);
+
+	%(* declares exception 'n' identified with the address 'base+offset'
+	% that carries an argument of type 'arg_type'.  If 'raise_proc', then
+	% 'base+offset+BYTESIZE(ADDRESS)' is a pointer to the procedure that
+	% packages the argument and calls the runtime to raise the exception.*)
+   
+%==============================================================================
+\Subsection{Declaring Labels}
+
+C and C++ treat case alternatives as labels.  This bizarre notion
+stems from their excessively low-level view of the switch statement.  
+The generation interface handles case alternatives differently from
+general labels.  
+
+%--
+\interface{NameID}{DeclLabel}{Identifier i}{}{LabelDecl}
+	%(*------------------------------------------------- ID counters ---*)
+	%next_label (n: INTEGER := 1): Label;
+	%(* reserve 'n' consecutive labels and return the first one *)
+
+%==============================================================================
+\Subsection{Code Units}\label{sec:unit}
+A code unit groups related code.  Code units include modules and
+namespaces.  
+
+% Module names are declared, whereas file names are not
+% visible to the program text.
+
+%------------------------------------------------------------------------------
+\subsubsection{Namespace}\label{sec:namespace}
+A C++ namespace can be thought of as a named scope.  
+
+%--
+\interface{void}{DeclNamespaceUnitBegin}{}{}{}
+%%--
+%\interface{NameID}{DeclAnonNamespaceBegin}{}{}{}
+%--
+\interface{NameID}{DeclNamespaceUnitEnd}{Identifier name}
+	{\manyPops}{NamespaceDecl nd}
+\begin{functionality}
+\befunc{DeclNamespaceUnit}{\node{Declaration}}
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{File}
+These routines are meant for demarcating a C/C++ file scope.  These
+routines are not meant for annotating a graph with which source file a
+particular piece of code originates from.  
+%--
+\interface{void}{FileUnitBegin}{}{}{}
+%--
+\interface{void}{FileUnitEnd}{String name}{\manyPops}{Unit}
+\begin{functionality}
+\befunc{FileUnit}{\node{Declaration}}
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Interface}
+%--
+\interface{void}{DeclInterfaceUnitBegin}{}{}{}
+%--
+\interface{NameID}{DeclInterfaceUnitEnd}{Identifier name}
+	{\manyPops}{InterfaceDecl}
+\begin{functionality}
+\befunc{DeclInterfaceUnit}{\node{Declaration}}
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Module}
+%--
+\interface{void}{ImportUnit}{NameID interface, Identifier name}{}{Import}
+\begin{functionality}
+This routine imports interface \code{i} as \code{name}.  If
+\code{name} is NoName, then the interface is not renamed.
+\end{functionality}
+%--
+\interface{void}{ImportMember}{NameID interface, NameID declaration}
+	{}{Import}
+\begin{functionality}
+This routine imports a single member (\code{declaration}) of
+\code{interface}.  Note that this routine accepts more information
+(\ie \code{interface}) than it strictly needs.
+\end{functionality}
+%--
+\interface{void}{ImportsBegin}{}{}{}
+%--
+\interface{void}{ImportsEnd}{}{\manyPops}{Imports}
+\begin{functionality}
+\befunc{Imports}{\node{Import}}
+\end{functionality}
+
+%--
+\interface{void}{ExportsBegin}{}{}{}
+%--
+\interface{void}{ExportsEnd}{}{\manyPops}{Exports}
+\begin{functionality}
+\befunc{Exports}{\node{Identifier}}
+\end{functionality}
+
+%--
+\interface{void}{DeclModuleUnitBegin}{}{}{}
+%--
+\interface{NameID}{DeclModuleUnitEnd}{Identifier name}{\manyPops}{Unit}
+\begin{functionality}
+\befunc{DeclModuleUnit}{\node{Declaration}}
+\end{functionality}
+
+%==============================================================================
+%\Subsection{Miscellaneous Declarations}
+%This section includes those declarations that do not warrant their own
+%individual sections.  Generally, these are constructs which are
+%limited to a single language.  
+
+%------------------------------------------------------------------------------
+%\subsubsection{Initializers}
+%%--
+%\interface{void}{DefaultValue}{}{Declaration d, Expression e}{Declaration}
+%\begin{functionality}
+%This routine specifies a default value for an entity.  A default value
+%is much like an initial value, except that a default value can be
+%overridden.  This routine will generally only be used with formal
+%parameters.
+%\end{functionality}
+
+%%--
+%\interface{void}{InitialValue}{}{Declaration d, Expression e}{Declaration}
+%\begin{functionality}
+%This routine specifies an initial value.  
+%\end{functionality}
+
+%==============================================================================
+\Subsection{Setting Declaration Attributes}
+
+Declarations may have attributes associated with them.  The
+current design specifies the attributes in an enumerated type.  
+
+An alternate design would use a separate routine for each attribute, so
+that a compiler/linker could catch non-compliance to the interface.
+However, it seems unnecessarily verbose when compared to a single
+function with an enumerated type
+
+The attributes break down into roughly five categories.  The first
+group of attributes define which entities have values that can change.
+The second group of attributes indicate in what part of memory an
+entity should be located.  The most important aspect of the location
+decision is whether or not the entity's value is saved across
+procedure calls.  The third group of attributes determine the
+visibility of the entity.  These attributes correspond to C/C++'s
+notion of linkage.  The remaining two groups of attributes control
+method visibility and overloading.
+
+The \code{DeclAttributes} enumerated type is defined as follows:
+
+\EnumOptions{DeclAttributes}{ cConstantDecl, cMutable, cLocationStack,
+    cLocationRegister, cLocationStatic, cLocationInline, cLinkageLocal,
+    cLinkageFile, cLinkageGlobal, cLinkageForeign, cPublic, cProtected,
+    cPrivate, cAbstract, cNonvirtual, cVirtual, cNoConstructorCalls,
+    cNoDestructorCalls, cDestructorCalls }
+
+where:
+\begin{Description}
+\item [] \partitle{Entity mutability}
+The mutability attributes only apply to variables, fields, and routines.
+\item [cConstantDecl] Indicates that an entity is a constant.  This
+attribute is equivalent to the type attribute of the same name, but
+this one is preferred.
+\item [cMutable] Indicates than an entity is \emph{not} a constant.
+This is the default value for mutability.  It only needs to be
+explicitly specified to indicate that a component of a constant
+aggregate entity is not constant (as in C++).
+
+\item [] \partitle{Entity location}
+The location attributes only apply to variables and fields.
+\item [cLocationStack] Marks a data value as being locally 
+allocated (\ie on the stack).  Local allocation is the default form of
+allocation and so seldom (if ever) needs to be explicitly specified.
+This attribute represents C/C++'s \key{auto} construct.
+\item [cLocationRegister] Recommends that a value be assigned to a register.
+If the value cannot be assigned to a register, it should be allocated
+on the stack.
+\item [cLocationStatic] Indicates that an entity is assigned to permanently
+allocated space.
+\item [cLocationInline] Recommends that a procedure be inlined.  This
+attribute applies only to procedures and methods.
+
+\item [] \partitle{Entity visibility}
+The entity visibility attributes apply to all declarations.  
+\item [cLinkageLocal] Indicates that an entity is visible only within
+its current scope.  This is the default linkage.
+\item [cLinkageFile] Indicates that the entity is visible only within
+its file scope.  This attribute is intended to represent one meaning
+of the C/C++ \key{static} construct.  Admittedly, this attribute
+should be redundant with \code{linkageLocal} when at the file scope
+level.  However, this captures the notion of C/C++'s \key{static}
+construct; whereas, \code{linkageLocal} should never be used.
+\item [cLinkageGlobal] Indicates that an entity has globally visible
+in the program.  This attribute implements the common case of C/C++'s
+\key{extern} construct.
+\item [cLinkageForeign] Indicates that an entity is visible to a
+different source language.  This attribute eliminates C++'s
+overloading of the \key{extern} keyword.
+
+\item [] \partitle{Method visibility}
+The method visibility attributes potentially apply to all
+declarations, but for currently support languages, the attributes only
+affect fields and methods.
+\item [cPublic] Specifies that an identifier is visible outside of its
+namespace.  This value is the default.
+\item [cProtected] Specifies than an identifier is visible only within
+its namespace.  This attribute may only be used for class members, in
+which case it denotes the semantics of C++'s \key{protected} construct.
+\item [cPrivate] Specifies that an identifier is visible only within
+its namespace.
+
+\item [] \partitle{Method overloading}
+The method overloading attributes apply only to methods.
+\item [cAbstract] Marks a method as undefined for the current class,
+and therefore requiring definition in derived classes.  By default,
+the generation interface assumes that all methods are fully defined.
+\item [cNonvirtual] Indicates that a method may not be overloaded.
+\item [cVirtual] Indicates that a method may be overloaded.  This value
+is the default.
+
+\item [] \partitle{Automatic methods}
+The automatic method attributes apply only to class declarations.
+\item [cNoConstructorCalls] Marks a class as not requiring automatic
+invocation of its constructor.  This is the default value.
+\item [cConstructorCalls] Marks a class as requiring automatic
+invocation of its constructor.
+\item [cNoDestructorCalls] Marks a class as requiring automatic
+invocation of its destructor.  This is the default value.
+\item [cDestructorCalls] Marks a class as requiring automatic
+invocation of its destructor.  Note that automatic constructor and destructor
+are indicated separately in order to support Java which does not
+have destructors.
+\item [cMainProcedure] Marks the procedure as the main procedure in
+the program.
+
+\end{Description}
+
+%--
+\interface{void}{SetDeclarationAttribute}{DeclAttributes da}
+	{Declaration d}{Declaration}
+\begin{functionality}
+This routine assigns attribute \code{da} to declaration \node{d}.
+For those attributes which do not require a value, use NoExpression.  
+\end{functionality}
+
+

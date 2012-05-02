@@ -1,0 +1,34 @@
+
+\chapter{Introduction}\label{chap:intro}
+\pagenumbering{arabic}
+
+We describe how to convert Clef to C.  Using Clef we can
+represent languages such as C++\cite{ellis:90}, Modula-3, and Fortran.
+
+We should also have an option to convert Clef to C++. An advantages of
+generating C++ is that we do not have to convert C++ classes to C.
+
+We have thought of a couple of different implementation strategies
+for converting Clef to C.
+\begin{enumerate}
+\item Create an implementation of the Generation Interface that
+generates C.
+\item Generate C as a separate pass over Clef.
+\end{enumerate}
+
+Creating an implementation of the Generation Interface that generates
+C appears promising but it has several problems.  First, we would need
+to create a program which calls each of the interface routines to
+actually generate the C code.  We could call the C generating routines
+when we call the Clef generating roitines, but this means that we only
+generate C code at the same times as generating Clef.  We would like
+to generate C code after Clef has already been generated.
+
+Instead we will generate C as a separate pass over Clef using the
+traversal mechanisms built into Clef.
+
+The C++ language generator, called {\tt Clef2Cxx}, is a subclass of
+the C language generator.  Since it is a subclass, we only need
+to redefine those methods which are specific to C++.
+
+

@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>Steensgaard Alias Analysis</title>
+</head>
+<body bgcolor="white">
+Provides alias analysis using {@link scale.alias.steensgaard.Steensgaard Steensgaard}'s algorithm.
+<p>
+Basically, Steensgaard's analysis context-insensitive (meaning it
+doesn't care about function call paths and scoping) and
+flow-insensitive (meaning it doesn't care about statement ordering).
+This means that the analysis produces a (sometimes very) conservative
+result.  The analysis doesn't operate on names - instead we assign
+<i>types</i> to names and operate on the types.  At the beginning of the
+analysis there is a one-to-one correspondence between names and types.
+The algorithm merges the types during the analysis and at the end, a
+single type may represent many names.  The type is a representation of
+the alias characteristics of the program. The use of types in the
+algorithm is a little confusing because they are not based upon real
+programming language types.  The reason is that the algorithm is based
+upon type inference algorithms.
+
+<p>
+
+For example, if we have the following program:
+<pre>
+int *g;
+void foo() {
+ int b;
+ g = &b;
+ ...
+}
+void bar() {
+ int a;
+ g = &a;
+ ...
+}
+</pre>
+
+Then, after the analysis, it appears that <code>g -&gt; {a,b}</code>
+(<code>g</code> points to <code>a</code> and <code>b</code>), meaning
+that <code>*g</code>, <code>a</code>, <code>b</code> are aliases of
+each other.  Of course, if we look at the program, <code>a</code> and
+<code>b</code> can never be alias because they appear in different
+scopes but Steensgaard's analysis does not recognize this.
+
+But, if say, <code>bar()</code> is defined as:
+<pre>
+void bar() {
+  int a,b;
+  g = &a;
+  ...
+}
+</pre>
+
+Then, the analysis would still have <code>g -&gt; {a,b}</code> BUT the
+<code>b</code> is the local variable from foo, not the local variable
+from <code>bar</code>. (It may be easier to see this if we prepend the
+names with the scopes.  Thus, <code>File_g -> {File_Bar_a,
+File_Foo_b}</code>).
+
+<p>
+
+Actually, Steensgaard's analysis doesn't care about names.  It assigns
+alias variables or types to each name and uses those during the
+analysis.  The alias variables represent the alias characteristics of
+the program.  Before analysis we assign the alias variables to all
+globals, function names, and local variable names.
+<pre>
+g (global) = AV1; (AV = alias variable)
+a (in bar) = AV2;
+b (in foo) = AV3;
+b (in bar) = AV4;
+</pre>
+After the analysis, we have:
+
+<code>AV1 -&gt; {AV2, AV3}</code> (this doesn't quite follow the implementation as we have
+left out some details).
+
+<p>
+
+Most of our optimizations don't care about names while performing
+transformations.  They follow the use-def links.  In fact, the only
+reason we added the name to an alias variable is for debugging.  But,
+if you need to determine if two variables are aliases, then you need
+to get the declaration for the variables and obtain the alias variable
+for the declarations.
+<hr>
+<a name="cite">Bjarne Steensgaard</a>, "Points-to Analysis in Almost Linear Time",
+Proceedings of the Twenty Third Annual ACM SIGPLAN-SIGACT Symposium on
+Principles of Programming Languages, St. Petersburg, FL, Jan 1996.
+
+</body>
+</html>

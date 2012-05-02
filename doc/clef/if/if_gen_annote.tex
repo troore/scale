@@ -1,0 +1,31 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+\Section{Annotations}\label{sec:annote}
+
+The generation interface allows user code to pass information that
+does not directly correspond to the structure of the program.  We
+refer to this information as annotations.  The interface currently
+provides two kinds of annotations: point annotations and range
+annotations.  A \emph{point annotation} applies to a specific piece of
+the program (\eg an expression or function).  A \emph{range
+annotation} may apply to several pieces of the program and is marked
+with a begin/end pair.  
+
+\Subsection{Point Annotations}
+A point annotation applies to the top element of the stack.  A point
+annotation may modify the top element of the stack but does not
+(permanently) remove it.
+
+\interface{void}{SetSourceLine}{int line}{}{Node}
+
+\Subsection{Range Annotations}
+A range annotation applies to all elements pushed onto the stack after
+the begin routine and before the corresponding end routine.
+
+\interface{void}{SourceFileBegin}{String filename}{}{}
+\interface{void}{SourceFileEnd}{String filename}{\manyPops}{}
+\begin{functionality}
+Strictly speaking, the file name would not have to be specified at
+both the beginning and end, but doing so may help in debugging.
+\end{functionality}
+
+

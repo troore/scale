@@ -1,0 +1,68 @@
+###############################################################################
+#
+# Copyright 2008 by the
+# <a href="http://ali-www.cs.umass.edu/">Scale Compiler Group</a>,<br>
+# <a href="http://www.cs.umass.edu/">Department of Computer Science</a><br>
+# <a href="http://www.umass.edu/">University of Massachusetts</a>,<br>
+# Amherst MA. 01003, USA<br>
+# All Rights Reserved.<br>
+# <p>
+# Compiles the java classes and recurses to sub-directories
+#
+# Makefiles that include this makefile should have rules called
+#   all    - make everything
+#   clean  - remove everything that is built
+# These rules should depend on java, javaall, and javaclean.
+# <p>
+# $Id: Makefile.defs,v 1.28 2002-08-21 17:58:53 burrill Exp $
+###############################################################################
+
+.SUFFIXES:
+.SUFFIXES: .java .class .C .h .c .o
+
+$(DEST)/%.class: %.java
+	@echo "Creating " $@
+	@$(JAVAC) $(JAVACFLAGS) $<
+
+java: $(CLASSFILES)
+	@for dir in $(MODULES) xxx; \
+	do \
+	  if \
+            test -d $$dir ; \
+	  then \
+		(cd $$dir; \
+		 $(MAKE); \
+		) ; \
+	  fi ; \
+	done
+
+javaall: 
+ifdef CLASSFILES
+	$(JAVAC) $(JAVACFLAGS) *.java
+endif
+	@for dir in $(MODULES) xxx; \
+	do \
+	  if \
+            test -d $$dir ; \
+	  then \
+		(cd $$dir; \
+		 $(MAKE) all; \
+		) ; \
+	  fi \
+	done
+
+javaclean:
+	-rm -rf $(DEST)/*.class
+	@for dir in $(MODULES) xxx; \
+	do \
+	  if \
+            test -d $$dir ; \
+	  then \
+		(cd $$dir; \
+		 $(MAKE) clean; \
+		) ; \
+	  fi \
+	done
+
+sclean:
+	-rm -rf $(DEST)/*.class

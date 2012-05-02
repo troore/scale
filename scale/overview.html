@@ -1,0 +1,89 @@
+<html>
+<head>
+<title>Scale</title>
+</head>
+<body bgcolor="white">
+
+Scale is an easily modified compiler written in Java.  A more complete
+description is available at the University of Massachusetts <a
+href="http://www-ali.cs.umass.edu/Scale" TARGET="TOP">Scale web
+site</a>.  The top-level class is the {@link scale.test.Scale Scale}
+class which provides the top-level control.
+
+<p>
+Scale is composed of several parts roughly corresponding to the following steps:
+<ol>
+<li><a href="#edg">Parsing</a>
+<li><a href="#cfg">Conversion to the Control Flow Graph</a>
+<li>{@link scale.alias Alias Analysis} Alias Analysis
+<li>{@link scale.score.SSA Conversion to Static Single Assignment Form}
+<li><a href="#optimizations">Optimizing the CFG</a>
+<li><a href="#backend">Code Generation</a>
+</ol>
+These steps are controlled by the {@link scale.test.Scale Scale} class.
+
+<h2><a name="edg">Parsing</a></h2>
+
+Scale uses parsers written in Java to parse C and Fortran programs.
+These parsers create an <i>abstract syntax tree</i> (AST)
+representation of the source module which we called Clef.  The AST is
+a high level representation with very little lowering of the original
+program structures.
+
+<p>
+
+<h3><a name="clef2c">Clef AST To C</a></h3>
+A Scale Clef AST may be converted into a C program using {@link scale.clef.Clef2C Clef2C}.
+This is used primarily for debugging the Scale compiler.
+<p>
+
+<h2><a name="cfg">Conversion to the Control Flow Graph</a></h2>
+After a Clef AST has been constructed and analysed, a {@link scale.score Scribble} CFG is constructed for each routine in the program.
+Part of this conversion includes:
+<ul>
+<li>dead code elimination
+<li>lowering of high level structures such as subscript expressions
+<li>converting implicit loops to explicit loops
+<li>converting irreducible graphs to reducible graphs
+</ul>
+<p>
+
+<h3><a name="scribble2c">Scribble CFG To C</a></h3>
+Scale can transform the Scribble CFG into a C program using {@link scale.score.Scribble2C Scribble2C}.
+This transformation is used for testing the compiler.
+It provides a way of validating the compiler and has been used to instrument programs.
+<p>
+
+<h2><a name="optimizations">Optimizing the CFG</a></h2>
+Scale performs the following {@link scale.score.trans optimizations} optimizations on the SSA form of the Scribble CFG:
+<ul>
+<li>Sparse Conditional Constant Propagation
+<li>Partial Redundancy Elimination
+<li>Copy Propagation
+<li>Value Numbering
+<li>Loop Invariant Code Motion
+<li>Inlining
+<li>Loop Un-rolling
+</ul>
+<p>
+
+<h2><a name="backend">Code Generation</a></h2>
+<p>
+Scale can transform the Scribble CFG into a machine instructions for the Alpha and Sparc&reg; V8 microprocessor chip.
+A {@link scale.backend backend} backend for Mips chips is being developed.  Backends for additional microprocessors can be added without modifying the Scale compiler.
+<p>
+The backend is composed of machine dependent and machine independent parts.
+It uses object-oriented concepts to separate the parts.
+For example, the register allocator is machine independent.  It can be easily replaced
+by a different register allocator and utilized by all the machine code generators.
+To do this, the concept of an instruction is machine independent and has a specified set of attributes.
+Machine specific instructions are then derived from this basic concept.
+
+<h2>Other Scale related documents</h2>
+<ul>
+<li><a href="code_style.html">Coding Style Used in Scale</a>
+<li><a href="environmental_vars.html">Environmental Variables Used in Scale</a>
+<li><a href="inlining.html">Inlining in Scale</a>
+</ul>
+</body>
+</html>

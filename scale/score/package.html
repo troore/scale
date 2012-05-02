@@ -1,0 +1,542 @@
+<html>
+<head>
+<title>Score</title>
+</head>
+<body bgcolor="white">
+
+This package implements an internal representation of source programs
+using a control flow graph (CFG) called {@link scale.score.Scribble
+Scribble}.  The CFG is implemented using {@link
+scale.score.chords.Chord Chord} instances as the nodes of the graph.
+{@link scale.score.expr.Expr Expressions} are attached to the CFG
+nodes.  Other representations are available but all optimizations are
+performed on the CFG while it is in {@link scale.score.SSA SSA} form.
+The {@link scale.score.Scribble Scribble} class is the container class
+for the CFG.
+
+<p>
+
+The {@link scale.score.chords scale.score.chords} package is used to
+represent nodes in the CFG.  The {@link scale.score.expr
+scale.score.expr} package is used to represent expression trees.  Each
+{@link scale.score.chords.ExprChord ExprChord} instance has a single
+expression tree attached.  The easiest way to understand this is to
+display the CFG for VERY simple programs using the -sga and -sgb
+switches on the command line.  For example,
+
+<pre>
+  java scale.test.Scale test.c -sga s -sgb s -O s
+</pre>
+will display the CFG for test.c both before and after entering SSA form.
+Make sure that the daVinci executable is accessible on your path.
+
+The documentation for the {@link scale.score.chords.LoopHeaderChord LoopHeaderChord}
+class illustrates a CFG.
+
+<h2>Control Flow Graph (CFG)</h2>
+
+Scale uses an internal control flow graph to represent programs.  All
+optimizations are performed on this representation.  The graph may be
+in <i>static single assignment</i> ({@link scale.score.SSA SSA}) form.
+Currently, all major optimizations in Scale are performed when the CFG
+is in SSA form.  While it is possible to go in and out of SSA form,
+our current optimizations leave the CFG in a valid SSA form making
+this un-necessary.
+
+<p>
+
+Nodes in the CFG are one of two flavors.  Executable statements are
+represent by an instance of the {@link scale.score.chords.Chord Chord}
+class.  Expressions are represented by an instance of the {@link
+scale.score.expr.Expr Expr} class.
+
+<p>
+
+<h3>{@link scale.score.chords Statements (Chords)}</h3>
+
+Instances of the {@link scale.score.chords.Chord Chord} class form the
+nodes of the CFG that are linked together to form the graph.  An
+instance of a {@link scale.score.chords.SequentialChord
+SequentialChord} has only one successor while a DecisionChord instance
+has two or more successors.  Any node may have one or more
+predecessors.  Classes derived from these two classes are used to
+represent various executable statements.  A simplified class hierarchy
+is:
+
+<pre>
+Chord <- SequentialChord <- ExprChord <- PhiExprNode
+                         <- LoopPreHeaderChord
+                         <- LoopHeaderChord <- BeginChord
+                         <- LoopExitChord
+                         <- LoopTailChord
+                         <- BranchChord <- GotoChord
+                         <- EndChord <- LeaveChord <- ReturnChord
+      <- DecisionChord <- IfThenEsleChord
+                       <- SwitchChord
+</pre>
+
+Irreducible graphs are converted to reducible graphs by
+node-splitting.  All implicit and explicit loops in the original
+program are converted to the same form.  For example, the C for
+statement
+<pre>
+  for (int i = 0; i < n; i++) body;
+</pre>
+the graph looks like:
+<pre>
+         ExprChord (i = 0)
+              |
+              v
+         LoopPreHeader
+              |
+              v
+    ---->LoopHeader
+    ^         |
+    |         v
+    |    IfThenElseChord (i < n) -> LoopExitChord ->
+    |         | T
+    |         v
+    |       body
+    |         |
+    |         v
+    |    ExprNode (i++)
+    |         |
+    |         v
+     <---LoopTailChord
+</pre>
+
+The regularity of this form makes analysis of the graph easier to
+accomplish; there are only two predecessors to the LoopHeader, all
+loop exits are marked, and the LoopPreHeader and LoopHeader provide
+markers for the places that the SSA required Phi nodes may be
+inserted.
+
+<p>
+
+If the loop is placed in the <i>loop test at end</i> form, the graph looks like:
+
+<pre>
+         ExprChord (i = 0)
+              |
+              v
+         IfThenElseChord (i >= n) ------------------>
+              |                                      |
+              v                                      |
+         LoopPreHeader                               |
+              |                                      |
+              v                                      |
+    ---->LoopHeader                                  |
+    ^         |                                      |
+    |         v                                      |
+    |       body                                     |
+    |         |                                      |
+    |         V                                      |
+    |    ExprNode (i++)                              |
+    |         |                                      |
+    |         v                                      v
+    |    IfThenElseChord (i < n) -> LoopExitChord ->
+    |         | T
+    |         v
+     <---LoopTailChord
+</pre>
+
+Basic blocks are not represented explicitly.  Rather, a simple
+detection scheme is used to detect the beginning and and of a basic
+block:
+<ul>
+<li>A basic block begins at the node with more than one predecessor or whose predecessor has more than one successor.
+<li>A basic block ends at the node with more than one successor or whose successor has more than one predecessor.
+</ul>
+
+The disadvantage to this scheme is that there are many more nodes in
+the CFG than would be the case if only explicit basic blocks were
+nodes.  As an example, when processing Phi nodes of a basic block, all
+CFG nodes in the basic block must be scanned.  That is why Scale uses
+an explicit class ({@link scale.score.chords.PhiExprChord
+PhiExprChord}) for these nodes even though they are identical to any
+other {@link scale.score.chords.ExprChord ExprChord}.  The advantage
+to this representation is that manipulations of the graph are straight
+forward.
+
+<p>
+
+It is possible to travel easily in any direction in the graph.
+However, most current processing in Scale spans the graph in the same
+way; the backward link is used primarily for inserting and deleting nodes.
+
+<p>
+
+Each node has an integer <i>color</i>.  To scan every node in the graph,
+first the base color is incremented by one.  Starting at the root node
+in the graph, all successors whose color is different from the base
+color are placed on a stack and their color is changed to the base
+color.  As each node is popped off of the stack, its successors are
+processed similarly.
+
+<h3>{@link scale.score.expr Expressions}</h3>
+<p>
+
+Expressions are represented as a tree.  Each node of the tree is
+unique -- it does not appear in any other tree.  Chords may be linked
+to none, one, or more expressions depending on the Chord class.  An
+{@link scale.score.chords.ExprChord ExprChord} instance has one or two
+expression trees while a {@link scale.score.chords.LoopHeaderChord
+LoopHeaderChord} instance has none.
+
+<p>
+
+The simplified expression class hierarchy is:
+<pre>
+  Expr <- UnaryExpr <- AbsoluteExpr
+                    <- BitComplementExpr
+                    <- ConversionExpr
+                    <- NotExpr
+                    <- NegativeExpr
+                    <- LoadValueIndirectExpr
+                    <- FieldExpr <- LoadFieldAddressExpr
+                                 <- LoadFieldValueExpr
+       <- BinaryExpr <- AdditionExpr
+                     <- SubstractionExpr
+                     <- MultiplicationExpr
+                     <- DivisionExpr
+                     <- EqualityExpr
+                     <- LessExpr
+                     <- LessEqualExpr
+                     <- MaxExpr
+                     <- AndExpr
+                     <- OrExpr
+                     <- BitAndExpr
+                     <- BitOrExpr
+       <- NaryExpr <- CallExpr
+                   <- VectorExpr <- PhiExpr
+       <- LoadExpr <- LoadDeclValueExpr
+                   <- LoadDeclAddressExpr
+       <- DualExpr
+       <- SubscriptExpr
+       <- ValueExpr <- LiteralExpr
+                    <- NilExpr
+</pre>
+
+Each expression has a type and none, one, or more successor expressions.
+Other information may be associated with each expression.
+
+<p>
+
+When in {@link scale.score.SSA SSA} form, each {@link
+scale.score.expr.LoadExpr LoadExpr} instance has a link to the {@link
+scale.score.chords.ExprChord ExprChord} instance that defines that
+version of the variable.  Likewise, the ExprChord instance has a list
+of the LoadExpr instances that use the value defined.  The SSA
+variables are actually different variables represented by a different
+instance of the {@link scale.clef.decl.VariableDecl VariableDecl}
+class.  Each such instance has a link to the original VariableDecl
+instance.
+
+<p>
+
+The {@link scale.score.expr.DualExpr DualExpr} class is used to represent expressions that have both a
+high-level form and a low-level form.  For example, subscript
+operations have a high-level form such as <code>a[i]</code> and a low-level
+form that uses address operations such as <code>address_of(a) + i *
+sizeof(int)</code>.  The high-level form is used in analysis such as
+dependence testing and the low level form is used for code generation.
+Each high-level expression provides a method that converts it to its
+low-level form.
+
+<p>
+
+The {@link scale.score.analyses.MayDef MayDef} and {@link
+scale.score.analyses.MayUse MayUse} are used to represent the
+information obtained from alias analysis.
+
+<p>
+
+The expression trees for <code>c = a++</code> look like:
+
+<pre>
+  ExprChord <- LoadDeclAddressExpr (temp)
+     |      <- LoadDeclValueExpr (a)
+     v
+  ExprChord <- LoadDeclAddressExpr (a)
+     |      <- AdditionExpr <- LoadDeclValueExpr (temp)
+     |                      <- LiteralExpr (1)
+     v
+  ExprChord <- LoadDeclAddressExpr (c)
+            <- LoadDeclValueExpr (temp)
+</pre>
+
+In {@link scale.score.SSA SSA} form there would be a link from the
+first {@link scale.score.chords.ExprChord ExprChord} instance to the two
+LoadDeclValue instances for \verb*temp*.
+
+<h3>{@link scale.score.trans Optimizations}</h3>
+
+The current version of Scale performs only one loop optimization (loop permutation).
+Several scalar optimizations are performed:
+
+<ul>
+<li>{@link scale.score.trans.SCC Sparse Conditional Constant Propagation}
+<li>{@link scale.score.trans.PRE Partial Redundancy Elimination}
+<li>{@link scale.score.trans.CP Copy Propagation}
+<li>{@link scale.score.trans.ValNum Value Numbering}
+<li>{@link scale.score.trans.LICM Loop Invariant Code Motion}
+<li>{@link scale.score.trans.UselessCopy Useless Copy Elimination}
+<li>{@link scale.score.trans.DeadVarElimination Dead Variable Elimination}
+</ul>
+
+All but the last two require the CFG to be in SSA form and alias
+analysis to have been performed.  
+
+<p>
+
+Several optimizations require {@link scale.score.Domination dominance information}.  Scale provides
+methods for computing both the pre- and post-dominance information,
+the {@link scale.score.DominanceFrontier dominance frontier}, and the iterated dominance frontier.  If the
+optimization adds or deletes CFG nodes, this information will be
+re-computed on demand for the next optimization.
+
+<p>
+
+Scale provides {@link scale.score.pred.References reference
+information} for variables that lists each CFG node and expression
+node that references a particular variable.  This information is
+updated as an optimization adds or deletes references.
+
+<p>
+
+While not currently used, Scale provides a method to obtain the {@link
+scale.score.CDG control dependence graph}.  This information was
+needed for research into branch prediction.
+
+<p>
+
+Each optimization can be selection by a command line switch.
+The order that the optimizations is not constrained.
+
+<p>
+
+The coalescing of SSA variable names when leaving {@link
+scale.score.SSA SSA} form is not strictly required.  It is also the
+most expensive process because it does a live analysis of each SSA
+variable.  We leave it in because it makes debugging the generated C
+or assembly code easier; the variable reference correspond more
+closely to the original program.
+
+<p>
+
+Our experiments have indicated that partial-redundancy elimination has
+very little effect on the 51 benchmarks in our regression tests.  And,
+copy propagation is not required unless partial-redundancy elimination
+is performed.
+
+<h3>{@link scale.score.analyses Alias Analyses}</h3>
+
+Scale provides seven ways of performing alias analysis:
+<ol>
+<li>None - no SSA-based optimizations can be performed.
+<li>Simple - All variables whose address is taken are placed in the same alias category.
+<li>Steensgaard based on [].
+<li>Shapiro-Horowitz based on []. 1, 2, 4, or 8 categories are allowed.
+<li>Inter-procedural Simple
+<li>Inter-procedural Steensgaard.
+<li>Inter-procedural Shapiro-Horowitz.
+</ol>
+
+For the inter-procedural analysis all modules of a program must be
+compiled together.  Every routine in the program is converted to its
+CFG form before analysis is performed.  This results in very large
+compile-time memory requirements.  Because of the memory requirements
+and because we currently have no optimizations that use the
+inter-procedural information, most compiles are performed using either
+method 1.  
+
+<p>
+
+Experiments we have run to-date do not show any significant
+improvement of Steensgaard or Shapiro-Horowitz over the simple
+analysis on our set of 51 benchmarks.
+
+<h2>Profiling</h2>
+<p>
+The user's program is first modified to produce the profiling
+information by inserting operations into the CFG.  This insertion
+occurs just prior to code generation.  The user requests this via
+a command line switch.
+<p>
+When the program is executed it produces a <code>.pft</code> file
+for every source module in the program.  This file contains the
+profile information on the number of times a block, edge, or path
+in the program was executed.
+<p>
+On a subsequent compilation an optimization can request that this
+profile information be read and the CFG annotated with it.  For
+edge profiling, the out-going CFG edges of a <code>
+scale.score.chords.DecisionChord</code> are given a
+probability of that edge being used.
+<p>
+<b>In order for this to work</b>, the CFG must be equivalent, in
+the structure of the graph edges when the profile information is
+read, to the CCFG when the profiling operations were inserted.
+<p>
+<h2>FAQ</h2>
+<p>
+<b>
+I am a bit lost in understanding the structure of the Scale CFG. So, I
+have a few questions. Instances of the Chord class appear to represent
+a number of things. Is this correct? Or, are all Chord instances basic
+blocks?
+</b>
+<blockquote>
+Chord instances are nodes in the CFG.  Scale does not explicitly
+represent basic blocks.  Most Chord instances represent simple
+imperative operations and are of the form
+<pre>
+   a <- b + c
+</pre>
+<p>
+There are methods that let you determine if a CFG node begins or ends
+a basic block.  The simple definition of a basic block in Scale is
+<ul>
+<li> a basic block begins with the node that has more than one in-coming
+  CFG edge or whose predecessor has more than one out-going CFG edge, and
+
+<li> a basic block ends with a CFG node that has more than one out-going 
+  CFG edge or whose successor has more than one in-coming CFG edge.
+</ul>
+</blockquote>
+<p>
+<b>
+Is there code in Scale that would help me detect basic blocks?
+</b>
+<blockquote>
+Yes - 
+<dl>
+<dt>{@link scale.score.chords#firstInBasicBlock firstInBasicBlock()}<dd> returns the first CFG node (Chord)
+   in the basic block containing chord
+
+<dt>{@link scale.score.chords#lastInBasicBlock lastInBasicBlock()}<dd> returns true if this CFG node is the last
+   node in a basic block.
+</dl>
+{@link scale.score.trans.SCC SCC} has examples of their use.
+</blockquote>
+<p>
+<b>
+What does a loop look like?
+</b>
+<blockquote>
+The Loop class represents information about a loop.  It is not the loop.
+The loop is in the CFG and has this basic form:
+<pre>
+             |
+             v
+           LoopPreHeaderChord
+             |
+             v
+   ------> LoopHeaderChord
+   |         |
+   |         v
+   |       IfThenElseChord -------> LoopExitChord
+   |         |
+   |         v
+   |        ....
+   |         |
+   |         v
+   |<----  LoopTailChord
+</pre>
+The loop exit test position may vary depending on whether it is in SSA
+form, what the source program form was, was <tt>l</tt> specified using the <tt>-O</tt> switch
+selected, etc.  And, there may be more than one
+{@link scale.score.chords.LoopExitChord LoopExitChord}.
+</blockquote>
+<p>
+<b>
+Is the loop test always done at the top of the loop?
+</b>
+<blockquote>
+No - using <tt>l</tt> with the <tt>-O</tt> switch causes the loop test to be placed at the
+end of a loop and do-while loops naturally have the test at the end.
+</blockquote>
+<p>
+<b>
+Is there a document with a graphical depiction of a CFG? I would like
+to be able to see what a loop looks like.
+</b>
+<blockquote>
+You can get a good idea by using DaVinci and the <tt>-sga</tt> or
+<tt>-sgb</tt> switches for the {@link scale.test.Scale Scale} class.
+Display only <em>very simple</em> programs or the display will be
+too complex.
+</blockquote>
+<p>
+<b>
+Is there any documentation or examples that I could look at showing
+how to insert new sections of code and maintain the integrity of
+the CFG?
+</b>
+<blockquote>
+Unfortunately there is no such document.  And, it is very important to
+keep the CFG information valid.  There are three things that must be
+kept correct:
+
+<ol>
+<li> The use-def links.  This is the hardest and most important.  PRE
+      and ScalarReplacement do not do this fully as they both may
+      generate multiple defs of the same variable.  The other opts
+      maintain the use-def links correctly.
+
+      At some future time, we plan to make it easy to redo SSA
+      for selected variables.  Now, you may have to exit SSA form and
+      re-enter it to make the use-def info correct.
+
+<li> The variable reference information.  One can simply call
+         {@link scale.score.Scribble#recomputeRefs recomputeRefs()} at the end of the
+         optimization or one can update the information on the fly
+         using
+<pre>
+         refs.removeRefs(Chord s);
+         s.recordRefs(References refs);
+</pre>
+
+<li>  The dominance information.  If an optimization adds or deletes a 
+      CFG node, it should call <tt>scribble.recomputeDominators()</tt>
+      before it terminates.
+</ol>
+
+All of the optimizations in scale.score.trans show examples of keeping
+the CFG up to date.  <tt>SCC</tt>, <tt>ValNum</tt>, <tt>PRE</tt>,
+<tt>LICM</tt> all insert new CFG nodes.  It is very important to
+insert a <tt>NullChord</tt> before a CFG node that is deleted if the
+deleted CFG node has multiple in-coming CFG edges.  This is due to a
+design flaw and is necessary to keep the Phi node information valid.
+The <tt>NullChord</tt>s are deleted later.  An example of this exists
+in <tt>SCC</tt>.
+</blockquote>
+<p>
+<b>
+Can I exit SSA form and re-enter as another way of keeping the CFG valid?
+</b>
+<blockquote>
+Yes, this is a valid approach.
+<p>
+One area where you will have a problem is in the alias analysis.
+Alias variables must exist for all variables before entering SSA form.
+</blockquote>
+<p>
+<b>
+Does the method <tt>ssa.removePhis()</tt> exit SSA? Would I then call
+<tt>ssa.buildSSA()</tt> again to recompute SSA form?
+</b>
+<blockquote>
+Yes.  You would also have to decide if you should do
+<tt>ssa.coalesceVariables()</tt> to eliminate most SSA renamed
+variables.  It would definitely be faster not to call this method and
+it is probably not necessary.  However, if you do not call it after
+<tt>ssa.removePhis()</tt>, the names can never be coalesced.  This may
+have an adverse effect on the backend generated code as there will be
+many more temporary variables.  This may increase the register
+pressure and will definitely cause the register allocation to be
+slower.
+</blockquote>
+
+</body>
+</html>

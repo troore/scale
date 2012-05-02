@@ -1,0 +1,8 @@
+digraph toplevel {
+#include "setup.h"
+
+"Node"->"Type"
+"Node"->"Declaration"
+"Node"->"Statement"
+"Node"->"Expression"
+}

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Alias Analysis</title>
+</head>
+<body bgcolor="white">
+Provides alias analysis.
+<p>
+The Scale compile may perform alias analysis either:
+<ul>
+<li>interprocedurally 
+<li>intraprocedurally
+<li>never
+</ul>
+This analysis may be performed by:
+<ul>
+<li><a href="#cite">Bjarne Steensgaard's Algorithm</a>
+<ul>
+<li>a rich points-to set describes the variables 
+<li>interprocedural flow-insensitive analysis
+<li>almost-linear time complexity
+<li>linear space complexity
+<li>based upon type-inference methods
+</ul>
+<li><a href="#cite">Shapiro-Horowitz's Extension to Steensgaard's Algorithm</a>
+<li>a Simple Algorithm which uses a single points-to set
+</ul>
+No alias analysis may also be selected in which case most Scale optimizations can not be performed.
+
+<h2>Relevant Statements in Alias Analysis</h2>
+<pre>
+   x = y
+   x = &y
+   x = *y
+   x = op(y1, ... yn)
+   x = allocate(y)
+   *x = y
+   x = ftn(f1, ..., fn) => (r1, ..., rm)
+   x1, ..., xm = p(y1, ..., pn)
+</pre>
+<h2>Storage Shape Graph</h2>
+<img src="../../storagegraph.jpg" alt="Storage Shape Graph">
+<hr>
+<a name="cite">Bjarne Steensgaard</a>, "Points-to Analysis in Almost Linear Time",
+Proceedings of the Twenty Third Annual ACM SIGPLAN-SIGACT Symposium on
+Principles of Programming Languages, St. Petersburg, FL, Jan 1996.
+</body>
+</html>

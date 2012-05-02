@@ -1,0 +1,422 @@
+;# Target architecture: trips.
+;# Host architecture: i386.
+;# Steensgard intra-procedural alias analyses.
+;# Separate compilation.
+;# Scale Compiler Version:  Mon Feb 7 00:45:42 CST 2005 
+;# Data dependence testing: tibBO.
+;# Optimizations: a2c0tfgjcamnpxmnpibudl.
+;# Performing: Loop Permutation
+;# Performing: Structure Fields in Registers
+;# Performing: Global Variable Replacement
+;# Performing: Flatten, Unroll & Jam
+;# Performing: Sparse Conditional Constant Propagation
+;# Performing: Array Access Strength Reduction
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Scalar Replacement
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Expression Tree Height Reduction
+;# Performing: Basic Block Optimizations
+;# Performing: Useless Copy Removal
+;# Performing: Dead Variable Elimination
+;# Performing: Loop Test at End
+;# Scale -oa -quiet -arch trips2 reduce.c -dir ..
+.app-file "reduce.c"
+; BSS 
+	.global B
+	.comm	B, 160, 4
+	.global C
+	.comm	C, 160, 4
+
+	.data	
+	.align	4
+	.global	thread_num
+thread_num:
+	.int	0x4
+	.align	8
+_V0$$0:
+	.ascii	"Sum of two arrays B and C is: %d\n\000"
+
+	.text	
+	.global	init_arrays
+;VARIABLE "_ar0" size:8 $g71
+;VARIABLE "_ar1" size:8 $g72
+;VARIABLE "i#s_7_t_0" size:4 $g75
+;VARIABLE "i_ssa_0" size:4 $g73
+;VARIABLE "i_ssa_1" size:4 $g77
+.bbegin init_arrays
+	read	$t0, $g1
+	mov	$t1, $t0
+	addi	$t2, $t0, -32
+	sd	($t2), $t1 S[0]
+	entera	$t3, B
+	mov	$t4, $t3
+	entera	$t5, C
+	mov	$t6, $t5
+	movi	$t7, 0
+	bro	init_arrays$1	B[0]	; prob 1.0		; loop 3
+	write	$g1, $t2
+	write	$g71, $t4
+	write	$g72, $t6
+	write	$g73, $t7
+.bend
+.bbegin init_arrays$1
+	read	$t0, $g71
+	read	$t1, $g72
+	movi	$t2, 1
+	sw	($t0), $t2 S[0]		; loop 3
+	sw	($t1), $t2 S[1]		; loop 3
+	sw	4($t0), $t2 S[2]		; loop 3
+	sw	4($t1), $t2 S[3]		; loop 3
+	sw	8($t0), $t2 S[4]		; loop 3
+	sw	8($t1), $t2 S[5]		; loop 3
+	sw	12($t0), $t2 S[6]		; loop 3
+	sw	12($t1), $t2 S[7]		; loop 3
+	sw	16($t0), $t2 S[8]		; loop 3
+	sw	16($t1), $t2 S[9]		; loop 3
+	sw	20($t0), $t2 S[10]		; loop 3
+	sw	20($t1), $t2 S[11]		; loop 3
+	sw	24($t0), $t2 S[12]		; loop 3
+	sw	24($t1), $t2 S[13]		; loop 3
+	sw	28($t0), $t2 S[14]		; loop 3
+	sw	28($t1), $t2 S[15]		; loop 3
+	sw	32($t0), $t2 S[16]		; loop 3
+	sw	32($t1), $t2 S[17]		; loop 3
+	sw	36($t0), $t2 S[18]		; loop 3
+	sw	36($t1), $t2 S[19]		; loop 3
+	movi	$t3, 1
+	bro	init_arrays$2	B[0]	; prob 1.0
+	write	$g70, $t3
+.bend
+.bbegin init_arrays$2
+	read	$t0, $g70
+	read	$t1, $g71
+	read	$t2, $g72
+	read	$t3, $g73
+	sw	40($t1), $t0 S[0]		; loop 3
+	movi	$t4, 1
+	sw	40($t2), $t4 S[1]		; loop 3
+	sw	44($t1), $t4 S[2]		; loop 3
+	sw	44($t2), $t4 S[3]		; loop 3
+	sw	48($t1), $t4 S[4]		; loop 3
+	sw	48($t2), $t4 S[5]		; loop 3
+	sw	52($t1), $t4 S[6]		; loop 3
+	sw	52($t2), $t4 S[7]		; loop 3
+	sw	56($t1), $t4 S[8]		; loop 3
+	sw	56($t2), $t4 S[9]		; loop 3
+	sw	60($t1), $t4 S[10]		; loop 3
+	sw	60($t2), $t4 S[11]		; loop 3
+	sw	64($t1), $t4 S[12]		; loop 3
+	sw	64($t2), $t4 S[13]		; loop 3
+	sw	68($t1), $t4 S[14]		; loop 3
+	sw	68($t2), $t4 S[15]		; loop 3
+	sw	72($t1), $t4 S[16]		; loop 3
+	sw	72($t2), $t4 S[17]		; loop 3
+	sw	76($t1), $t4 S[18]		; loop 3
+	sw	76($t2), $t4 S[19]		; loop 3
+	addi	$t5, $t3, 20		; loop 3
+	extsw	$t6, $t5		; loop 3
+	addi	$t7, $t1, 80		; loop 3
+	addi	$t8, $t2, 80		; loop 3
+	mov	$t9, $t3		; loop 3
+	mov	$t10, $t6		; loop 3
+	tlti	$p11, $t9, 1		; loop 3
+	bro_t<$p11>	init_arrays$1	B[1]	; prob 0.5		; loop 3
+	bro_f<$p11>	init_arrays$3	B[0]	; prob 0.5		; loop 3
+	write	$g71, $t7
+	write	$g72, $t8
+	write	$g73, $t10
+.bend
+.bbegin init_arrays$3
+	read	$t0, $g1
+	read	$t1, $g2
+	addi	$t2, $t0, 32
+	ret	$t1	B[0]	; prob 1.0
+	write	$g1, $t2
+.bend
+
+	.global	reduce
+;VARIABLE "local_len" size:4 $g79
+;VARIABLE "i" size:4 $g78
+;VARIABLE "j" size:4 $g75
+;VARIABLE "sum" size:4 $g80
+;VARIABLE "local_sum" size:4 $g77
+;VARIABLE "_gr0" size:4 $g81
+;VARIABLE "_ar0" size:8 $g70
+;VARIABLE "_ar1" size:8 $g71
+;VARIABLE "_ar2" size:8 $g73
+;VARIABLE "_ar3" size:8 $g72
+;VARIABLE "_li0" size:4 $g74
+;VARIABLE "_li1" size:4 $g72
+;VARIABLE "j#s_121_t_0" size:4 $g75
+;VARIABLE "j_ssa_2" size:4 $g70
+;VARIABLE "local_sum_ssa_3" size:4 $g71
+;VARIABLE "j_ssa_5" size:4 $g76
+.bbegin reduce
+	read	$t0, $g1
+	mov	$t1, $t0
+	addi	$t2, $t0, -32
+	sd	($t2), $t1 S[0]
+	entera	$t3, thread_num
+	lws	$t4, ($t3) L[1]
+	movi	$t5, 40
+	divs	$t6, $t5, $t4
+	tgti	$p7, $t4, 0
+	bro_t<$p7>	reduce$1	B[1]	; prob 0.5
+	bro_f<$p7>	reduce$14	B[0]	; prob 0.5
+	write	$g1, $t2
+	write	$g79, $t6
+	write	$g81, $t4
+.bend
+.bbegin reduce$1
+	movi	$t0, 0
+	movi	$t1, 0
+	bro	reduce$2	B[0]	; prob 1.0		; loop 1
+	write	$g78, $t1
+	write	$g80, $t0
+.bend
+.bbegin reduce$2
+	read	$t0, $g78
+	read	$t1, $g79
+	mul	$t2, $t0, $t1		; loop 1
+	extsw	$t3, $t2		; loop 1
+	addi	$t4, $t0, 1		; loop 1
+	extsw	$t5, $t4		; loop 1
+	mul	$t6, $t5, $t1		; loop 1
+	extsw	$t7, $t6		; loop 1
+	tlt	$p8, $t3, $t7		; loop 1
+	bro_t<$p8>	reduce$6	B[1]	; prob 0.5		; loop 1
+	bro_f<$p8>	reduce$3	B[0]	; prob 0.5		; loop 1
+	write	$g75, $t3
+.bend
+.bbegin reduce$3
+	movi	$t0, 0
+	bro	reduce$4	B[0]	; prob 1.0		; loop 1
+	write	$g77, $t0
+.bend
+.bbegin reduce$4
+	read	$t0, $g77
+	read	$t1, $g78
+	read	$t2, $g80
+	read	$t3, $g81
+	add	$t4, $t2, $t0		; loop 1
+	extsw	$t5, $t4		; loop 1
+	addi	$t6, $t1, 1		; loop 1
+	extsw	$t7, $t6		; loop 1
+	tlt	$p8, $t7, $t3		; loop 1
+	bro_t<$p8>	reduce$2	B[1]	; prob 0.5		; loop 1
+	bro_f<$p8>	reduce$5	B[0]	; prob 0.5		; loop 1
+	write	$g78, $t7
+	write	$g80, $t5
+.bend
+.bbegin reduce$5
+	read	$t0, $g1
+	read	$t1, $g2
+	read	$t2, $g80
+	extsw	$t3, $t2
+	mov	$t4, $t3
+	addi	$t5, $t0, 32
+	ret	$t1	B[0]	; prob 1.0
+	write	$g1, $t5
+	write	$g3, $t4
+.bend
+.bbegin reduce$6
+	read	$t0, $g75
+	read	$t1, $g78
+	read	$t2, $g79
+	addi	$t3, $t1, 1		; loop 1
+	extsw	$t4, $t3		; loop 1
+	mul	$t5, $t4, $t2		; loop 1
+	extsw	$t6, $t5		; loop 1
+	subi	$t7, $t6, 2		; loop 1
+	extsw	$t8, $t7		; loop 1
+	tge	$p9, $t0, $t8		; loop 1
+	bro_t<$p9>	reduce$13	B[1]	; prob 0.5		; loop 1
+	bro_f<$p9>	reduce$7	B[0]	; prob 0.5		; loop 1
+.bend
+.bbegin reduce$7
+	read	$t0, $g75
+	read	$t1, $g78
+	read	$t2, $g79
+	slli	$t3, $t0, 2		; loop 1
+	entera	$t4, B		; loop 1
+	add	$t5, $t4, $t3		; loop 1
+	entera	$t6, C		; loop 1
+	add	$t7, $t6, $t3		; loop 1
+	addi	$t8, $t1, 1		; loop 1
+	extsw	$t9, $t8		; loop 1
+	mul	$t10, $t9, $t2		; loop 1
+	extsw	$t11, $t10		; loop 1
+	subi	$t12, $t11, 2		; loop 1
+	extsw	$t13, $t12		; loop 1
+	mov	$t14, $t0		; loop 1
+	movi	$t15, 0
+	bro	reduce$8	B[0]	; prob 1.0		; loop 4
+	write	$g70, $t14
+	write	$g71, $t15
+	write	$g72, $t7
+	write	$g73, $t5
+	write	$g74, $t13
+.bend
+.bbegin reduce$8
+	read	$t0, $g70
+	read	$t1, $g71
+	read	$t2, $g72
+	read	$t3, $g73
+	read	$t4, $g74
+	lws	$t5, ($t3) L[0]		; loop 4
+	lws	$t6, ($t2) L[1]		; loop 4
+	lws	$t7, 4($t3) L[2]		; loop 4
+	add	$t8, $t6, $t7		; loop 4
+	extsw	$t9, $t8		; loop 4
+	lws	$t10, 4($t2) L[3]		; loop 4
+	add	$t11, $t10, $t1		; loop 4
+	extsw	$t12, $t11		; loop 4
+	lws	$t13, 8($t2) L[4]		; loop 4
+	add	$t14, $t13, $t9		; loop 4
+	extsw	$t15, $t14		; loop 4
+	lws	$t16, 8($t3) L[5]		; loop 4
+	add	$t17, $t5, $t16		; loop 4
+	extsw	$t18, $t17		; loop 4
+	add	$t19, $t12, $t18		; loop 4
+	extsw	$t20, $t19		; loop 4
+	add	$t21, $t15, $t20		; loop 4
+	extsw	$t22, $t21		; loop 4
+	addi	$t23, $t0, 3		; loop 4
+	extsw	$t24, $t23		; loop 4
+	addi	$t25, $t3, 12		; loop 4
+	addi	$t26, $t2, 12		; loop 4
+	mov	$t27, $t0		; loop 4
+	mov	$t28, $t24		; loop 4
+	mov	$t29, $t22		; loop 4
+	addi	$t30, $t27, 3		; loop 4
+	extsw	$t31, $t30		; loop 4
+	tlt	$p32, $t31, $t4		; loop 4
+	bro_t<$p32>	reduce$8	B[1]	; prob 0.5		; loop 4
+	bro_f<$p32>	reduce$9	B[0]	; prob 0.5		; loop 4
+	write	$g70, $t28
+	write	$g71, $t29
+	write	$g72, $t26
+	write	$g73, $t25
+	write	$g75, $t27
+	write	$g76, $t24
+	write	$g77, $t22
+.bend
+.bbegin reduce$9
+	read	$t0, $g75
+	read	$t1, $g78
+	read	$t2, $g79
+	addi	$t3, $t0, 3		; loop 1
+	extsw	$t4, $t3		; loop 1
+	addi	$t5, $t1, 1		; loop 1
+	extsw	$t6, $t5		; loop 1
+	mul	$t7, $t6, $t2		; loop 1
+	extsw	$t8, $t7		; loop 1
+	tlt	$p9, $t4, $t8		; loop 1
+	bro_t<$p9>	reduce$10	B[1]	; prob 0.5		; loop 1
+	bro_f<$p9>	reduce$4	B[0]	; prob 0.5		; loop 1
+.bend
+.bbegin reduce$10
+	read	$t0, $g76
+	mov	$t1, $t0		; loop 1
+	bro	reduce$11	B[0]	; prob 1.0		; loop 1
+	write	$g75, $t1
+.bend
+.bbegin reduce$11
+	read	$t0, $g75
+	read	$t1, $g78
+	read	$t2, $g79
+	slli	$t3, $t0, 2		; loop 1
+	entera	$t4, B		; loop 1
+	add	$t5, $t4, $t3		; loop 1
+	entera	$t6, C		; loop 1
+	add	$t7, $t6, $t3		; loop 1
+	addi	$t8, $t1, 1		; loop 1
+	extsw	$t9, $t8		; loop 1
+	mul	$t10, $t9, $t2		; loop 1
+	extsw	$t11, $t10		; loop 1
+	bro	reduce$12	B[0]	; prob 1.0		; loop 2
+	write	$g70, $t5
+	write	$g71, $t7
+	write	$g72, $t11
+.bend
+.bbegin reduce$12
+	read	$t0, $g70
+	read	$t1, $g71
+	read	$t2, $g72
+	read	$t3, $g75
+	read	$t4, $g77
+	lws	$t5, ($t0) L[0]		; loop 2
+	lws	$t6, ($t1) L[1]		; loop 2
+	add	$t7, $t5, $t6		; loop 2
+	extsw	$t8, $t7		; loop 2
+	add	$t9, $t4, $t8		; loop 2
+	extsw	$t10, $t9		; loop 2
+	addi	$t11, $t3, 1		; loop 2
+	extsw	$t12, $t11		; loop 2
+	addi	$t13, $t0, 4		; loop 2
+	addi	$t14, $t1, 4		; loop 2
+	tlt	$p15, $t12, $t2		; loop 2
+	bro_t<$p15>	reduce$12	B[1]	; prob 0.5		; loop 2
+	bro_f<$p15>	reduce$4	B[0]	; prob 0.5		; loop 2
+	write	$g70, $t13
+	write	$g71, $t14
+	write	$g75, $t12
+	write	$g77, $t10
+.bend
+.bbegin reduce$13
+	movi	$t0, 0
+	bro	reduce$11	B[0]	; prob 1.0
+	write	$g77, $t0
+.bend
+.bbegin reduce$14
+	movi	$t0, 0
+	bro	reduce$5	B[0]	; prob 1.0
+	write	$g80, $t0
+.bend
+
+	.global	main
+.bbegin main
+	read	$t0, $g1
+	read	$t1, $g2
+	mov	$t2, $t0
+	addi	$t3, $t0, -96
+	sd	($t3), $t2 S[0]
+	sd	8($t3), $t1 S[1]
+	enterb	$t4, main$1
+	callo	init_arrays	B[0]	; prob 1.0
+	write	$g1, $t3
+	write	$g2, $t4
+.bend
+.bbegin main$1
+	enterb	$t0, main$2
+	callo	reduce	B[0]	; prob 1.0
+	write	$g2, $t0
+.bend
+.bbegin main$2
+	read	$t0, $g3
+	mov	$t1, $t0
+	entera	$t2, _V0$$0
+	mov	$t3, $t2
+	mov	$t4, $t1
+	enterb	$t5, main$3
+	callo	printf	B[0]	; prob 1.0
+	write	$g2, $t5
+	write	$g3, $t3
+	write	$g4, $t4
+.bend
+.bbegin main$3
+	read	$t0, $g1
+	ld	$t1, 8($t0) L[0]
+	addi	$t2, $t0, 96
+	ret	$t1	B[0]	; prob 1.0
+	write	$g1, $t2
+	write	$g2, $t1
+.bend
+
+
+
+

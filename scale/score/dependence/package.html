@@ -1,0 +1,236 @@
+<html>
+<head>
+<title>Dependence Anaylsis</title>
+</head>
+<body bgcolor="white">
+Provides dependence testing of array references in the CFG.
+
+<p>
+
+This is a description of how we include alias information into our
+{@link scale.score.SSA SSA} representation.  
+
+<p>
+
+Our baseline technique for including alias information in SSA form is
+described in the paper by Chow et. al.  It helps to understand this
+paper to understand our extensions.  First wesummarize Chow's solution
+to incorporating alias information in SSA form .  Then, we will
+discuss our extensions.
+
+<p>
+
+The main contribution by Chow et. al. is the use of virtual variables
+to represent indirect operations which unifies the treatment of
+indirect and scalar variables for SSA analyses and optimizations.  The
+treatment of aliases is based upon the work by Choi et. al. which
+distinguishes between {@link scale.score.analyses.MayDef MayDefs}
+(preserving definitions or weak updates) and {@link
+scale.score.analyses.MayUse MayUses}.  Chow et. al. add Chi and Mu
+operators to model MayDef and MayUse effects, respectively.  The Chi
+and Mu operators work on virtual variables rather than scalar
+variables.  Thus, a definition (Chi) of a virtual variable is a
+definition of a group of actual variables that share similar alias
+characteristics.  Correspondingly, a Mu operator represents a use.
+
+<p>
+
+A {@link scale.score.analyses.VirtualVar virtual variable} represents
+a group of program, or user, variables that have similar alias
+characteristics.  We originally used {@link
+scale.alias.steensgaard.Steensgaard Steensgaard's} alias analysis
+algorithm to create these groups which we also call abstract locations
+(abstract location and virtual variable can be used interchangeably).
+For example, in the sequence, <code>p = &amp;a; p = &amp;b</code>, a
+virtual variable is created to represent <code>a</code>,
+<code>b</code>, and <code>*p</code>.  This means that, conservatively,
+any use of <code>*p</code> may use <code>a</code> or <code>b</code>.
+A very conservative approach may create one virtual variable for every
+user variable.
+
+<p>
+
+Our basic algorithm works as follows:
+<ol>
+<li>Perform alias analysis to identify the virtual variables
+<li>Perform a pass over the program and insert Chi and Mu nodes for
+the virtual variables.
+<li>Convert to SSA with the virtual variables
+</ol>
+
+In step 2, we insert a Mu node for each use of an aliased user
+variable.  We insert a Chi node for each definition of an aliased user
+variable.  We also insert a Chi at function calls for each actual
+aliased actual parameter.  Using our small example from above, if we
+create a virtual variable, <code>_v</code>, to represent
+<code>a</code>, <code>b</code>, and <code>*p</code> then we add a
+<code>Mu(_v)/Chi(_v)</code> to each use/definition of <code>a</code>,
+<code>b</code>, or <code>*p</code>.  Note - the <code>Chi(_v)</code>
+is actually an assignment of the form <code>_v = Chi(_v)</code>.
+
+<p>
+
+When the CFG is converted into SSA form, the virtual variables as as
+well as the user variables are renamed.  This means that {@link
+scale.score.expr.PhiExpr Phi nodes} are created for the virtual
+variables and the virtual variables obey the single assignment rule of
+SSA form.
+
+<p>
+
+The scheme as described above works because each indirect variable
+(e.g., <code>*p</code>) represents at most one virtual variable (i.e.,
+<code>p</code> points to at most one abstract location).
+Unfortunately, the scheme does not work when <code>p</code> may point
+to multiple locations.  In the Shapiro/Horwitz algorithm,
+<code>p</code> may point to multiple locations.  We need to extend our
+alias SSA representation to handle the Shapiro analysis.
+
+<p>
+
+Again, using the example from above, let's say the Shapiro algorithm
+partitions the user variables such that <code>p-&gt;{a}</code> or
+<code>p-&gt;{b}</code> (i.e., <code>p</code> points to <code>a</code> or
+to <code>b</code>, but <code>a</code> and <code>b</code> are not
+aliases).  This is different from the Steensgaard algorithm in which
+<code>p-&gt;{a, b}</code> (i.e., <code>a</code> and <code>b</code> are
+aliases).  To incorporate the Shapiro results into SSA form, we need a
+different scheme to represent the MayUse and MayDefs.  For example, a
+use/def of <code>a</code> is not a use/def of <code>b</code>, but a
+use/def of <code>*p</code> may be a use/def of <code>a</code> or
+<code>b</code>.
+
+<p>
+
+We extend the basic scheme for including alias information by changing
+the meaning of a virtual variable.  In our new scheme, a virtual
+variable represents multiple locations and we attach information to
+the variable to distinguish between the locations.  We assign a
+superset and subset name to the virtual variable.  Essentially, the
+superset name represents indirect variables (e.g., <code>*p</code>), and the subset
+name represents user variables.  In our example, we can represent the
+relations among the variables using set notation, where a virtual
+variable represents the set <code>{*p, {a}, {b}}</code>.
+This means, <code>a</code> and <code>b</code> belong to distinct
+subsets but they are members of the same enclosing set which includes
+<code>*p</code>.
+
+<p>
+
+In theory, our extended algorithm for adding alias information to SSA
+isn't much different that the original.
+<ol>
+<li>Perform alias analysis to identify the virtual variables
+<li>Perform a pass over the program and insert Chi and Mu nodes for
+the virtual variables.
+<li>Convert to SSA with the virtual variables
+</ol>
+
+In Step 1, we create virtual variables using the new name scheme.  The
+number of subset names depends upon the number of categories used in
+the Shapiro pointer analysis.  In Step 2, inserting the Chi and Mu
+nodes is slightly different.  We insert a Chi/Mu for a superset
+virtual variable for a definition/use of an indirect variable.  We
+insert a Chi/Mu for a subset virtual variable for a definition/use of
+a user variable.  In Step 3, we also convert a CFG to SSA, but we
+ignore the subset names for the purposes of creating the the
+MayDef/Use links.  The subset names must be preserved for the
+optimizations to make use of the more precise alias information.
+
+<p>
+
+Note that the MayDef/Use links (and SSA numbers) ignore the subset
+name.  But, the optimizations must check for the subset names when
+propagating information.  Analysis information should only be
+propagated when the virtual variables are equivalent.  Two virtual
+variables are equivalent under the following conditions: 1) The subset
+and superset names are the same, 2) One virtual variable only contains
+a superset name and both the superset names are the same.
+
+<p>
+
+The superset and subset distinctions are intended to help the
+optimization phases.  We only want to propagate information for
+equivalent virtual variables.  That is, when propagation information
+associated with subset name, we ignore different subset names but we
+must perform an appropriate action for a virtual variable with the
+same subset name or superset name.  This is the main difference
+between the old scheme and the new scheme. In the old scheme, analysis
+information is always propagated down may def/use links.  But, in the
+new scheme, we selectively propagate analysis information down the may
+def/use links.
+
+<p>
+
+Using our example, we create 3 virtual variables, <code>_v#p</code>,
+<code>_v#p.a</code>, and <code>_v#p.b</code> (our implementation
+actually uses numbers, so it's _v#0.0, <code>_v#0.1</code> and
+<code>_v#0.2</code>, but we use the letters to hopefully make things
+clearer.  The description of {@link scale.score.trans.CP constant
+propagation (CP)} below is not meant to match the algorithm in Scale.
+Instead, we just attempt to illustrate how an optimization phase
+should use our SSA extensions.
+
+<p>
+
+We use the following program to illustrate the extensions (given that
+<code>p-&gt;{a}</code>, or <code>p-&gt;{b}</code>.
+<pre>
+  a = 1;
+  b = 2;
+    = *p;
+    = b;
+    = a;
+</pre>
+Using Steensgaard analysis (or Shapiro's analysis with 1 category), we
+cannot propagate 1 to the use of <code>a</code> or 2 to the use of <code>b</code>.  But,
+with Shapiro's analysis with multiple categories we can.  We
+annotate the program with the Chi and Mu information after converting
+to SSA form
+<pre>
+  a = 1;  _v#p.a_1 = Chi(_v#p.a)
+  b = 2;  _v#p.b_2 = Chi(_v#p.b_1)
+    = *p; Mu(_v#p_2)
+    = b;  Mu(_v#p.b_2)
+    = a;  Mu(_v#p.a_2)
+</pre>
+
+In the example, CP associates 1 with <code>_v#p.a_1</code> and
+<code>_v#p.b_1</code> after statement 1. The may def-use link for
+<code>_v#p.a_1</code> points to the use of <code>_v#p.b_1</code> at
+statement 2.  Since the virtual variable at statement 2 is not
+equivalent to the virtual variable at statement 1, CP does not
+propagate the value 1 to <code>_v#p.b_1</code>.  Instead, CP
+associates 2 with <code>_v#p.b_2</code> and <code>_v#p_2</code>.
+Then, CP follows the may def-use links to the Mu nodes at statements
+3, 4, 5.  At statement 3, <code>_v#p_2</code> is 2 so the use of
+<code>*p</code> can be replaced by 2.  The same action occurs at
+statement 4 for <code>b</code>. At statement 4, <code>a</code> can be
+replaced by 1.
+
+<p>
+
+If there is control flow in the program:
+<pre>
+  if ()
+    a = 1; _v#p.a_1 = Chi(_v#p.a)
+  else
+    b = 2; _v#p.b_2 = Chi(_v#p.b_1)
+	 _v#p_3 = Phi(_v#p_1,_v#p_2)
+   = *p;   Mu(_v#p_3)
+   = b;    Mu(_v#p.b_3)
+   = a;    Mu(_v#p.a_3)
+</pre>
+
+In this case, CP associates <i>not a constant</i> with
+<code>_v#p_3</code>, <code>_v#p.a_3</code>, and <code>_v#p.b_3</code>
+at the Phi node.  Then, none of the uses can be replaced by a
+constant.
+
+<p>
+
+Note - in the presence of control flow, we only need to add Phi
+functions for superset names because the definition of a superset is
+equivalent to definitions for each of the subsets.
+</body>
+</html>

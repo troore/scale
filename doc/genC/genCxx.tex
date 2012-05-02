@@ -1,0 +1,16 @@
+
+\chapter{Generating C++}\label{chap:genCxx}
+
+We also have the option of generating C++ code.  The user specifies
+C++ by creating a \code{Clef2Cxx} class rather than a \code{Clef2C}
+class.  
+
+Generating C++ is much easier than generating C for object oriented
+source languages.  C++ has built-in constructs such as objects,
+classes, and features such as exception handling.
+
+We implement the C++ generator by creating \code{Clef2Cxx} as a
+subclass of \code{Clef2C}.  We are able to use the existing code for
+generating C and we only need to redefine methods which generate code
+specific to C++.
+

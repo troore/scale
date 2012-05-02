@@ -1,0 +1,47 @@
+
+**** Notes on generating C from Clef - Clefgen or Clef2C or some music
+term.
+
+
+1. Generate C as an implementation of Generation Interface
+
+The problem with this approach is that we would be unable to generate
+C from Clef.  We would only be able to generate C and Clef at the same
+time.  I don't think that this is acceptable.
+
+2. Generate C as a separate pass over Clef.
+
+This is why we created the Visit routines??
+
+I think that we can extend the Clef classes to generate C.  i.e.,
+we create a subclass for each Clef class.
+
+I would like this to work regardless of the tree. For example,
+Clef to C and Score to C.
+
+
+Implementing Classes in C
+
+A Class is just record type.  If the class has virtual functions, then
+a virtual function table must be added to the class.
+
+Implementing constructors and destructors:
+
+Does a constructor have to take a NULL "this" as the first parameter??
+
+Implementing methods:
+
+e.g., If I have 
+
+int
+A::GetA()
+{
+  return a;  // a is a variable in class A
+}
+
+The C code is:
+
+int GetA_(struct A *const this)
+{
+  return this->a;
+}

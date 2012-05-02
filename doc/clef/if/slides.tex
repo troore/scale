@@ -1,0 +1,189 @@
+\documentclass[slidesonly]{seminar}
+%\documentclass[notes]{seminar}
+\usepackage[dvips,usenames]{color}  % To get extra color names!
+\usepackage{fancybox}
+\usepackage{epsf}
+\usepackage{semcolor}
+\usepackage{semlayer}
+%\documentstyle[slidesonly,slidesec,fancybox,epsf]{seminar}
+
+\overlaysfalse
+
+\def\printlandscape{\special{landscape}}    % Works with dvips.
+\epsfslidesize
+
+\articlemag{1}
+
+%\twoup   % Try me.
+
+\slideframe{none}
+
+\newcommand{\heading}[1]{%
+  \begin{center}
+    \large\bfseries
+    \shadowbox{#1}%
+  \end{center}
+  \vspace{1ex minus 1ex}}
+
+\newcommand{\icolor}{Mulberry}
+\newcommand{\jcolor}{Mahogany}
+\newcommand{\jprimecolor}{Mahogany}
+\newcommand{\loopcolor}{Blue}
+\newcommand{\emcolor}{RoyalPurple}
+
+\begin{document}
+
+%------------------------------------------------------------------------------
+\begin{slide}
+\begin{center}
+
+{\large\bfseries Interfaces and the Generation Interface}
+\\
+\vspace{0.4in}
+Scale Compiler\\
+\vspace{0.4in}
+{\small 
+  Department of Computer Science\\
+  University of Massachusetts\\
+}
+
+\end{center}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Background}
+\begin{center}
+\setlength{\epsfxsize}{9in}
+\epsfbox{scale_hld.eps} \\
+\end{center}
+
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+\begin{slide}\heading{Generation Interface}
+\begin{itemize}
+\item Souce language independent
+\item Target architecture independent
+\item Extensible
+\item Support generation of high-level representations 
+\item Prevent user errors where possible
+\item Support C, C++, Modula-3, and Fortran~77, and consider
+Java, Ada, and parallel Fortran variants
+\end{itemize}
+\end{slide}
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Division of labor}
+\begin{minipage}[t]{3.5in}
+Front End performs:
+\begin{itemize}
+\item Syntactic and semantic error checking
+\item Semantic resolution
+\item Enumeration constant assignment
+\end{itemize}
+\end{minipage}
+
+\begin{minipage}[t]{3.5in}
+Back End performs:
+\begin{itemize}
+\item Memory layout
+\item Initialization code generation
+\end{itemize}
+\end{minipage}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+\begin{slide}\heading{Breakdown}
+\begin{itemize}
+\item Operations
+\item Statments
+\item Declarations
+\textcolor{Gray}{\item Compilation Unit}
+\item Interface Options
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Operators}
+As you would expect:
+\begin{itemize}
+\item Expression negative(Expression e)
+\item Expression addition(Expression e1, Expression e2)
+\item Expression subtraction(Expression e1, Expression e2)
+\item Expression multiplication(Expression e1, Expression e2)
+\item Expression division(Expression e1, Expression e2)
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Statements}
+High-level and basically what you would expect:
+\begin{itemize}
+\item Statement for\_loop(Expression e, Expression e, Expression e, Statement s)
+\item Statement for\_loop(Identifier id, Expression e, Expression e, Expression e, Statement s)
+\item Statement for\_loop(Declaration d, Expression e, Expression e, Statement s)
+\item void block\_begin()
+\item Statement block\_end()
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Declarations}
+\begin{itemize}
+\item Declarations: Types, Values, Labels, Functions, Exceptions
+\item Types: separation of constructors from other attributes
+\item Obsessive distinction between description and declaration
+\item Values: variables, constants, fields, enumeration elements
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{}
+
+\small{
+\begin{verbatim}
+formals_begin()
+decl_formal(``x'', lookupType(``int''))
+decl_formal(``y'', lookupType(``int''))
+sig = spcfy_signature(formals_end())
+block_begin()
+scope_begin()
+st = decl_variable(``sum'', lookupType(``int''));
+return(assignment(st, addition(lookupVariable(``x''), lookupVariable(``y''))))
+scope_end()
+body = block_end()
+decl_function(``sum'',sig, lookupType(``int''), body);
+\end{verbatim}
+}
+
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Design Points}
+\begin{itemize}
+\item Symbol Table
+\item Scopes
+\item Base Types
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+%------------------------------------------------------------------------------
+\begin{slide}\heading{Open Issues}
+\begin{itemize}
+\item Does the backend need to know about scopes in data structures
+	(\textit{i.e.}, objects)?
+\item Inconsistent semantics for begin/end.
+\end{itemize}
+\end{slide}
+%-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
+
+\end{document}
+
+

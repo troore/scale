@@ -1,0 +1,274 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\documentclass[11pt]{article}
+
+\usepackage[]{doublespace}
+\setstretch{1.1}
+
+%\usepackage{epsf}
+\usepackage[dvips]{epsfig}
+
+\usepackage{pstricks}
+\usepackage{fancybox}
+
+%\usepackage{draftstamp}
+
+\oddsidemargin=0in
+\evensidemargin=0in
+\textwidth=6.5in
+\textheight=8.0in
+%\columnsep=0.25in
+\footskip 0.2truein
+%\footheight 0.5truein  TeTeX doesn't recognize it!
+\marginparwidth=.75in
+\marginparsep=.1in
+\marginparpush=5pt
+\renewcommand{\textfraction}{0.25}
+\renewcommand{\topfraction}{0.75}
+\renewcommand{\bottomfraction}{.85}
+\renewcommand{\floatpagefraction}{.85}
+\renewcommand{\dbltopfraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{.85}
+\raggedbottom
+
+\newcommand{\PARTITLE}[1]{\par\vspace{1ex}\noindent{\textit{ #1}}\\*\noindent}
+\newcommand{\partitle}[1]{\PARTITLE{#1}} % Same as capitalized version
+\newcommand{\eg}{{\itshape e.g.},\ }
+\newcommand{\ie}{{\itshape i.e.},\ }
+\newcommand{\etal}{{\itshape et al.}}
+\newcommand{\clef}{Clef}
+\newcommand{\tbs}{{\bfseries\itshape T.B.S}}
+
+\newcommand{\key }[1]{\textsf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\node}[1]{\textmd{#1}}
+\newcommand{\method}[1]{\textsl{#1}}
+
+% For operator table:
+\newcommand{\tabhead}[1]{\textit{#1}}
+\newcommand{\na}{\textsl{N/A}}
+
+\newcommand{\interface}[4]{
+\par\vspace{1ex}\noindent
+  \begin{samepage}
+  %\hspace{-1ex}Interface Method:
+  \textsl{#1} \textbf{#2}\index{#2} \textsl{(#3)} $\Rightarrow$ 
+	\textmd{#4\index{#4}}\par
+  \end{samepage}
+}
+
+\newcommand{\question}[1]{
+\begin{center}
+  \boxput*(-0.75,1)
+    {\psframebox*{Question!}}
+    {\psshadowbox[framesep=12pt]{\parbox{6.0in}{#1}}}
+\end{center}
+}
+
+\newcommand{\befunc}[2]{
+  At the point that the \method{#1\_end} routine is called, the top of
+  the stack (\ie the portion added since the \method{#1\_begin} call)
+  should contain only #2 nodes.  
+}
+\newcommand{\oparg}[2]{
+  Operands for #1 operators must be of type #2.  
+}
+\newcommand{\modulaOp}{
+  This routine implements the corresponding Modula3 operator.
+}
+
+\newcommand{\todo}[1]{
+\par\noindent
+%\begin{verbatim}
+%#1
+%\end{verbatim}
+}
+
+\newcommand{\EnumOptions}[2]{
+  \begin{center}
+  \code{enum #1 \{#2\};}
+  \end{center}
+}
+
+\newcommand{\Section}[1]{\newpage\section{#1}}
+\newcommand{\Subsection}[1]{
+  \begin{samepage}
+    \setlength{\epsfxsize}{\textwidth}
+    \vspace{3.0ex}\noindent
+    \epsfbox{clefbar.eps}
+    \nopagebreak\vspace{-5.0ex}\nopagebreak
+    \subsection{#1}
+  \end{samepage}}
+\setcounter{secnumdepth}{5}  % Number subsections.
+\setcounter{tocdepth}{3}     % Include subsubsections in TOC.
+
+\newcommand{\Paragraph}[1]{\noindent\paragraph{#1}\par}
+
+\newenvironment{functionality}
+               {\list{}{\rightmargin 0em
+			\listparindent \parindent}%
+                \item[]\hspace{\parindent}}
+               {\endlist}
+
+\newlength{\argwidth}
+\setlength{\argwidth}{4.5in}
+
+\newenvironment{parameters}
+               {\begin{itemize}\item[]\textit{Parameters}:\begin{description}}
+               {\end{description}\end{itemize}}
+
+\newenvironment{Description}
+               {\begin{itemize}\item[]\begin{description}}
+               {\end{description}\end{itemize}}
+
+%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+\begin{document}
+
+
+\paragraph{Handling unusual structures}
+\begin{description}
+\item [Intrinsic Functions] These functions will be places in an
+implicit library.  
+\item [Implicit] Existing routines are sufficient.
+\item [Parameter] Existing routines are sufficient.
+\item [Data] Existing routines are sufficient.
+\item [Save] Existing routines are sufficient.
+\end{description}
+
+\paragraph{New attributes}
+\begin{description}
+\item [intrinsic] Declaration attribute
+\item [external] Declaration attribute (but called something else)
+\item [array layout] Need unit attribute to indicate array layout.
+\end{description}
+
+\paragraph{Aliases}
+I forgot to handle C++ reference types, which are similar to
+Fortran~77's equivalence construct.  Since C++ treats the reference
+symbol (\&) as a type construtor, we need a reference type attribute.
+However, when a reference value is actually declared, we want to
+separate out the definition of the variable from the specification of
+its alias in order to support Fortran~77.
+
+\interface{void}{alias}{Declaration d1, Declaration d2}{void}
+\begin{functionality}
+This routine defines \code{d1} as an alias for \code{d2}.  For C++,
+\code{d1} is the reference.  For C++, the declaration of a reference
+name should be followed immediately by a definition of what that name
+aliases.  
+\end{functionality}
+
+\paragraph{Strings}
+Some languages, such as Fortran, have strings as a primitive type.
+The following operators assume Fortran string handling semantics.
+
+%--
+\interface{void}{string\_assignment}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_equality}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_inequality}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_greater}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_greater\_equal}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_less}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{string\_less\_equal}{Expression e1, Expression e2}{Expression}
+%--
+\interface{void}{substring}{Expression s, Expression b, Expression e}{Expression}
+\begin{functionality}
+\begin{parameters}
+\item [s] The string to be operated on.
+\item [l] The beginning position of the substring.
+\item [e] The ending position of the substring.
+\end{parameters}
+\end{functionality}
+%--
+\interface{void}{substring\_remainder}{Expression s, Expression l}{Expression}
+\begin{functionality}
+This operator returns the rest of a string.
+\begin{parameters}
+\item [s] The string to be operated on.
+\item [l] The beginning position of the substring.
+\end{parameters}
+\end{functionality}
+%--
+\interface{void}{concatenation}{Expression s1, Expression s2}{Expression}
+\begin{functionality}
+Concatentation is performed into a temporary variable.
+\end{functionality}
+
+\paragraph{Statements}
+%--
+\interface{void}{three\_way\_if}{Expression e, LabelDecl l, LabelDecl e,
+	LabelDecl g}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's arithmetic if
+statement.  
+\end{functionality}
+%--
+\interface{void}{labels\_begin}{}{void}
+%--
+\interface{void}{labels\_end}{}{Labels}
+\begin{functionality}
+\befunc{labels}{LabelDecl}
+\end{functionality}
+%--
+\interface{void}{computed\_goto}{Labels l, Expression e}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's computed goto
+statement.  It is similar to a switch statement, except that the
+target labels are not limited to a single statement of code.
+\end{functionality}
+%--
+\interface{void}{assign\_label}{ValueDecl v, LabelDecl l}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's assign
+statement.  I'm considering representing this as a type conversion
+instead.  
+\end{functionality}
+%--
+\interface{void}{assigned\_goto}{Expression e, Labels l}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's assigned goto
+statement.  
+\end{functionality}
+
+\interface{void}{alternative\_return}{Expression e}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's alternative
+return construct. 
+\end{functionality}
+
+\paragraph{Alternative Entry Points}
+Fortran allows routines to have multiple entry points and alternative
+return points.  
+\partitle{Alternative Entries}
+
+\interface{NameID}{entry}{Identifier name, Signature s}{RoutineDecl}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's entry construct.
+We define an EntryDecl which is a subclass of a FunctionDecl (only
+functions may have alternative entry points).  
+\end{functionality}
+
+\paragraph{Decisions}
+\begin{itemize}
+\item Should we explicitly represent Fortran's output statements, or
+should we put these routines into our implicit library?
+\item Fortran's assigned goto could be handled by having variables of
+label type.  Assign statements would be represented as a type
+conversion from an integer to a label.
+\item Can users write \emph{generic} functions?
+\end{itemize}
+
+
+\paragraph{Miscellaneous}
+Fortran specifies that overflow and underflow errors are caught, so we
+need alternate versions of arithmetic operators to handle these cases.
+
+\end{document}

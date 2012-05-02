@@ -1,0 +1,183 @@
+<html>
+<head>
+   <META HTTP-EQUIV="Description" CONTENT="Scale Compiler Inlining">
+   <META HTTP-EQUIV="Keywords" CONTENT="compiler, compilation, inlining">
+   <META NAME="Author" CONTENT="Jim Burrill">
+<title>In-lining in Scale</title>
+</head>
+<body bgcolor="white">
+<h1>In-lining in Scale</h1>
+<p>
+In-lining is the process of inserting the
+body of a routine in place of a call to the routine.  In-lining is
+performed in order to improve execution time by:
+<ul>
+<li>avoiding the overhead of the routine call, and
+<li>constructing larger basic blocks.
+</ul>
+The disadvantage of in-lining can be compiled-code bloat and increased
+compile time.
+<p>
+Several languages make explicit the programmer's desire to have a
+routine in-lined.  An example is C++ with it's <tt>inline</tt>
+attribute.
+<p>
+Java does not make in-lining explicit but, rather, makes it easy for
+the compiler to accomplish it.  It does this through the byte-codes,
+the stack oriented operations, and its edit-compile-test philosophy.
+<p>
+Scale currently deals with languages (C and Fortran) that have no
+explicit provisions for in-lining.  However, in-lining can still have
+some powerful advantages.  Some hardware architectures demand very
+large basic blocks in order to be effective.  A typical C program
+results in very small basic blocks.  The availability of in-lining may
+allow the programmer to use a more <i>object-oriented</i> programming
+style in C without suffering the ill-effects of the resulting small
+basic blocks.
+<p>
+Scale currently does not have any in-lining capability -- but only
+because no one has implemented it yet.  This raises the question of
+how in-lining should be accomplished in Scale.  This document will not
+attempt to answer that question.  Instead, it will discuss various
+possibilities for in-lining in Scale.
+<p>
+<h2>In-lining Criteria</h2>
+<p>
+A criteria for picking routines as candidates for in-lining is
+required.  The criteria chosen may have an impact on when that
+in-lining may be performed.  If the criteria depends on metrics that
+are only available at certain points, then the in-lining can not be
+performed until the metric is available.  The decision on criteria
+also impacts the information on each routine that must be retained.
+For example, a certain criteria, such as <i>don't in-line if the in-lined
+code is bigger than the calling code</i>, would require that
+in-lining be performed after the instructions for each routine have
+been generated.   Or, at least until a good estimate had been obtained.
+<p>
+Consideration must be given as to whether or not routines that are
+candidates to be in-lined can also have in-lined routines.  If the
+in-lining were performed <i>on-the-fly</i>, the implementation resulting
+from allowing such recursion would be easier to accomplish using Java
+code rather than C code.  If the in-lining were performed but once, some
+ordering of the in-lined routines would be required.
+<p>
+<h2>Inter- or Intra- In-lining</h2>
+<p>
+The question naturally arises of whether Scale should in-line code
+from other modules into the module being compiled.  Scale was built
+with the idea of performing inter-module optimizations.  It has a
+command-line switch (-M) that selects inter-module compilation.  What
+this means is that after a module is compiled, information about that
+module is retained while the other modules are compiled.  To date,
+this facility has not been used.  And, it is not clear that Scale
+keeps the pertinent information around from each module.  For
+in-lining, the information required depends to a large extent on when
+in-lining is performed.
+<p>
+Obviously, the disadvantage to inter-module in-lining is the retention
+of this information and its effect on the memory usage of the Scale
+compiler.  Scale is already a memory hog.  It was developed as a
+research compiler and very little though or effort has gone into
+making it memory efficient.  This memory in-efficiency is aggravated
+by the fact that Scale is written in a language that uses implicit
+memory management at run-time.  Inter-module in-lining would only make
+the memory usage worse.
+<p>
+If only intra-module in-lining is performed, many, if not most, of the
+opportunities to in-line would be unavailable.
+<p>
+<h2>Where in Scale</h2>
+<p>
+It is not a simple matter to decide where or when in-lining should be performed.
+There are many possibilities.  Several  are discussed below.
+<p>
+<h3>In the EDG front-end parser</h3>
+<p>
+Scale uses the Edison Design Group C and Fortran parsers.  These two
+parsers generate an abstract syntax tree (AST) form of the program called
+the IL.  Intra-module in-lining could be performed, by the
+<tt>edg2clef.c</tt> module of Scale, once the IL is formed.  The
+in-lining would have to be written in C and the developer would have
+to have a license for the source code of the EDG parser.  Intimate
+knowledge of the EDG parsers would be required.
+<p>
+Inter-module in-lining could also be performed.  It would only be
+necessary to keep the IL files for every module around during the
+complete program compilation.  Doing so probably would have the least
+impact on the memory usage of Scale of any of the possibilities for
+in-lining.
+<p>
+The in-lining would not change the EDG IL representation of the
+program but would generate the Scale Clef AST for the in-lined code as
+part of the Scale AST for the routine that was being compiled.  The
+implementation of this method of in-lining should be fairly
+straight-forward.  It would have the added advantage of making it
+easier to fix a current problem that Scale has with Fortran statement
+functions that reference non-argument variables.  A disadvantage would
+be the possible lack of information about the to-be in-lined routine
+that is developed later by the compiler.
+<p>
+No matter where in-lining is performed there will always be the issue
+of re-naming.  When in an AST form, actual variable names must be
+changed as the routine is in-lined.  A mapping from internal-name to
+external-name must be constructed.
+<p>
+<h3>In the Scale AST</h3>
+<p>
+In-lining after the routines are converted to the Scale AST would be
+very similar to in-lining performed in the front-end.  A benefit of
+this approach is that the in-lining optimization could be written in
+Java and no EDG license would be required.
+<p>
+Scale creates an AST representation of the entire source code module
+that is being compiled.  For inter-module in-lining the disadvantage
+is that the Scale AST form of each source code module would have to be
+retained which would adversely affect the memory usage of the compiler.
+It would not be possible to use the EDG generated IL files.
+<p>
+A compiler module to do the in-lining could be called from the
+<tt>Scale.java</tt> class method <tt>optimizeClef()</tt>.
+<p>
+<h3>In the Scale AST to CFG Conversion</h3>
+<p>
+In Scale the <tt>Clef2Scribble</tt> class is used to convert the
+compiled program from the Scale AST to the control-flow graph (CFG)
+form.  In-lining could be accomplished by this class in much the same
+way as in the previous phase of the compiler.  The difference is that
+instead of changing the AST, the generated CFG form of the program
+would include the in-lined routine CFG.
+<p>
+<h3>In the CFG Optimization Phase</h3>
+<p>
+In this phase the structure of the compiled program is much more
+complex.  As a result, the implementation of in-lining would be more
+complex.  Contemplation of in-lining while in SSA form will likely
+lead to severe headaches.
+<p>
+It would be difficult to load and store the CFG form if it were
+decided to use files to retain the needed information about
+inter-module routines to be in-lined.
+<p>
+There are no readily apparent
+advantages to doing in-lining at this point in the compiler.
+<p>
+<h3>In the CFG to Instruction Conversion</h3>
+<p>
+In-lining the instruction form of a routine would be fairly straight
+forward.  There would still be re-naming issues involving virtual
+registers.  Each routine to be in-lined would have to be saved in a
+pre-register allocated form.
+<p>
+Saving the routine to a file for inter-module in-lining would be
+relatively easy; to over-simplify the description, the routine could
+be saved as a set of tuples that contain integers representing the opcode
+and registers of each instruction.
+<p>
+The main disadvantage to this method of in-lining is that no
+optimizations, such as common sub-expression elimination, would be
+applied to the combination of the in-lined code and the code in the
+target routine.
+<hr>
+(<i>Last changed: June 14, 2002</i>.)
+</body>
+</html>

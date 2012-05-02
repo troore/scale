@@ -1,0 +1,139 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\chapter{Generation Interface}\label{chap:genIf}
+
+This chapter describes the \textit{generation interface}.  The
+generation interface provides an Application Programming Interface
+which supports the generation of an intermediate representation.  The
+interface hides the structure of the intermediate representation from
+the code which is calling the interface.  This separation of concerns
+allows user code (code which calls the interface) to handle source
+language dependent issues, and client code (which uses the generated
+representation) to handle language independent or machine dependent
+issues.  We use the term \emph{language parser} to refer to code that
+handles source language issues, and \emph{user code} to refer to code
+that directly calls the generation interface.  For this interface to
+generate a particular representation, programmers must supply an
+\emph{implementation} which provides the bodies for the
+routines defined in the interface.  The code which uses the
+resulting representation is called a \emph{client}.
+
+\begin{figure}
+  \centering
+  %\setlength{\epsfxsize}{\textwidth}
+  \epsfbox{scaleFlow_if.eps}
+\caption{\label{fig:ifRole} Generation interface's role in Scale
+compiler framework.}
+\end{figure}
+
+We designed the generation interface with the following goals:
+\begin{itemize}
+\item Souce language independent
+\item Target architecture independent
+\item Extensible
+\item Support generation of high-level representations 
+\item Fully describe original program
+\item Prevent user errors where possible
+\item Support C, C++, Modula-3, and Fortran~77, and consider
+Java, Ada, and parallel Fortran variants
+\end{itemize}
+Though our design permits the detection of many invalid sequences of
+routine calls, it cannot detect all such sequences.  In particular, the
+generation interface is not intended to support syntax or semantic
+error checking.  Source language issues must be handled before the
+generation interface may be used.  The interface provides some
+routines that allow the original program to be fully described, even
+though the information provided by the routines is not strictly
+necessary.  
+
+\begin{table}
+\[\begin{array}{cc}
+\begin{minipage}[t]{3.0in}
+User code:
+\begin{itemize}
+\item Syntactic and semantic error checking
+\item Semantic resolution
+\item Enumeration constant assignment
+\item Insertion of explicit type conversions
+\item Generation of unspecified brands
+\end{itemize}
+\end{minipage} &
+\begin{minipage}[t]{3.0in}
+Implementation code:
+\begin{itemize}
+\item Memory layout
+\item Initialization code generation
+\end{itemize}
+\end{minipage}
+\end{array}\]
+\caption{\label{tab:assumptions}Division of responsibilities between
+user code and implementation code.}
+\end{table}
+
+To support our goal of source language independence, we have divided
+responsibility between the language parser and the client as shown in 
+Figure~\ref{tab:assumptions}.  
+
+The generation interface derives its language independence by
+supersetting the capabilities of the languages which we wish to
+support.  Hence, no one language is likely to need all the routines
+defined in the interface.  However, implementations should implement
+all the routines if possible.  If not, they are required to issue
+appropriate error messages.
+
+%Our design of the generation interface strives to be high-level and
+%source language independent.  The interface definition attempts to
+%prevent user (\ie programmers who use the interface) errors, but
+%language independence necessarily forces the interface to accept input
+%which is nonsense for any language.  In other words, the generation
+%interface does not try to support syntax or semantic error checking.
+%Ideally, the generation interface would be sufficient to handle any
+%programming language, but our design focuses on C, C++, Modula-3, and
+%Fortran, with some deference to Ada and Java.  The language used in
+%naming interface methods is a half-breed of C++ and Modula-3.
+
+
+\partitle{\clef\ Implementation}
+Our implementation of the generation interface builds the \clef\
+representation.  Our implemenation realizes the generation interface
+as a C++ class.  The \clef\ class hierarchy does not include the
+interface's class hierarchy.  This design point highlights the
+separation of the interface from the representation.  Nevertheless,
+many of the interface's routines end up being a call to a single
+constructor in the \clef\ class hierarchy.
+
+%The programmer should use a separate class hierarchy to define the
+%node set for the generated IR.  The programmer must then provide an
+%implementation of the generation interface in which the interface
+%methods assemble an IR graph.  Many of the interface's methods may be
+%simple invocations of a single constructor from the IR node set class
+%hierarchy.  Nevertheless, the goal of this interface is to separate
+%the code which generates an intermediate representation from the
+%details of the represenation.
+
+%The rest of this document lists the method calls in the generation
+%interface's API.  Section~\ref{sec:decl} describes how declarations
+%are handled.  Section~\ref{sec:stmt} covers statements, and
+%section~\ref{sec:op} lists the supported operations.
+%Section~\ref{sec:unit} shows how compilation units are
+%handled. Finally, interface face options are listed in
+%section~\ref{sec:opts}.  
+
+\input{if/if_gen_aux.tex}
+
+\input{if/if_gen_lang.tex}
+
+\input{if/if_gen_type.tex}
+
+\input{if/if_gen_decl.tex}
+
+\input{if/if_gen_stmt.tex}
+
+\input{if/if_gen_op.tex}
+
+\input{if/if_gen_unit.tex}
+
+\input{if/if_gen_annote.tex}
+
+
+

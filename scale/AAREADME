@@ -1,0 +1,160 @@
+This is the read-me file for the Scale system.
+
+Copyright 2002 by the Scale Compiler Group
+Department of Computer Science
+University of Massachusetts
+Amherst MA. 01003, USA
+All Rights Reserved.
+
+Scale is an ANSI C and ANSI Fortran 77 optimizing compiler written,
+for the most part, in Java.  It currently contains a variety of scalar
+optimizations, alias analysis, and a few loop optimizations.  It uses
+an SSA based intermediate representation.  It produces Sparc and Alpha
+assembly language files.  If requested, it will produce .c files also.
+
+On-line scale documentation is available at
+  http://ali-www.cs.umass.edu/Scale
+
+REQUIREMENTS
+-------------------------------------------------------------------------
+Scale requires JDK 1.4
+
+Scale compilations require a lot of time and memory.
+
+Versions of Scale are available for Sun Sparc systems running Solaris
+and Compaq Alpha systems running OSF/1.  If you have a license for the
+Edison Design Group compiler front-ends you may consider porting Scale
+to some other system.  Ports for MIPS 8000 and PowerPC are in progress
+at the University of Massachusetts.
+
+The Scale compiler uses a translation to Java of the Omega library
+Version 1.0 from the University of Maryland.  We use it for dependence
+testing.  It has been slightly modified for our needs.  This version
+is included with the distribution.
+
+The run-time routines for compiled Fortran programs uses the f2c
+libraries from AT&T Bell Laboratories & bellcore - see copyright
+and warranty disclaimer below.
+
+LINKS
+-------------------------------------------------------------------------
+Scale:			http://ali-www.cs.umass.edu/Scale
+Omega Library:		http://www.cs.umd.edu/projects/omega/
+
+USING SCALE
+-------------------------------------------------------------------------
+
+   Make sure the scale/dev/classes directory is defined in 
+   your CLASSPATH environment variable.
+
+   Execute
+
+      java scale.test.Scale -help
+
+   to obtain a list of command line switches for the Scale compiler.
+
+  A typical compilation might be
+
+      java -Xmx128m -Xms32m scale.test.Scale -oa src/file1.c src/file2.c -I src
+
+  This will produce .o files for file1.c and file2.c.
+  The java -X parameters specify a heap size from 32 MB to 128 MB.
+  The -oa switch specifies that the Scale compile is to produce .s
+  files as well.  These .s files are assembled using the native
+  assembler to produce the .o files.
+
+BUG REPORTS
+-------------------------------------------------------------------------
+Bug reports are appreciated.  You send them to
+  mailto:scaleproject@ali-mail.cs.umass.edu
+
+Please include a "distilled" source code file that is
+incorrectly compiled.  A "distilled" file contains only that
+code that is necessary and sufficient to illustrate the bug.
+
+CHANGING THE SCALE COMPILER
+ -------------------------------------------------------------------------
+
+The Scale directory tree contans Makefiles.  For these makefiles to work
+properly, you must use <strong>GNU make</strong> and you will need to set up some environment variables:
+
+SCALE
+	Set this to your scale directory where you un-tarred the files.
+SCALEHOME
+	Set this to your scale directory where you un-tarred the files.
+SCALERELEASE
+	Set this to rel1.4
+SCALEHOST
+	Set this to ALPHA or SOLsun.
+MACHINETYPE
+	Set this to ALPHA or SOLsun.
+SCALELIB
+	Set this to ${SCALE}/${SCALERELEASE}/${SCALEHOST}/lib
+SCALEHOMELIB
+	Set this to ${SCALEHOME}/${SCALERELEASE}/${SCALEHOST}/lib
+SCALEBIN
+	Set this to ${SCALE}/${SCALERELEASE}/${SCALEHOST}/bin
+SCALEHOMEBIN
+	Set this to ${SCALEHOME}/${SCALERELEASE}/${SCALEHOST}/bin
+LD_LIBRARY_PATH
+	Set this to ${LD_LIBRARY_PATH}:${SCALELIB}:${SCALEHOMELIB}
+CLASSDEST
+	Set this to $SCALE/$SCALERELEASE/classes
+CLASSPATH
+	Set this to ${CLASSDEST}:$SCALE/$SCALERELEASE
+JAVAHOME
+	Set this to the jdk1.2 directory.
+JAVA
+	Set this to "$JAVAHOME/bin/java"
+JAVAC
+	Set this to "$JAVAHOME/bin/javac -J-Xmx32m"
+JAVAFLAGS
+	Set this to "-d $CLASSDEST -g"
+JAVAD
+	Set this to "$JAVAHOME/bin/javadoc -J-Xmx64m"
+JAVADFLAGS
+	Set this to "-d $SCALE/$SCALERELEASE/doc/html"
+JAVAH
+	Set this to $JAVAHOME/bin/javah
+CC
+	Set this to your C compiler (e.g., "/sunwrkshp5/SUNWspro/bin/cc -Xc").
+CPP
+	Set this to your C++ compiler (e.g., "/sunwrkshp5/SUNWspro/bin/CC").
+CPPT
+	Set this to "-ptr " for Alphas and "-ptr" for Sparcs.
+CFLAGS
+	 E.g., "-g -v"
+CPPFLAGS
+	 E.g., "-g"
+F77
+	Set this to your Fortran 77 compiler (e.g., "/sunwrkshp5/SUNWspro/bin/f77 -silent").
+
+The makefiles operate recursively so doing 
+
+  make all
+
+in your $SCALE/$SCALERELEASE/scale directory will compile all the parts of Scale
+while
+
+  make clean
+
+will remove all the Scale .class and .o files.  You may perform these makes 
+in sub-directories to affect just that part of the directory tree.
+
+To run the regression tests, you will need to define:
+
+CFP95
+	Set this to your Specmark floating point directory.
+CINT95
+	Set this to your Specmark integer directory.
+
+You may want to have SCALE and SCALEHOME refer to separate places if,
+for example, you want to put the Scale system under CVS and have
+separate people work on it.  This allows someone to check out only
+part of the system and still use it.  Use SCALEHOME to refer to a
+complete system which you build periodically.
+
+You may want to consider setting SCALEHOST to the name of the system
+you are running Scale on.  You would do this, for example, if you
+wanted to run Scale on two different Sun systems that had different
+operating systems.

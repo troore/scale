@@ -1,0 +1,71 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\chapter{Introduction}\label{chap:intro}
+\pagenumbering{arabic}  % Switch to arabic numerals for page numbering.
+
+Scale is a compiler \emph{framework} which simplifies the task of
+developing a compiler for new hardware.  Scale is not a compiler in
+the sense that its objective is not to translate a particular language
+or to generate object code for a particular machine.  Rather it is a
+\emph{flexible} framework which provides all the components of a
+compiler along with modules that facilitate the assembling of these
+components into a complete compiler for a particular language and
+machine pair.
+
+Scale accepts multiple source languages and generates code for
+multiple target architectures.  Accepting multiple source languages
+largely consists of supplying a common notation for expressing the
+semantices of each language.  Similarly, to generate object code for
+different machines, Scale must have a common notation for expressing
+the capabilities of each target.  This common notation for describing
+hardware also permits Scale to generate object code for multiple
+machines \emph{simultaneously}.  This ability is the base features
+required by a compiler for heterogeneous systems.
+
+Firgure~\ref{fig:scaleFlow} shows the flow of a program through the
+initial phases of the Scale compiler.  In its initial design, Scale
+supports the translation of imperative and object-oriented programming
+languages (\ie C, C++, Modula-3, Fortran~77, and Ada-83).  Scale uses
+the Edison Design Group (EDG) front ends for C and C++
+(\module{edgcpfe}) and Fortran (\module{edgffe}) to handle parsing and
+semantic error checking.  The EDG front ends pass a proprietary AST to
+\module{Edg2Clef} which uses the \emph{generation interface} to 
+translate it to the common high-level representation form used by
+Scale.  For Modula-3, Scale uses the Digital Equipment Corporation
+(DEC) Systems Research Center (SRC) Modula-3 front end to generate an
+AST representation.  \module{M32Clef} reads the Modula-3 AST and uses
+the generation interface to convert it to Scale's high-level
+representation.
+
+\begin{figure}
+  \centering
+  %\setlength{\epsfxsize}{\textwidth}
+  \epsfbox{scaleFlow.eps}
+\caption{\label{fig:scaleFlow} The Scale compiler framework.}
+\end{figure}
+
+The generation interface is a set of routines for constructing
+high-level program representations such as ASTs.  The interface itself
+does not determine the structure of the generated interface; however,
+the Scale's initial design provides only one implementation of the
+interface: \module{ClefBulder}.  \module{ClefBuilder} constructs a
+\clef\ (Common Language Encoding Form) representation.  \clef\ is a
+high-level AST representation which provides representations for all
+the features found in source languages supported by Scale.  \clef\ may
+be used for certain program transformation and annotation.  \clef\ also
+provides a common representation from which the Composer module can
+build the Score representation.  Score is a lower level representation
+than \clef\ and is the form on which Scale performs most of its program
+transformations.
+
+This book describes components of the Scale compiler framework that
+relate to the \clef\ representation.  Chapter~\ref{chap:genIf}
+describes the generation interface and lists all of its routines.
+Chapter~\ref{chap:nodes} presents the \clef\ representation node set,
+and Chapter~\ref{chap:build} documents the design of
+\module{ClefBuilder}.  For information on the EDG and SRC
+representations see their respective documentation.  Score is
+discussed in more detail in \cite{hcw96}.
+
+
+

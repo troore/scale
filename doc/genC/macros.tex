@@ -1,0 +1,60 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+% This file has a bunch of macros for formating.
+% Most of them came from Glen's Clef Design Doc.
+
+% Paragraph titles are convenient for minor titles.  They are not numbered.
+\newcommand{\PARTITLE}[1]{\par\vspace{1ex}\noindent{\textit{ #1}}\\*\noindent}
+\newcommand{\partitle}[1]{\PARTITLE{#1}} % Same as capitalized version
+\newcommand{\subtitle}[1]{\item[]\hspace{-2ex}\emph{#1}}
+\newcommand{\eg}{\textit{e.g.},\ }
+\newcommand{\ie}{\textit{i.e.},\ }
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\clef}{Clef}
+\newcommand{\tbs}{{\bfseries\itshape T.B.S}}
+\newcommand{\manyPops}{$*$}
+
+% These macros are for hilighting text in a consistent manner.
+\newcommand{\key }[1]{\texttt{#1}}
+\newcommand{\args}[1]{\textit{#1}}
+\newcommand{\ret }[1]{\textit{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\node}[1]{\textsf{#1}}
+\newcommand{\method}[1]{\textbf{#1}}
+\newcommand{\member}[1]{\textbf{#1}}
+\newcommand{\module}[1]{\textsc{#1}}
+
+% This macro allows authors to leave short notes to themselves.
+%\newcommand{\question}[1]{}
+\newcommand{\question}[1]{
+\begin{center}
+  \boxput*(-0.75,1)
+    {\psframebox*{Question!}}
+    {\psshadowbox[framesep=12pt]{\parbox{6.0in}{#1}}}
+\end{center}
+}
+
+% These macros standarize the appearance of sections.
+\newcommand{\Section}[1]{\newpage\section{#1}}
+\newcommand{\Subsection}[1]{
+  \begin{samepage}
+    \setlength{\epsfxsize}{\textwidth}
+    \vspace{3.0ex}\noindent
+    \epsfbox{clefbar.eps}
+    \nopagebreak\vspace{-5.0ex}\nopagebreak
+    \subsection{#1}
+  \end{samepage}}
+\setcounter{secnumdepth}{5}  % Number subsections.
+\setcounter{tocdepth}{3}     % Include subsubsections in TOC.
+\newcommand{\Paragraph}[1]{\noindent\paragraph{#1}\par}
+
+% Macros for display code sequences
+\newcommand{\fourtabs}{nnnn\= nnnn\= nnnn\= nnnn\= nnnn\= nnnn\= 
+nnnn\= nnnn\= nnnn\= nnnn\= nnnn\= nnnn\= \kill \\}
+\newcommand{\sspace}{\renewcommand{\baselinestretch}{1}\Large\normalsize}
+\newcommand{\dspace}{\renewcommand{\baselinestretch}{1.18}\Large\normalsize}
+\newenvironment{codeseq}{\vspace{-3ex}\begin{flushleft}\sspace\small\begin{tabbing}\tt\fourtabs}{\end{tabbing}\end{flushleft}\dspace\vspace{-3ex}}
+
+% Macros to raise type for tables
+
+\newcommand{\rb}[1]{\raisebox{1.5ex}[0pt]{#1}}
+

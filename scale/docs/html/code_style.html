@@ -1,0 +1,158 @@
+<html>
+<head>
+   <META HTTP-EQUIV="Description" CONTENT="Scale Compiler Code Style">
+   <META HTTP-EQUIV="Keywords" CONTENT="compiler, compilation, style">
+   <META NAME="Author" CONTENT="Jim Burrill">
+<title>Coding Style in Scale</title>
+</head>
+<body bgcolor="white">
+<h1>Coding Style in Scale</h1>
+The coding style used in the Scale
+compiler Java&reg; code is based on the style presented in <cite>The
+Elements of Java Style</cite> by A. Vermeulen, et al (ISBN
+0-521-77768-2) and published by <a href="http://www.cambridge.org">Cambridge University Press</a>.
+However, the Scale compiler was pretty far along before we became
+aware of this book.
+<p>
+Below are comments on each rule in relation to the existing Scale
+Java&reg; code.  One rule (36) we feel is just plain wrong.  Another
+rule (64) we feel is poor. We have added comments concerning many of
+the other rules in regards to the use of the rule in Scale.  For the
+other rules not referenced you can assume that we agree with it while
+Scale may or may not adhere to it completely.
+<p>
+Unfortunately, we can not include the actual rule here.  You will have to go out and buy the book.
+<p>
+<h2>Rule Comments</h2>
+
+<p>1.  Please! Adhere to the coding style that is used throughout Scale.  Make the effort to learn the style in use.
+<p>2.  Give a thought to the person(s) who will end up maintaining your stuff.  Unless, of course, you wish to be that person for the rest of your life.
+<p>3.  Don't we all wish we could write it right the first time every time.  But, we can at least try by not knowingly violating known principals.
+<p>4.  Oops - perhaps we can add this documentation of deviations later ;->
+<p>5.  Scale uses two spaces as an indent.
+<p>
+ We also do not exactly follow the indenting standard for certain Java&reg; constructs.  For example, scale indents methods and classes as
+<pre>
+  public void method()
+  {
+    ..
+  }
+</pre>
+For <code>else</code>, <code>else if</code>, and <code>catch</code> the Scale code does
+<pre>
+    if (exp) {
+      ...
+    } else if (exp) {
+      ...
+    } else {
+      ...
+    }
+</pre>
+
+<p>6.  Never, ever place more than one semicolon on the same line!
+<p>
+Always make the assignment operator (<code>=</code>) the primary operator in a statement.
+For eample, the code
+<pre>
+   if ((a = exp) == null) {
+     ...
+   }
+</pre>
+is just awful.  It should be written as
+<pre>
+  a = exp;
+  if (a == null) {
+    ...
+  }
+</pre>
+to make it easy to see the assignment.
+<p>7.  This rule is very important.  Use whitespace copiously. Nothing is harder to read than a congealed mass of ASCII text all munged together.
+<p>8.  We don't really use hard tabs.  By default, Emacs does. Naughty emacs.
+<p>9.  Using meaningful names goes a long way to making the code readable.  However, some people carry this naming too far.
+For example, which is more readable:
+<pre>
+  for (int indexOverArrayA = 0; indexOverArrayA < n; indexOverArrayA++) {
+    ...
+    ... a[indexOverArrayA] ...
+  }
+</pre>
+or
+<pre>
+  for (int i = 0; i < n; i++) {
+    ...
+    ... a[i] ...
+  }
+</pre>
+Use an unimportant name for an unimportant variable - see rule 28.  (Using <code>i,j,k,l,m,</code> and <code>n</code> for loop indexes is
+an old Fortran habit.)
+</pre>
+<p>10.  We should have used the name <code>CfgNode</code> instead of <code>Chord</code>.
+<p>12.  Use only standard acronyms.  Don't make up new ones by dropping vowels.
+<p>13.  Someday all occurrences of <code>CFG</code> in Scale names will be changed to <code>Cfg</code>.
+<p>14.  Scale may contain some examples of names that differ only in case.  They will be eliminated as each is found.
+<p>15.  Somehow using <code>edu.umass.cs.ali.scale</code> as a package name did not appeal to us.  Besides, conforming to this rule would be a massive change.
+<p>21.  We try to avoid interfaces because of the performance cost.  We do use interfaces for the <i>visit</i> pattern.  
+<p>29.  We believe using <code>this</code> with every member reference is onerous.  We do use <code>this</code> in the constructor and <i>write access</i> methods to avoid
+ambiguity (see rule 30).
+<p>32.  Write your documentation the way you would want others to write theirs for you.
+<p>33.  We plead <i>nolo contendre</i>.  We will make more of an effort to keep code and comments in-synch.
+<p>36.  This rule is WRONG.  Use <code>//</code> at the beginning of the line to hide the line.  (The Emacs editor has a function that makes this easy.)
+The standard comment form (<code>/* ... */</code>)
+can not be applied to every line without modifying the line while <code>//</code> can be applied to every line.
+<p>37.  If you use one-line comments, make them useful.  Saying what the next statement does is often not useful.
+For example, in the code
+<pre>
+   // Call the xyz method.
+   q.xyz(abc);
+</pre>
+the comment is NOT useful.  See rule 61.
+<p>39.  Most definitely.  All methods and members should have <code>javadoc</code>-style comments. The method may be <code>private</code> now and <code>public</code> later.
+<p>63.  We have used comments like <code>/****** comment *****/</code> to note incorrect or incomplete code in the past.  We should develop a better convention
+<p>64.  No, no, no!  Adding a comment on the closing brace makes the code more un-readable.  If you write short code sequences, these comments will not be needed anyway.
+Use a good code browser to find the paired delimiter otherwise.  Modifying code using these comments is more difficult too.
+<p>65.  Adding a <i>fall-through</i> comment in <code>switch</code> cases where appropriate is on the list of things to we do when we find fall-through code.
+<p>66.  Commenting empty statements is on the list of things we do when we encounter them.
+<p>67.  Methods from a <code>final</code> class can be inlined so classes should be made <code>final</code> if possible.
+<p>69.  Question - are the Scale classes too big for a compiler?  We believe we use as small of classes as possible.
+<p>71.  We use <code>public</code> members in <code>private</code> classes.
+<p>72.  At every chance we eliminate occurrences of <code>instanceof</code> when that does not
+result in placing application-specific code in a more general class.  This is why we use the <code>visit</code> pattern.  
+<p>73.  We may benefit from observing this rule which has been ignored so far.  For example, we often use a <code>Vector</code> of <code>Declaration</code>s.
+Having a <code>DeclVector</code> class would increase type safety.  When we move to jdk 1.5, we can use the new features that make this easier.
+<p>74.  We used to encapsulate enumeration values in their own classes.  We eliminated every such instance from the Scale compiler for several reasons:
+<ul>
+<li>With thousands of instances and several enumeration members, we get better packing using <code>byte</code>s instead of object references.
+<li>It eliminated many classes.
+<li>The constants are tied directly to the classes that use them.
+</ul>
+When we move to jdk 1.5, we can use the new features that make this easier.
+<p>76.  Sometimes we think the code is more readable without the extra braces.
+We prefer
+<pre>
+   if (condition)
+     statement;
+</pre>
+to
+<pre>
+   if (condition) {
+     statement;
+   }
+</pre>
+
+<p>77.  We are firm believers in fully parenthesizing an expression.  Who can remember those numerous precedence rules anyway?
+Certainly not an old APLer.
+<p>79.  We went to great effort, in the interest of performance, to insure that <code>==</code> could be used instead of <code>.equals()</code> for some class instances.
+<p>80.  Sometimes it is just not possible in Scale to create an instance of a class that is valid immediately.  We often have to create the instance and then add information to it to make it valid.
+One example is when some instance is created without a <code>Type</code> which is added later.
+<p>81.  We should definitely check for occurrences where a non-<code>final</code> method is called from a constructor and eliminate them.
+<p>83.  Sometimes we explicitly check for errors, instead of allowing the JVM to detect them, so that we can generate a meaningful error report.
+<p>87.  We silently absorb exceptions from the Omega Library.
+<p>89.  Use the Java <code>assert</code> statement:
+<pre>
+   assert (condition) : message + instance.toString();
+</pre>
+<p>90. Use <code>assert</code> statements.
+<hr>
+(<i>Last changed: December 5, 2006</i>.)
+</body>
+</html>

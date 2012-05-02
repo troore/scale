@@ -1,0 +1,44 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+% This file contains the global style definitions for the blook.  It also
+% includes the ``macro.tex'' file which contains useful commands and 
+% environments.  
+
+\documentclass[11pt,twoside]{book}
+
+%------------------------------------------------------------------------------
+% This section is for packages.
+\usepackage{times}
+\usepackage{makeidx}       % Makes index at end of book.
+\usepackage[]{setspace} % Adjusts the space between lines on page.
+\setstretch{1.2}
+
+\usepackage[dvips]{epsfig} % For including postscript images.
+\usepackage{pstricks}      % Supports fancybox
+\usepackage{fancybox}      % For drawing boxes, among other things.
+% \usepackage{draftstamp}    % Prints big ``draft'' across page.
+\usepackage{rotating}      % Rotates units for printing figures landscape.
+
+%------------------------------------------------------------------------------
+% This section sets up page parameters.
+\oddsidemargin=0in
+\evensidemargin=0in
+\textwidth=6.5in
+\textheight=8.0in
+%\columnsep=0.25in
+\footskip 0.2truein
+%\footheight 0.5truein  TeTeX doesn't recognize it!
+\marginparwidth=.75in
+\marginparsep=.1in
+\marginparpush=5pt
+\renewcommand{\textfraction}{0.25}
+\renewcommand{\topfraction}{0.75}
+\renewcommand{\bottomfraction}{.85}
+\renewcommand{\floatpagefraction}{.85}
+\renewcommand{\dbltopfraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{.85}
+\raggedbottom
+
+%------------------------------------------------------------------------------
+% All author defined macros should be in this file (macros.tex).
+\input{macros.tex}
+

@@ -1,0 +1,10 @@
+digraph Statement {
+#include "setup.h"
+
+Statement->BlockStmt
+Statement->ConditionalStmt
+Statement->LoopStmt
+Statement->BranchStmt
+Statement->ExceptionStmt
+Statement->MiscStmt
+}

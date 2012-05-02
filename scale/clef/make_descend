@@ -1,0 +1,7 @@
+#! /bin/csh -f
+echo "   " >aaa
+foreach file (`cat xxx`)
+echo $file
+awk '/public class/ {print "  public void visit" $3 "(Node n) \t\t{ visit" $5 "(n); }"}' $file >>aaa
+awk '/public abstract class/ {print "  public void visit" $4 "(Node n) \t\t{ visit" $6 "(n); }"}' $file >>aaa
+end

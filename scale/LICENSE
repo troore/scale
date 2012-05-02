@@ -1,0 +1,134 @@
+Scale V1.x License
+======================
+
+IMPORTANT:
+
+Please read this license carefully before using this software. By using,
+copying or redistributing Scale, you accept and agree to become bound by
+the terms of this license. Please do not use this software, if you do not
+accept the terms of this license.
+
+The Scale Research Compiler Scale V1.x (hereinafter referred to as
+"Scale") has been developed by the Scale project at the University of
+Massachusetts at Amherst Computer Science Department (hereinafter referred 
+to as "Scale project"). The Scale project grants a "right to use" license 
+of Scale to any user of this software (hereinafter referred to as "licensee")
+for use under the following conditions:
+
+----------------------------------------------------------------------------
+                            RIGHT TO USE LICENSE
+----------------------------------------------------------------------------
+
+Permission to copy the system, to redistribute it, and to use it for any
+purpose is granted, subject to the following restrictions and
+understandings:
+
+  1. Grant of License
+
+     Scale is licensed free of charge for non-profit or internal use. Any
+     commercial exploitation of Scale, as a stand-alone program, as part of
+     a more comprehensive system or in any other constellation, is
+     prohibited by this license. Please contact the Scale project if you
+     are interested in a commercial license of Scale to use it in case of
+     for-profit applications.
+
+  2. Redistribution
+
+     Scale can only be redistributed for free or as part of a free,
+     non-profit software. Any copy made of Scale must cover the complete
+     distribution, especially this license in full, the complete
+     documentation, all of the tools and examples.
+
+  3. Restrictions
+
+     a. This license does not permit the licensee to alter, modify, improve,
+     decompile, disassemble or otherwise reverse-engineer the obtained
+     object code binaries of Scale. These binaries are proprietary to
+     other parties.
+
+     b. The licensee shall not remove any proprietary copyright legend
+     from Scale or any part thereof.
+
+     c.  The licensee may modify the Scale Java or C source code for their
+     own use in research.  However, the licensee shall not remove any 
+     proprietary copyright legend from the Scale Java or C source code 
+     or any part thereof.
+
+  4. Obligations
+
+     The licensee agree to make his/her best efforts to inform the Scale
+     project about bugs and noteworthy applications of this system.
+
+  5. Acknowledgement
+
+     All materials, developed as a consequence of Scale, shall duly
+     acknowledge such use, in accordance with the usual standards of
+     acknowledging credit in academic research.
+
+  6. Disclaimer of Warranty
+
+     The licensee expressly acknowledge and agree that use of Scale is at
+     the sole risk of the licensee. Scale and related documentation are
+     provided "as-is".  Neither the Scale project nor the University of
+     Massachusetts makes any warrant or representation, either express or
+     implied, for Scale or the University of Massachusetts, including, but
+     not limited to, any implied warranties of merchantability and fitness
+     for a particular purpose.  Neither the Scale project nor the
+     University of Massachusetts warrants that Scale will meet the
+     licensees requirements, or that the operation of Scale will run
+     uninterrupted or error-free, or that defects in Scale will be
+     corrected. The entire risk as to the functioning, faultless operation,
+     quality, performance and effect on hardware or other software of Scale
+     is with the licensee. Should Scale prove defective, the licensee
+     assumes the cost of all necessary servicing and repair of correction.
+
+  7. Limitation of Liability
+
+     Under no circumstances, including negligence, unless required by
+     applicable law, shall the Scale project be liable for any direct,
+     indirect, special, incidental, or consequential damages arising out of
+     the use of or inability to use Scale, even if the Scale project has
+     been advised of the possibility of such damages. Specifically, the
+     Scale project or the University of Massachusetts, its trustees,
+     officers, employees or agents is not responsible for any costs
+     including, but not limited to, those incurred as a result of lost
+     profits, revenue or other economic loss, loss of use of the product,
+     loss of data, the costs of recovering such software or data, the cost
+     of substitute software or data, claims by third parties or for other
+     similar costs.
+
+  8. Disclaimer of Support
+
+     The Scale project is under no obligation to provide any services, by
+     way of maintenance, consultation, update, or otherwise.
+
+  9. Non-Exclusiveness
+
+     The licensee recognizes that Scale is released on a non-exclusive
+     basis and the Scale project shall have the exclusive right to grant
+     licenses to others or to make such other use of Scale as it shall
+     desire.
+
+ 10. Effectiveness and Termination
+
+     This license is taking effect after using, installing, copying or
+     redistributing Scale by the licensee. By using, installing, copying
+     or redistributing Scale, the licensee accepts and agrees to become
+     bound by all terms of this license. The license is effective until
+     terminated. The licensee may terminate this license at any time by
+     destroying all components of Scale, related documentations and all
+     copies thereof. This license will terminate immediately without notice
+     from the Scale project if the licensee fail to comply with any
+     provision of this license. Upon termination, the licensee must destroy
+     all components of Scale, related documentations and all copies
+     thereof.
+
+ 11.
+
+     This License shall be deemed to have been made in Amherst,
+     Massachusetts, and shall be construed and its application determined
+     under the laws of the Commonwealth of Massachusetts.
+
+University of Massachusetts, July 12, 2001 - The Scale project
+
+-End-

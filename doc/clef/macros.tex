@@ -1,0 +1,171 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+% This file has a bunch of macros I've written to help format the Clef book.
+
+% Paragraph titles are convenient for minor titles.  They are not numbered.
+\newcommand{\PARTITLE}[1]{\par\vspace{1ex}\noindent{\textit{ #1}}\\*\noindent}
+\newcommand{\partitle}[1]{\PARTITLE{#1}} % Same as capitalized version
+\newcommand{\subtitle}[1]{\item[]\hspace{-2ex}\emph{#1}}
+\newcommand{\eg}{\textit{e.g.},\ }
+\newcommand{\ie}{\textit{i.e.},\ }
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\clef}{Clef}
+\newcommand{\tbs}{{\bfseries\itshape T.B.S}}
+\newcommand{\manyPops}{$*$}
+
+% These macros are for hilighting text in a consistent manner.
+\newcommand{\key }[1]{\textit{#1}}
+\newcommand{\args}[1]{\textit{#1}}
+\newcommand{\ret }[1]{\textit{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\node}[1]{\textsf{#1}}
+\newcommand{\method}[1]{\textbf{#1}}
+\newcommand{\member}[1]{\textbf{#1}}
+\newcommand{\module}[1]{\textsc{#1}}
+
+% For operator table:
+\newcommand{\tabhead}[1]{\textit{#1}}
+\newcommand{\na}{\textsl{N/A}}
+
+% These macros control the appearance of each routine description.
+\newcommand{\interface}[5]{
+\par\vspace{1ex}\noindent
+  \begin{samepage}
+  %\hspace{-1ex}Interface Method:
+  \textsl{#1} \textbf{#2}\index{#2} \textsl{(#3)} $\succ$ 
+	$\lfloor$\textsf{#4}$\rfloor$ $\Rightarrow$ 
+	$\lfloor$\textsf{#5\index{#5}}$\rfloor$\par
+  \end{samepage}
+}
+\newcommand{\interfaceNS}[3]{
+\par\vspace{1ex}\noindent
+  \begin{samepage}
+  %\hspace{-1ex}Interface Method:
+  \textsl{#1} \textbf{#2}\index{#2} \textsl{(#3)}\par
+  \end{samepage}
+}
+
+% This macro allows authors to leave short notes to themselves.
+%\newcommand{\question}[1]{}
+\newcommand{\question}[1]{
+\begin{center}
+  \boxput*(-0.75,1)
+    {\psframebox*{Question!}}
+    {\psshadowbox[framesep=12pt]{\parbox{6.0in}{#1}}}
+\end{center}
+}
+
+% This macro standardizes the text for a begin/end routine pair.
+\newcommand{\befunc}[2]{
+  At the point that the \method{#1End} routine is called, the top of
+  the stack (\ie the portion added since the \method{#1Begin} call)
+  should contain only #2 nodes.  
+}
+% This macro standardizes the text for specifying the type of an
+% operator's argument.
+\newcommand{\oparg}[2]{
+  Operands for #1 operators must be of type #2.  
+}
+
+% This macro standardizes the text for indicating that a routine
+% implements a particular language's semantics.
+\newcommand{\modulaOp}{
+  This routine implements the corresponding Modula-3 operator (see
+Table~\ref{tab:ops1}).
+}
+\newcommand{\modulaSemantics}[1]{
+  This routine implements the semantics of Modula-3's \key{#1} construct.
+}
+\newcommand{\cxxOp}{
+  This routine implements the corresponding C++ operator (see
+Table~\ref{tab:ops1}, \ref{tab:ops2}, or \ref{tab:ops3}).
+}
+\newcommand{\cxxSemantics}[1]{
+  This routine implements the semantics of C++'s \key{#1} construct.
+}
+\newcommand{\fortranOp}{
+  This routine implements the corresponding Fortran~77 operator (see
+Table~\ref{tab:ops1}).
+}
+\newcommand{\fortranSemantics}[1]{
+  This routine implements the semantics of Fortran~77's \key{#1} construct.
+}
+
+% This macro simply comments out text.
+\newcommand{\todo}[1]{
+\par\noindent
+%\begin{verbatim}
+%#1
+%\end{verbatim}
+}
+
+% This macro standardizes the appearance of enumeration lists.
+\newcommand{\EnumOptions}[2]{
+  \begin{center}
+  \code{enum #1 \{#2\};}
+  \end{center}
+}
+
+% These macros standarize the appearance of sections.
+\newcommand{\Section}[1]{\newpage\section{#1}}
+\newcommand{\Subsection}[1]{
+  \begin{samepage}
+    \setlength{\epsfxsize}{\textwidth}
+    \vspace{3.0ex}\noindent
+    \epsfbox{clefbar.eps}
+    \nopagebreak\vspace{-5.0ex}\nopagebreak
+    \subsection{#1}
+  \end{samepage}}
+\setcounter{secnumdepth}{5}  % Number subsections.
+\setcounter{tocdepth}{3}     % Include subsubsections in TOC.
+\newcommand{\Paragraph}[1]{\noindent\paragraph{#1}\par}
+
+% This macro standardizes the appearance of descriptive text.
+\newenvironment{functionality}
+               {\list{}{\rightmargin 0em
+			\listparindent \parindent}%
+                \item[]\hspace{\parindent}}
+               {\endlist}
+
+%\newlength{\argwidth}
+%\setlength{\argwidth}{4.5in}
+
+% This macro standardizes the appearance of text describing a routine's
+% parameters. 
+\newenvironment{Parameters}
+               {\begin{itemize}\item[]\textit{Parameters}:\begin{description}}
+               {\end{description}\end{itemize}}
+\newcommand{\Param}[1]{\item[\code{#1}]}
+
+% This macro standardizes the appearance of a describion list in a
+% functionality block.
+\newenvironment{Description}
+               {\begin{itemize}\item[]\begin{description}}
+               {\end{description}\end{itemize}}
+
+% These macros standardize the appearance of exception code lists.
+\newenvironment{ErrorList}
+               {\begin{itemize}\item[]\textit{Possible Exceptions}:\begin{description}}
+               {\end{description}\end{itemize}}
+%               {\begin{itemize}\item[]\begin{description}}
+\newcommand{\ErrorItem}[1]{\item[#1]}
+
+% These macros standarize the appearance of Clef node definitions.
+\newenvironment{ClassDef}[2]
+               {\begin{itemize}\item[]\key{class} \node{#1} : \node{#2} \{\
+			\begin{description}}
+               {\item[]\hspace{0.5in}$\vdots$\ \ \emph{\small Methods omitted.}\
+		\end{description}\item[]\}\end{itemize}}
+\newcommand{\MethodItem}[3]{\item[] \ret{#1} \method{#2} \args{(#3)};}
+\newcommand{\MemberItem}[2]{\item[] \ret{#1} \member{#2};}
+
+% This command designed to work with the environments I created.  
+% It creates an unnumbered heading within an environment.
+
+\newcommand{\NodePicture}[1]{
+	\begin{samepage}
+	\begin{center}
+	\epsfbox{nodes/pictures/node_#1.eps}\\
+	{\small The \node{#1} node and its children.}
+	\end{center}
+	\end{samepage}
+}

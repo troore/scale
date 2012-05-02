@@ -1,0 +1,8 @@
+To build scale alone (i.e., just the compiler), do the following:
+
+source setup_scale.sh
+cd scale
+make all && make jar
+
+That will create scale.jar in your classes/ directory.
+

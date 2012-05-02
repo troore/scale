@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Scale Frontend Classes</title>
+</head>
+<body bgcolor="white">
+
+This package contains the separate parsers for each language that
+Scale can compile.  Each sub-directory contains the parser for that
+particular language (some are empty).  Each parser must be derived
+from {@link scale.frontend.Parser Parser}.
+
+<h3>Adding a New Parser</h3>
+To add a new parser for a language follow these steps:
+<ol>
+
+<li>Create the subdirectory for that parser.  The subdirectory name
+should be mnemonic.
+
+<li>Create the class for the parser in that directory.  The name for
+the new parser class should be mnemonic. Context-free languages may
+use the <a href="http://www.antlr.org/">ANTLR</a> parser builder; See
+<code>scale/frontend/c/c99.g</code> for an example.
+
+<li>If the language uses a preprocessor, create the
+<code>runPreprocessor()</code> method that invokes the preprocessor
+without invoking the parser.
+
+<li>Create the <i>source language</i> class for the language, that is
+derived from the {@link scale.frontend.SourceLanguage} class, which
+specifies various language features that the compiler needs to know
+about.
+
+<li>Add the mapping, for the new file extension to be used, to the new
+parser class in the {@link scale.frontend.Parser Parser} class.
+
+<li>Add the subdirectory name to the <code>scale/Makefile</code> file
+<code>javadoc</code> rule.
+
+</ol>
+</body>
+</html>

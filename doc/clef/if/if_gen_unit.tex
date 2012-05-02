@@ -1,0 +1,99 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\Section{Compilation Units}\label{sec:compilationUnit}
+
+All compilations begin with a compilation unit.  In terms of an
+abstract syntax tree, a compilation unit is the root of the tree.  
+Compilation units collect together information from outside the source
+program, which generally means source language information.
+
+The generation interface requires that user code specify the source
+language of each compilation unit.  Implementations may use this
+information to define language specific constants, types, routines,
+etc.  Moreover, the source language information is used to preset
+attributes of the compilation unit.  Programmers use the following
+enumeration to specify source languages:
+
+\begin{center}
+\EnumOptions{LanguageId}{cLangC, cLangCxx, cLangModula3, cLangFortran77}
+\end{center}
+
+%\Subsection{Compilation Units}
+%--
+\interface{void}{CompilationUnitBegin}{LanguageId l}{}{CompilationUnit}
+%--
+\interface{void}{CompilationUnitEnd}{}{\manyPops}{CompilationUnit}
+\begin{functionality}
+\befunc{CompilationUnit}{UnitDecl}  Note that both begin and end
+routines return a \node{CompilationUnit} node, and this node is the
+same.  The begin routine returns the partially complete node so that
+attributes may be associated with the node.
+\end{functionality}
+
+%\Subsection{Setting Compilation Unit Attributes}\label{sec:unitAttributes}
+
+%--
+\interface{void}{SetIdentifierCase}{IdentifierCase ic}
+	{CompilationUnit cu}{CompilationUnit}
+\begin{functionality}
+Implemenations of the generation interface are required to handle
+both case sensitive and insensitive identifiers.  The default is case
+sensitive.  We could have required the front end to homogenize case
+for case insensitive languages; however, this information may prove
+vital to debuggers.
+\EnumOptions{IdentifierCase}{cSensitive, cInsensitive}
+\end{functionality}
+
+%--
+\interface{void}{SetMemoryManagement}{MemoryManagement mm}
+	{CompilationUnit cu}{CompilationUnit}
+\begin{functionality}
+This routine specifies how dynamic memory is managed by the source language.
+\EnumOptions{MemoryManagement}{cUserManaged, cGarbageCollected}
+\end{functionality}
+
+%--
+\interface{void}{SetRecordFieldOrderRule}{bool orderMatters}
+	{CompilationUnit cu}{CompilationUnit}
+\begin{functionality}
+This routine specifies whether or not the source language uses the
+order of fields to distinguish record types.  The default value is
+true, order does matter.
+\end{functionality}
+
+%--
+\interface{void}{SetClassFieldOrderRule}{bool orderMatters}
+	{CompilationUnit cu}{CompilationUnit}
+\begin{functionality}
+This routine specifies whether or not the source language uses the
+order of fields to distinguish class types.  The default value is
+true, order does matter.
+\end{functionality}
+
+%--
+\interface{void}{SetMethodsRule}{bool methodsMatter}
+	{CompilationUnit cu}{CompilationUnit}
+\begin{functionality}
+This routine specifies whether or not methods are used to distinguish
+class types.  The default value is true, methods do matter.
+\end{functionality}
+
+
+
+
+
+
+\todo{
+(*----------------------------------------------------- compilation units ---*)
+
+begin_unit (optimize: INTEGER := 0);
+(* called before any other method to initialize the compilation unit. *)
+
+end_unit ();
+(* called after all other methods to finalize the unit and write the
+   resulting object.  *)
+
+import_unit (n: Name);
+export_unit (n: Name);
+(* note that the current compilation unit imports/exports the interface 'n' *)
+}

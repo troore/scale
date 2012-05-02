@@ -1,0 +1,102 @@
+
+\section{Miscellaneous Stuff}
+
+\subsection{Generating New Symbols}
+
+We need to generate new symbols in order to create names for
+variables, data structures, etc. that are not defined in the originial
+source.  Users do not typically use identifiers that begin with two
+underscores\footnote{I believe these are reserved}.
+
+Since we are converting languages other than C or C++ we must be
+careful about identifier names.  Specifically, we must not all
+identifiers that are also keywords.  If we encounter an identifier
+that is a keyword then we prepend the identifier with two underscores.
+
+\subsubsection{Function Name Encoding - aka. Name Mangling}
+
+If the source language is C++, we implement a function name encoding
+scheme to ensure type-safe linkage.  This is also know as name
+mangling.  We use the same encoding scheme document in the Annotated
+C++ Reference Manual~\cite{ellis:90}.
+
+The encoding scheme works by appending the function's signature
+to its name.  A double underscore (\_\_) separates the name
+of the function with the encoded signature name.
+
+The name of a function includes :
+\begin{itemize}
+\item An encoding of the class in which it is defined,
+\item A special prefix for global function names,
+\item An encoding of the types of the function's arguments,
+\item A special prefix for member function (for the \key{this} pointer),
+\item An encoding for type modifiers (\ie unsigned, const, etc),
+\item An encoding for type declarators,
+\item A special case for pointers to functions
+\item Special prefixes for operator functions and special members
+(such as constructors and destructors).
+\end{itemize}
+
+The name of a class is encoded as the length of the name followed by
+the name itself.  For example, \code{class foo} is encoded as
+\texttt{3foo}.  A qualified class name has a special encoding,
+the character \texttt{Q} followed by the number of encodines.
+For example, \code{class Outer::Inner} is encoded as
+\texttt{Q25Outer5Inner}, where 2 indicates there are two names.
+
+A global function name is encoded by prefixing the signature with the
+character \texttt{F}.
+
+Table~\ref{typeencode} shows the encoding for the basic types,
+type modifiers, and type declarators.
+\begin{table}[h]
+\begin{center}
+\begin{footnotesize}
+\begin{tabular}{|l|c|c||l|c|c|} \hline
+Type & \multicolumn{2}{c||}{Encoding} & Type & \multicolumn{2}{c|}{Encoding} \\ \hline
+\key{void} & \multicolumn{2}{c||}{\texttt{v}} & 
+\key{char} & \multicolumn{2}{c|}{\texttt{c}} \\
+\key{short} & \multicolumn{2}{c||}{\texttt{s}} & 
+\key{int} & \multicolumn{2}{c|}{\texttt{i}} \\ 
+\key{long} & \multicolumn{2}{c||}{\texttt{l}} & 
+\key{float} & \multicolumn{2}{c|}{\texttt{f}} \\
+\key{double} & \multicolumn{2}{c||}{\texttt{d}} & 
+\key{long double} & \multicolumn{2}{c|}{\texttt{r}} \\
+\key{...} & \multicolumn{2}{c||}{\texttt{e}} & &
+\multicolumn{2}{c|}{ } \\ \hline \hline
+Type Modifier & \multicolumn{2}{c||}{Encoding} & 
+Type Modifier & \multicolumn{2}{c|}{Encoding} \\ \hline
+\key{unsigned} & \multicolumn{2}{c||}{\texttt{U}} & 
+\key{const} & \multicolumn{2}{c|}{\texttt{C}} \\
+\key{volatile} & \multicolumn{2}{c||}{\texttt{V}} & 
+\key{signed} & \multicolumn{2}{c|}{\texttt{S}} \\ \hline\hline
+Type Declarator & Notation & Encoding & Type Declarator & Notation & Encoding \\ \hline
+Pointer & * & \texttt{P} &
+Reference & \& & \texttt{R} \\ 
+Array & [10] & \texttt{A10\_} &
+Function & () & \texttt{F} \\
+Pointer To Member & S::* & \texttt{M1S} & & & \\ \hline
+\end{tabular}
+\end{footnotesize}
+\caption{Type Encodings for Name Mangling}
+\label{typeencode}
+\end{center}
+\end{table}
+
+The encoding for a member function begins with the an encoding
+for the class name.  For example, \code{bar::foo(int)} is 
+encoded as \texttt{foo\_\_3barFi}.
+
+For an argument that is a function pointer, we encode the arguments
+types as well as the return type.  The encoded return type appears
+after the argument types and is preceded by an underscore.  For
+example, \code{f(int (*)(char *))} (\ie function f has a single
+parameter which is a function pointer that returns an int
+and has a single parameter which is a char pointer) is encoded
+as \texttt{f\_FPFPc\_i}.
+
+We also use special prefixes for all the operator functions.  (\eg the
+built-in C++ operators that may be overloaded.)  We do not list the
+encoding here since they are listed on pg. 125 of ~\cite{ellis:90}.
+Pg. 125 also lists the encodings for the special functions such as
+constructors, destructors, new, etc.

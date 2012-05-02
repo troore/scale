@@ -1,0 +1,524 @@
+% -*- Mode: latex; Mode: auto-fill; -*-
+
+\Section{Generating Statements}\label{sec:stmt}
+%(*----------------------------------------------------------- statements ---*)
+
+This section describes the routines available for representing
+statements.  
+
+%(*------------------------------------------------------------ load/store ---*)
+%(* Note: When an Int_A..Int_D value is loaded, it is sign extended to
+%   full Int width.  When a Word_A..Word_D value is loaded, it is zero
+%   extended to full Word width.  When an Int_A..Int_D or Word_A..Word_D
+%   value is stored, it is truncated from full width to the indicated size.
+
+%   Note: all loads and stores are aligned according to the specified type.
+%*)
+
+%load (v: Var;  o: ByteOffset;  t: MType);
+%(* push; s0.t := Mem [ ADR(v) + o ].t *)
+
+%load_address (v: Var;  o: ByteOffset := 0);
+%(* push; s0.A := ADR(v) + o *)
+
+%load_indirect (o: ByteOffset;  t: MType);
+%(* s0.t := Mem [s0.A + o].t *)
+
+%qualify_expr (holder: TypeUID; field: TEXT; 
+%t: Type; lval: BOOLEAN; obj: BOOLEAN);
+
+%osubscript_expr (t: Type; elt_size: INTEGER);
+%(* s1 := s0[s1]; s0 is an open array type. pop *)
+
+%(* Note that in osubscript and fsubscript, the order of array and index
+%   on the stack is different.  Unfortunate... *)
+%fsubscript_expr (t: Type; elt_size: INTEGER);
+%(* s0 := s1[s0]; s1 is a fixed array type. pop *)
+
+%array_size (n: INTEGER);
+%(* s0 := number of elements in nth dimension of open array s0 *)
+
+%store (v: Var;  o: ByteOffset;  t: MType);
+%(* Mem [ ADR(v) + o : s ].t := s0.t; pop *)
+
+%store_indirect (o: ByteOffset;  t: MType);
+%(* Mem [s1.A + o].t := s0.t; pop (2) *)
+
+
+%store_ref (v: Var;  o: ByteOffset := 0);
+%(* == store (v, o, Type.Addr), but also does reference counting *)
+
+%store_ref_indirect (o: ByteOffset;  var: BOOLEAN);
+%(* == store_indirect (o, Type.Addr), but also does reference counting.
+%     If "var" is true, then reference counting depends on whether the
+%     effective address is in the heap or stack. *)
+
+%==============================================================================
+\Subsection{Block Statements}
+Different programming languages have different rules about when a
+block opens a scope.  The generation interface separates the issues of
+grouping statements from that of declaring scopes (see
+Section~\ref{sec:symbolTable}.  Hence, none of the routines in this
+section imply the creation of a new scope.  A block of statements
+may have an associated scope (\eg a procedure
+with local variables).  Client code is responsible for
+associating a scope with a block of statements.
+
+\interface{void}{StmtBlockBegin}{}{}{}
+\interface{void}{StmtBlockEnd}{}{\manyPops}{Statement}
+\begin{functionality}
+\befunc{StmtBlock}{\node{Statement}}
+\end{functionality}
+
+%==============================================================================
+\Subsection{Labeled Statements}\label{sec:label}
+This section describes routines for representing labeled statements.
+
+\interface{void}{StmtLabel}{}{LabelDecl, Statement}{LabelStmt}
+
+%==============================================================================
+\Subsection{Conditional Statements}\label{sec:cond}
+
+This section describes routines for representing decision statements.
+This section also defines routines for specifying conditions.  
+
+%------------------------------------------------------------------------------
+\subsubsection{If statements}
+The routines in this section handle \key{if} statements.  The
+interface does not provide direct support for \key{else-if} clauses,
+so these clauses will have to be transformed to nested \key{if}
+statements.  The design of these routines require that for nested if
+statements, outer \key{if} statements remain on the stack until inner
+\key{if} statements have been processed.
+
+
+%--
+\interface{void}{StmtIfThenElse}{}
+	{Expression e, Statement s1, Statement s2}{Statement}
+\begin{functionality}
+The expression representing the test must be of boolean type.  If the
+statement does not have an \key{else} clause, then a null statement
+should be used for \node{s2}.
+\end{functionality}
+
+%--
+\interface{void}{StmtArithmeticIf}{NameID lessLabel, NameID equalLabel,
+	NameID moreLabel}{Expression e}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's arithmetic if
+statement.  
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Multi-way Branch Statements}
+These routines perform a single test and jump to one of potentially
+many points in the program.
+
+%--
+\interface{void}{LabelsBegin}{}{}{}
+%--
+\interface{void}{LabelsEnd}{}{}{Labels}
+\begin{functionality}
+\befunc{Labels}{LabelRef}  
+\end{functionality}
+%--
+\interface{void}{StmtComputedGoto}{}{Labels l, Expression e}{Statement}
+\begin{functionality}
+\fortranSemantics{computed goto}
+It is similar to a switch statement, except that the
+target labels are not limited to a single statement of code.
+\end{functionality}
+%--
+\interface{void}{StmtAssignLabel}{NameID value, NameID label}{}{Statement}
+\begin{functionality}
+\fortranSemantics{assign}
+
+Note that the semantics of this operation could be represented with a
+type conversion from integer to label.  However, this would require
+creating variables of type label.  Since labels are deprecated, this
+more direct representation has been chosen.
+\end{functionality}
+%--
+\interface{void}{StmtAssignedGoto}{}{Expression e, Labels l}{Statement}
+\begin{functionality}
+\fortranSemantics{assigned goto}
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Case/Switch Statements}
+The generation interface supports two types of multiple test
+conditional statement.  The first form is a well structured statement,
+as found in Modula-3.  We refer to this form as a case statement.  The
+body of a case statement consists of blocks of code, each of which
+when paired with their case keys is called a case alternatives.
+Each time a program passes through a case statement, it will execute
+zero or one of the case alternatives.  A case alternative is executed
+when the value of the conditional expression matches one of its case
+keys.  The other form matches the unstructured form of C/C++'s
+\key{switch} statement.   This form still uses case keys, but does not
+separate the \key{switch} statement body into case alternatives.
+
+The generation interface follows Modula-3's terminology of \key{case}
+statement.  Each unique body of code within a \key{case} statement is
+termed a case alternative, and each case alternative may have more
+than one case key.  A case key is the value which is compared against
+the expression at the top of the \key{case} statement.
+
+\interface{void}{CaseKeyBegin}{}{}{}
+\interface{void}{CaseKeyEnd}{}{\manyPops}{CaseKeys}
+\begin{functionality}
+\befunc{CaseKey}{\node{Expression}}
+\end{functionality}
+\interface{void}{CaseKey}{}{Expression e}{CaseKeys}
+\begin{functionality}
+The routines \method{CaseKeyBegin} and \method{CaseKeyEnd}
+build a list of case keys.  The \method{CaseKey} routine is a short
+cut for building a list with one member.
+\end{functionality}
+
+\interface{void}{CaseAlt}{}{CaseKeys ck, Statement s}{CaseAlt}
+%\interface{void}{CaseAlt}{}{CaseKeys ck, StatementList s}{CaseAlt}
+
+\interface{void}{CaseOthersAlt}{}{StatementList}{CaseAlt}
+\begin{functionality}
+This routine represents the default case alternative.
+\end{functionality}
+
+\interface{void}{CaseBodyBegin}{}{}{}
+\interface{void}{CaseBodyEnd}{}{\manyPops}{CaseAlts}
+\begin{functionality}
+The routines \method{CaseBodyBegin} and \method{CaseBodyEnd}
+build the body of a case statement.
+
+\befunc{CaseBody}{\node{CaseAlt}}
+\end{functionality}
+
+\interface{void}{StmtCase}{}{Expression e, CaseAlts}{Statement}
+\begin{functionality}
+This routine implements the semantics of Modula-3's \key{case}
+statement, in which the order of the case alternatives does not matter.
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+\interface{void}{StmtSwitch}{}{Expression e, Statement s}{Statement}
+\begin{functionality}
+This routine implements the semantics of C/C++'s \key{switch} construct.
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+%------------------------------------------------------------------------------
+\subsubsection{Typecase}
+Modula-3's \key{typecase} statement allows a conditional expression
+based on an expressions type.  The routines provided for handling a
+\key{typecase} mirror those provided for the \key{case} statement.
+
+%--
+\interface{void}{TypecaseKey}{TypeID type, NameID variable}
+	{}{TypecaseKey}
+\begin{functionality}
+If \code{variable} is NoName, then no variable has been specified.
+\end{functionality}
+%--
+\interface{void}{TypecaseKeyBegin}{}{}{}
+%--
+\interface{void}{TypecaseKeyEnd}{}{\manyPops}{TypecaseKeys}
+\begin{functionality}
+\befunc{TypecaseKey}{\node{TypecaseKeys}}
+\end{functionality}
+
+%--
+\interface{void}{TypecaseAlt}{}{TypecaseKeys tck, Statement s}{TypecaseAlt}
+%\interface{void}{TypecaseAlt}{}{TypecaseKeys tck, StatementList s}{TypecaseAlt}
+
+%--
+\interface{void}{TypecaseBodyBegin}{}{}{}
+%--
+\interface{void}{TypecaseBodyEnd}{}{\manyPops}{TypecaseAlts}
+\begin{functionality}
+\befunc{TypecaseBody}{\node{TypecaseAlt}}
+\end{functionality}
+%--
+\interface{void}{StmtTypecase}{}{Expression e, TypeCaseAlts}{Statement}
+\begin{functionality}
+This routine implements the semantics of Modula-3's \key{case}
+statement.  In a \key{typecase} the order of the case alternatives
+does matter.
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+%case_jump (READONLY labels: ARRAY OF Label);
+%(* tmp := s0.I; pop; GOTO labels[tmp]  (NOTE: no range checking on s0.I) *)
+
+\todo{
+if_true  (l: Label;  f: Frequency);
+%(* tmp := s0.I; pop; IF (tmp # 0) GOTO l *)
+
+if_false (l: Label;  f: Frequency);
+%(* tmp := s0.I; pop; IF (tmp = 0) GOTO l *)
+}
+
+%if_eq (l: Label;  t: ZType;  f: Frequency); (*== eq(t); if_true(l,f)*)
+%if_ne (l: Label;  t: ZType;  f: Frequency); (*== ne(t); if_true(l,f)*)
+%if_gt (l: Label;  t: ZType;  f: Frequency); (*== gt(t); if_true(l,f)*)
+%if_ge (l: Label;  t: ZType;  f: Frequency); (*== ge(t); if_true(l,f)*)
+%if_lt (l: Label;  t: ZType;  f: Frequency); (*== lt(t); if_true(l,f)*)
+%if_le (l: Label;  t: ZType;  f: Frequency); (*== le(t); if_true(l,f)*)
+
+%==============================================================================
+\Subsection{Looping Statements}
+
+\interface{void}{StmtWhileLoop}{}{Expression e, Statement s}{Statement}
+\begin{functionality}
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+\interface{void}{StmtRepeatWhileLoop}{}{Statement s, Expression e}{Statement}
+\begin{functionality}
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+\interface{void}{StmtRepeatUntilLoop}{}{Statement s, Expression e}{Statement}
+\begin{functionality}
+The expression representing the test must be of boolean type.
+\end{functionality}
+
+\interface{void}{StmtLoop}{}{Statement s}{Statement}
+
+%--
+\interface{void}{StmtDoLoop}{NameID index}{Expression first, 
+	Expression last, Expression step, Statement s}{Statement}
+\begin{functionality}
+This routine represents an iterating loop.  When \args{step} is
+negative, the loop terminates when \args{index} becomes lower than
+\code{last}.  Otherwise, the loop terminates when \args{index} exceeds
+\args{last}.  The \args{first}, \args{last}, and \args{step}
+expressions are evaluated once, at entry to the loop.  
+\begin{Parameters}
+\Param{index} Variable (or other assignable name) being incremented.
+\Param{first} Initial value of \code{index}.
+\Param{last} Maximum value of \code{index}.
+\Param{step} Amount by which to increment \code{index} each time
+through the loop.
+\end{Parameters}
+
+This routine follows Fortran~77 semantics, which requires that the
+index be updated.  However, some source languages do not guarantee
+that the value of the index is meaningful after the loop finishes,
+which provides additional opportunities for optimizations.  For such
+source languages, user code may create a local (\ie temporary)
+variable for the loop index.  In this case, the index will have no
+uses beyond the loop, so client code may optimize more aggressively.
+
+\end{functionality}
+%--
+\interface{void}{StmtForLoop}{}
+	{Expression d, Expression e, Expression e, Statement s}{Statement}
+\begin{functionality}
+The expression representing the test must be of boolean type.
+\end{functionality}
+%==============================================================================
+\Subsection{Branch Statements}
+
+This section lists branching statements.  The statements included here
+are simple branches, Fortran~77 has several elaborate branch
+statements which may be found in Section~\ref{sec:cond}.
+
+\interface{void}{StmtBreak}{}{}{Statement}
+\interface{void}{StmtContinue}{}{}{Statement}
+\interface{void}{StmtGoto}{NameID label}{}{Statement}
+\interface{void}{StmtReturn}{}{Expression e}{Statement}
+\begin{functionality}
+If the return statement does not have an expression, then
+\node{NoExpression} should be used.
+\end{functionality}
+\interface{void}{StmtExit}{}{Expression e}{Statement}
+\begin{functionality}
+This routine terminates a program.  If no expression is specified,
+\node{NoExpression} should be used.
+\end{functionality}
+	%exit_proc (t: Type);
+	%(* Returns s0.t if t is not Void, otherwise returns no value. *)
+	%jump (l: Label);
+	%(* GOTO l *)
+
+\interface{void}{StmtThrow}{NameID value}{}{Statement}
+\begin{functionality}
+This routine throws a C++ style exception and branches to an
+appropriate exception handler.
+\end{functionality}
+
+\interface{void}{StmtRaise}{NameID exception}{Expression e}{Statement}
+\begin{functionality}
+This routine raises a Modula-3 style exception and branches to an
+appropriate exception handler.  If no expression is available,
+\node{NoExpression} should be used.
+\end{functionality}
+
+%--
+\interface{void}{StmtAlternateReturn}{}{Expression e}{Statement}
+\begin{functionality}
+This routine implements the semantics of Fortran~77's alternate
+return construct.  The expression indexes the special alternate return
+parameters.  
+\end{functionality}
+
+%==============================================================================
+\Subsection{Exception Handling Statements}
+
+Though exception handling is similar in Modula-3 and C++, The
+generation interface provides separate routines for these languages.
+The primary difference is that a Modula-3 exception passes an entity
+of type \node{Exception}, whereas a C++ exception passes an argument
+list for an exception handler.  The syntax of their respective
+\key{try} blocks is also slightly different.
+
+\partitle{Modula-3 style exceptions}
+%--
+\interface{void}{ExceptionKey}{NameID e}{}{ExceptionKey}
+%--
+\interface{void}{ExceptionKeyBegin}{}{}{}
+%--
+\interface{void}{ExceptionKeyEnd}{}{\manyPops}{ExceptionKeys}
+\begin{functionality}
+\befunc{ExceptionKey}{\node{ExceptionKey}}
+\end{functionality}
+
+%--
+\interface{void}{ExceptionHandler}{}{ExceptionKeys eks, Statement s}{Handler}
+%--
+\interface{NameID}{ExceptionHandlerWithArgument}
+	{NameID exception, Identifier i}{Statement s}{Handler}
+\begin{functionality}
+This routine represents an exception with an argument.  Generation
+interface implementations are responsible for generating the
+declaration for \args{i}.
+\end{functionality}
+%--
+\interface{void}{ElseHandler}{}{Statement s}{Handler}
+\begin{functionality}
+This routine implements Modula-3's else handler, which is called for
+any exception that reaches it.
+\end{functionality}
+
+%--
+\interface{void}{HandlerBegin}{}{}{}
+%--
+\interface{void}{HandlerEnd}{}{\manyPops}{Handlers}
+\begin{functionality}
+Each try block has a list of elements of type \node{Handler}
+associated with it.  
+
+\befunc{Handler}{\node{Handler}}
+\end{functionality}
+
+%--
+\interface{void}{StmtTryExcept}{}{Statement s, Handlers hs}{Statement}
+\begin{functionality}
+This routine implements Modula-3's \key{tryExcept} construct.  
+\end{functionality}
+%--
+\interface{void}{StmtTryFinally}{}{Statement s1, Statement s2}{Statement}
+\begin{functionality}
+This routine implements Modula-3's \key{tryFinally} construct.  
+\end{functionality}
+
+\partitle{C++ style exceptions}
+
+%--
+\interface{void}{CatchException}{}{FormalDecl vd, Statement stmt}{Catch}
+%--
+\interface{void}{CatchAll}{}{Statement stmt}{Catch}
+\begin{functionality}
+This routine represents a catch clause that can handle any exception.
+This routine represents C++'s ``...'' notation.
+\end{functionality}
+
+%--
+\interface{void}{CatchBegin}{}{}{}
+%--
+\interface{void}{CatchEnd}{}{\manyPops}{Catchers}
+\begin{functionality}
+Each try block has a list of elements of type \node{Catch}
+associated with it.  
+
+\befunc{Catch}{\node{Catch}}
+\end{functionality}
+
+%--
+\interface{void}{StmtTry}{}{Statement s, Catchers cs}{Statement}
+\begin{functionality}
+This routine implements C++'s \key{try} construct.  
+\end{functionality}
+
+\todo{
+(*------------------------------------------------ traps & runtime checks ---*)
+
+assert_fault   ();
+narrow_fault   ();
+return_fault   ();
+case_fault     ();
+typecase_fault ();
+(* Abort *)
+
+check_nil ();
+(* IF (s0.A = NIL) THEN Abort *)
+
+check_lo (READONLY i: Target.Int);
+(* IF (s0.I < i) THEN Abort *)
+
+check_hi (READONLY i: Target.Int);
+(* IF (i < s0.I) THEN Abort *)
+
+check_range (READONLY a, b: Target.Int);
+(* IF (s0.I < a) OR (b < s0.I) THEN Abort *)
+
+check_index ();
+(* IF NOT (0 <= s1.I < s0.I) THEN Abort END; pop
+   s0.I is guaranteed to be positive so the unsigned
+   check (s0.W < s1.W) is sufficient. *)
+
+check_eq ();
+(* IF (s0.I # s1.I) THEN Abort;  Pop (2) *)
+}
+
+%==============================================================================
+\Subsection{Miscellaneous Statements}
+
+\interface{void}{StmtSpcfyUsing}{NameID id}{}{Statement}
+
+\interface{void}{StmtUsingDirective}{NameID namespace}{}{Statement}
+
+\interface{NameID}{StmtWithAlias}{Identifier id}
+	{Expression e, Statement s}{Statement}
+
+\interface{void}{StmtEval}{}{Expression e}{Statement}
+\begin{functionality}
+This routine converts an expression to a statement.  It executes an
+expression and then discards the result.  Hence, the expression is
+being executed only for its side effect.  This routine implements
+Modula-3's \key{eval} construct and is used to represent C/C++'s
+implicit conversion from an expression to a statement.  
+\end{functionality}
+
+\interface{void}{StmtDeclStmt}{}{Declaration d}{Statement}
+\begin{functionality}
+This routine converts a declaration to a statement, which allows a
+statement block to consist of all statements.
+\end{functionality}
+
+\interface{void}{StmtNull}{}{}{Statement}
+\begin{functionality}
+This routine represents a null statement.  
+\end{functionality}
+
+\todo{
+set_label (l: Label;  barrier: BOOLEAN := FALSE);
+(* define 'l' to be at the current pc, if 'barrier', 'l' bounds an exception
+   scope and no code is allowed to migrate past it. *)
+
+%(*---------------------------------------------------------------- misc. ---*)
+comment (a, b, c, d: TEXT := NIL);
+(* annotate the output with a&b&c&d as a comment.  Note that any of a,b,c or d
+   may be NIL. *)
+}

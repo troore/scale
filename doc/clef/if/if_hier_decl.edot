@@ -1,0 +1,40 @@
+digraph Declaration {
+#include "setup.h"
+graph[size="6.5,5" ratio=compress nodesep=.1]
+
+Declaration->TypeName
+Declaration->TypeDecl
+Declaration->ValueDecl
+Declaration->RoutineDecl
+Declaration->LabelDecl
+Declaration->ExceptionDecl
+Declaration->UnitDecl
+
+TypeDecl->OpaqueDecl
+
+ValueDecl->VariableDecl
+ValueDecl->FormalDecl
+ValueDecl->FieldDecl
+ValueDecl->ConstantDecl
+
+  ConstantDecl->EnumElementDecl
+
+{rank=same; EnumElementDecl; RoutineDecl}
+
+RoutineDecl->ProcedureDecl
+RoutineDecl->MethodDecl
+RoutineDecl->FriendDecl
+
+  MethodDecl->ConstructorDecl
+  MethodDecl->DestructorDecl
+  MethodDecl->ConversionDecl
+
+  ProcedureDecl->EntryDecl
+
+{rank=same; DestructorDecl; UnitDecl}
+
+UnitDecl->NamespaceDecl
+UnitDecl->FileDecl
+UnitDecl->InterfaceDecl
+UnitDecl->ModuleDecl
+}
