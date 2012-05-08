@@ -8,7 +8,7 @@ import scale.clef.type.*;
 
 /**
  * This class represents a C-style for loop statement, different with normal 
- * for loop statement, it is a CLONing for loop statement, and has a 'thread'
+ * for loop statement, it is a future-CLONED for loop statement, and has a 'thread'
  * number member.
  */
 
@@ -26,14 +26,14 @@ public class CloneForLoopStmt extends TestLoopStmt
   /**
    * Number of threads
    */
-  private Expression exprThdNum;
+  private int clnNum;
 
-  public CloneForLoopStmt(Statement s, Expression eInit, Expression eTest, Expression eInc, Expression eThdNum)
+  public CloneForLoopStmt(Statement s, Expression eInit, Expression eTest, Expression eInc, int clnNum)
   {
     super(s, eTest);
     setExprInit(eInit);
     setExprInc(eInc);
-	setExprThdNum (eThdNum);
+	this.clnNum = clnNum;
   }
 
   public void visit(Predicate p)
@@ -56,6 +56,14 @@ public class CloneForLoopStmt extends TestLoopStmt
   {
     return getExpr();
   }
+  
+  /**
+   * Return the clone number
+   */
+  public final int getClnNum()
+  {
+	return clnNum;  
+  }
 
   /**
    * Return the increment expression.
@@ -64,6 +72,7 @@ public class CloneForLoopStmt extends TestLoopStmt
   {
     return exprInc;
   }
+  
 
   /**
    * Specify the initialization expression.
@@ -90,14 +99,6 @@ public class CloneForLoopStmt extends TestLoopStmt
   }
 
   /**
-   * Specify the thread num expression.
-   */
-  protected final void setExprThdNum(Expression expr)
-  {
-    this.exprThdNum = expr;
-  }
-
-  /**
    * Return the specified AST child of this node.
    */
   public Node getChild(int i)
@@ -108,10 +109,9 @@ public class CloneForLoopStmt extends TestLoopStmt
       return getExpr();
     if (i == 2)
       return exprInit;
-	if (i == 3)
+    assert (i == 3) : "No such child " + i;
 		return exprInc;
-    assert (i == 4) : "No such child " + i;
-    return exprThdNum;
+    
   }
 
   /**
@@ -119,6 +119,6 @@ public class CloneForLoopStmt extends TestLoopStmt
    */
   public int numChildren()
   {
-    return 5;
+    return 4;
   }
 }

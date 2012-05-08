@@ -5141,7 +5141,7 @@ KEYWORD_clone = "__CLONE_beta";
     return stmt;
   }
 
-  private Statement buildCloneForStmt(Expression expr1, Expression expr2, Expression expr3, Statement istmt, Token t, Expression exprThdNum)
+  private Statement buildCloneForStmt(Expression expr1, Expression expr2, Expression expr3, Statement istmt, Token t, int exprClnNum)
   {
     if (fatalError)
       return errStmt;
@@ -5150,7 +5150,7 @@ KEYWORD_clone = "__CLONE_beta";
       istmt = new NullStmt();
 
     expr2 = trueOrFalse(expr2, t);
-    Statement stmt = new ForCloneLoopStmt(istmt, expr1, expr2, expr3, exprThdNum);
+    Statement stmt = new CloneForLoopStmt(istmt, expr1, expr2, expr3, exprClnNum);
     addStmtInfo(stmt, t.getLine(), t.getColumn());
     return stmt;
   }
@@ -6573,7 +6573,7 @@ protected iterationStatement returns [Statement stmt=errStmt]
   Expression  expr2 = null;
   Expression  expr3 = null;
   
-  Expression  exprThdNum = null;
+  int  exprClnNum = 1;
 
   Statement   istmt = null;
 } :
@@ -6587,9 +6587,9 @@ protected iterationStatement returns [Statement stmt=errStmt]
    | {allowC99Extensions}? (declarationSpecifiersChk)=> type = declarationSpecifiers decl = declarator[type, 0] Assign expr1 = initializer[type] Semi
      { expr1 = new AssignSimpleOp(type, genDeclAddress(decl), expr1); }
    | expr1=expression Semi
-   ) (expr2=expression)? Semi (expr3=expression)? RParen ((KEYWORD_clone)=> KEYWORD_clone LParen exprThdNum=expression RParen)? istmt=statement
+   ) (expr2=expression)? Semi (expr3=expression)? RParen ((KEYWORD_clone)=> KEYWORD_clone LParen n0:IntValue RParen {exprClnNum = (int)(Integer.parseInt (n0.getText()));})? istmt=statement
      { 
-		 stmt = ((exprThdNum == null) ? buildForStmt (expr1, expr2, expr3, istmt, f) : buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprThdNum));
+		 stmt = ((exprClnNum > 1) ? buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprClnNum) : buildForStmt (expr1, expr2, expr3, istmt, f));
      }
  ;
 

@@ -1640,12 +1640,144 @@ public class Clef2Scribble extends scale.clef.ErrorPredicate
     endNewStmt();
   }
   
-  public void visitCloneForLoopStmt (CloneForLoopStmt cs)
-  {
-	 /**
-	  * TODO: See visitForLoopStmt above, you'll get it.
-	  */
-  }
+	public void visitCloneForLoopStmt(CloneForLoopStmt cs) {
+		/**
+		 * TODO: See visitForLoopStmt above, you'll get it.
+		 */
+		startNewStmt(cs);
+
+		boolean lte = (pragma != null)
+				&& pragma.isSet(PragmaStk.LOOP_TEST_AT_END);
+
+		// Set up the loop header with variable initialization.
+
+		LoopInitChord lin = new LoopInitChord();
+		ExprTuple sr = new ExprTuple(lin, lin);
+		Expression init = cs.getExprInit();
+		Expression step = cs.getExprInc();
+		Expression ce = cs.getExprTest();
+		
+		
+		ExprTuple sri = visitExpr(init);
+
+		sr.concat(sri);
+
+		LoopPreHeaderChord lph = new LoopPreHeaderChord();
+		LoopHeaderChord lh = new LoopHeaderChord(scribble, parentLoop);
+
+		lh.setLoopInit(lin);
+		lh.usePragma(pragma);
+		
+		lh.setCloneNumber (cs.getClnNum ());
+
+		recordNewChord(lin);
+		recordNewChord(lph);
+		recordNewChord(lh);
+
+		VariableDecl iv = null;
+		if (init instanceof AssignSimpleOp) {
+			AssignSimpleOp ass = (AssignSimpleOp) init;
+			Expression lhs = ass.getLhs();
+			if (lhs instanceof IdAddressOp) {
+				iv = (VariableDecl) ((IdAddressOp) lhs).getDecl();
+				if ((ce == null) || (step == null)
+						|| !ce.containsDeclaration(iv)
+						|| !step.containsDeclaration(iv))
+					iv = null;
+			}
+		}
+
+		// To simplify cfg construction, we insert a null statement on the
+		// exit path from the loop.
+
+		NullChord exit = new NullChord();
+		recordNewChord(exit);
+
+		LoopTailChord tail = new LoopTailChord();
+		recordNewChord(tail);
+		lh.setLoopTail(tail);
+
+		Chord saveBreak = breakS;
+		Chord saveContinue = continueS;
+		LoopHeaderChord saveParentLoop = parentLoop;
+
+		breakS = exit;
+		parentLoop = lh;
+
+		// Set up the loop increment
+
+		ExprTuple inc_r = visitExpr(step);
+		Expr inc = extractStep(inc_r, iv);
+
+		if (inc_r.getBegin() == null) {
+			Chord s = new NullChord();
+			inc_r = new ExprTuple(inc_r.getRef(), s, s);
+		}
+
+		continueS = inc_r.getBegin();
+
+		// Generate the loop body
+
+		Statement block = cs.getStmt();
+		block.visit(this);
+		ExprTuple body_r = exp;
+
+		// If a for loop has no exit test (e.g., for(;;)), add one so that
+		// the CFG still reaches the end node. The exit test will be
+		// eliminated later.
+
+		if (ce == null) // No loop exit test - create one.
+			ce = LiteralMap.put(1, boolType);
+
+		// Generate the loop exit test and link up the loop nodes.
+
+		IfThenElseChord ifChord = null;
+		if (ce.isSimpleOp() && lte) { // Put loop exit test at the end.
+			NullChord after = new NullChord();
+			IfThenElseChord preIf = genConditionalBranch(ce, lph, after);
+			ExprTuple sr2 = new ExprTuple(lph, lph);
+			recordNewChord(after);
+			sr.concat(exp);
+			sr2.append(lh);
+			sr2.concat(body_r);
+			sr2.concat(inc_r);
+
+			ifChord = genConditionalBranch(ce, tail, exit);
+			lh.setLoopTest(ifChord);
+			sr2.concat(exp);
+			exit.setTarget(after);
+			tail.setTarget(lh);
+			exp = new ExprTuple(sr.getBegin(), after);
+		} else { // Put loop exit test at the start.
+			inc_r.append(tail);
+			sr.append(lph);
+			sr.append(lh);
+			body_r.concat(inc_r);
+			ifChord = genConditionalBranch(ce, body_r.getBegin(), exit);
+			lh.setLoopTest(ifChord);
+			sr.concat(exp);
+
+			tail.setTarget(lh);
+			exp = new ExprTuple(sr.getBegin(), exit);
+		}
+
+		if ((iv != null) && (inc != null)) {
+			Expr match = ifChord.getPredicateExpr();
+			if (match.isMatchExpr() && match.containsDeclaration(iv)) {
+				InductionVar ivar = new InductionVar(lh, iv);
+				lh.defPrimaryInductionVariable(ivar);
+				ivar.setInitExpr(sri.getRef());
+				ivar.setStepExpr(inc.copy());
+				ivar.setTermExpr((MatchExpr) match, false);
+			}
+		}
+
+		breakS = saveBreak;
+		continueS = saveContinue;
+		parentLoop = saveParentLoop;
+
+		endNewStmt();
+	}
 
   private Expr extractStep(ExprTuple inc_r, VariableDecl iv)
   {

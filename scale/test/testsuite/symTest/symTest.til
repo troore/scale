@@ -1,0 +1,145 @@
+;# Target architecture: trips.
+;# Host architecture: i386.
+;# Steensgard intra-procedural alias analyses.
+;# Separate compilation.
+;# Scale Compiler Version:  Mon Feb 7 00:45:42 CST 2005 
+;# Data dependence testing: tibBO.
+;# Optimizations: a2c0tfgjcamnpxmnpibudl.
+;# Performing: Loop Permutation
+;# Performing: Structure Fields in Registers
+;# Performing: Global Variable Replacement
+;# Performing: Flatten, Unroll & Jam
+;# Performing: Sparse Conditional Constant Propagation
+;# Performing: Array Access Strength Reduction
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Scalar Replacement
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Expression Tree Height Reduction
+;# Performing: Basic Block Optimizations
+;# Performing: Useless Copy Removal
+;# Performing: Dead Variable Elimination
+;# Performing: Loop Test at End
+;# Scale -oa -quiet -arch trips2 symTest.c -dir ..
+.app-file "symTest.c"
+	.data	
+	.align	4
+	.global	a
+a:
+	.space	4
+	.align	4
+	.global	b
+b:
+	.int	0x1
+	.align	4
+	.global	c
+c:
+	.int	b
+	.align	4
+_V0$$0:
+	.ascii	"%x\n\000"
+	.align	4
+_V1$$1:
+	.ascii	"%x\n\000"
+	.align	4
+_V2$$2:
+	.ascii	"%x\n\000"
+	.align	4
+_V3$$3:
+	.ascii	"%d\n\000"
+	.align	4
+_V4$$4:
+	.ascii	"%d\n\000"
+
+	.text	
+	.global	main
+;VARIABLE "b" size:4 (stack (Stk 88))
+;VARIABLE "h" size:4 $g12
+.bbegin main
+	read	$t0, $g1
+	read	$t1, $g2
+	read	$t2, $g12
+	mov	$t3, $t0
+	addi	$t4, $t0, -112
+	sd	($t4), $t3 S[0]
+	sd	8($t4), $t1 S[1]
+	sd	-8($t3), $t2 S[2]
+	entera	$t5, _V0$$0
+	entera	$t6, c
+	lws	$t7, ($t6) L[3]
+	mov	$t8, $t5
+	enterb	$t9, main$1
+	callo	printf	B[0]	; prob 1.0
+	write	$g1, $t4
+	write	$g2, $t9
+	write	$g3, $t8
+	write	$g4, $t7
+.bend
+.bbegin main$1
+	read	$t0, $g1
+	movi	$t1, 4
+	addi	$t2, $t0, 88
+	sw	($t2), $t1 S[0]
+	entera	$t3, _V1$$1
+	mov	$t4, $t3
+	mov	$t5, $t2
+	enterb	$t6, main$2
+	callo	printf	B[0]	; prob 1.0
+	write	$g2, $t6
+	write	$g3, $t4
+	write	$g4, $t5
+.bend
+.bbegin main$2
+	entera	$t0, b
+	lws	$t1, ($t0) L[0]
+	movi	$t2, 7
+	sw	($t0), $t2 S[1]
+	entera	$t3, _V2$$2
+	mov	$t4, $t3
+	mov	$t5, $t0
+	enterb	$t6, main$3
+	callo	printf	B[0]	; prob 1.0
+	write	$g2, $t6
+	write	$g3, $t4
+	write	$g4, $t5
+	write	$g12, $t1
+.bend
+.bbegin main$3
+	entera	$t0, _V3$$3
+	entera	$t1, b
+	lws	$t2, ($t1) L[0]
+	mov	$t3, $t0
+	enterb	$t4, main$4
+	callo	printf	B[0]	; prob 1.0
+	write	$g2, $t4
+	write	$g3, $t3
+	write	$g4, $t2
+.bend
+.bbegin main$4
+	read	$t0, $g12
+	entera	$t1, _V4$$4
+	mov	$t2, $t1
+	mov	$t3, $t0
+	enterb	$t4, main$5
+	callo	printf	B[0]	; prob 1.0
+	write	$g2, $t4
+	write	$g3, $t2
+	write	$g4, $t3
+.bend
+.bbegin main$5
+	read	$t0, $g1
+	ld	$t1, 8($t0) L[0]
+	addi	$t2, $t0, 112
+	ld	$t3, -8($t2) L[1]
+	ret	$t1	B[0]	; prob 1.0
+	write	$g1, $t2
+	write	$g2, $t1
+	write	$g12, $t3
+.bend
+
+
+
+

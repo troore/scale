@@ -1,0 +1,29 @@
+Trips Micro-Architecture eXtension - Version 1.4+
+
+Configuring simulator
+Loading configuration file /home/troore/Projects/trips/tmax/config/tmax_conf.cfg
+Initializing simulator
+Some threadslots will not be used (tmorph_mask 0xf)
+DEFAULT process scheduler chosen
+
+Loading program: symTest
+Running simulator
+Task 0, ASID 0, starts execution on Thread 0 with 16 cores!
+Program 0 exited with status 0x2
+Process 0 finished in cycle 19188
+
+num_processes 0
+num_waiting 0
+Finalizing simulator
+
+insts      : 7706
+blocks     : 345
+cycles     : 19189
+bp rate    : -nan
+ipc        : 0.40
+warnings   : 0
+fatals     : 0
+
+seconds    : 0.5486
+kinst/sec  : 14.0468
+kcyc/sec   : 34.9785

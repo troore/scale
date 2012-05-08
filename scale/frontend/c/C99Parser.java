@@ -5099,7 +5099,7 @@ public class C99Parser extends antlr.LLkParser       implements C99ParserTokenTy
     return stmt;
   }
 
-  private Statement buildCloneForStmt(Expression expr1, Expression expr2, Expression expr3, Statement istmt, Token t, Expression exprThdNum)
+  private Statement buildCloneForStmt(Expression expr1, Expression expr2, Expression expr3, Statement istmt, Token t, int exprClnNum)
   {
     if (fatalError)
       return errStmt;
@@ -5108,7 +5108,7 @@ public class C99Parser extends antlr.LLkParser       implements C99ParserTokenTy
       istmt = new NullStmt();
 
     expr2 = trueOrFalse(expr2, t);
-    Statement stmt = new ForCloneLoopStmt(istmt, expr1, expr2, expr3, exprThdNum);
+    Statement stmt = new CloneForLoopStmt(istmt, expr1, expr2, expr3, exprClnNum);
     addStmtInfo(stmt, t.getLine(), t.getColumn());
     return stmt;
   }
@@ -11438,6 +11438,7 @@ public C99Parser(ParserSharedInputState state) {
 		Token  w = null;
 		Token  d = null;
 		Token  f = null;
+		Token  n0 = null;
 		
 		Declaration decl  = null;
 		Type        type  = null;
@@ -11445,7 +11446,7 @@ public C99Parser(ParserSharedInputState state) {
 		Expression  expr2 = null;
 		Expression  expr3 = null;
 		
-		Expression  exprThdNum = null;
+		int  exprClnNum = 1;
 		
 		Statement   istmt = null;
 		
@@ -11637,8 +11638,12 @@ public C99Parser(ParserSharedInputState state) {
 					{
 						match(KEYWORD_clone);
 						match(LParen);
-						exprThdNum=expression();
+						n0 = LT(1);
+						match(IntValue);
 						match(RParen);
+						if ( inputState.guessing==0 ) {
+							exprClnNum = (int)(Integer.parseInt (n0.getText()));
+						}
 						break;
 					}
 					case KEYWORD_break:
@@ -11705,7 +11710,7 @@ public C99Parser(ParserSharedInputState state) {
 					istmt=statement();
 					if ( inputState.guessing==0 ) {
 						
-								 stmt = exprThdNum == null ? buildForStmt (expr1, expr2, expr3, istmt, f) : buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprThdNum);
+								 stmt = ((exprClnNum > 1) ? buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprClnNum) : buildForStmt (expr1, expr2, expr3, istmt, f));
 						
 					}
 					break;

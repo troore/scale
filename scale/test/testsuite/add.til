@@ -1,0 +1,57 @@
+;# Target architecture: trips.
+;# Host architecture: i386.
+;# Steensgard intra-procedural alias analyses.
+;# Separate compilation.
+;# Scale Compiler Version:  Mon Feb 7 00:45:42 CST 2005 
+;# Data dependence testing: tibBO.
+;# Optimizations: a2c0tfgjcamnpxmnpibudl.
+;# Performing: Loop Permutation
+;# Performing: Structure Fields in Registers
+;# Performing: Global Variable Replacement
+;# Performing: Flatten, Unroll & Jam
+;# Performing: Sparse Conditional Constant Propagation
+;# Performing: Array Access Strength Reduction
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Scalar Replacement
+;# Performing: Loop Invariant Code Motion
+;# Performing: Global Value Numbering
+;# Performing: Copy Propagation
+;# Performing: Expression Tree Height Reduction
+;# Performing: Basic Block Optimizations
+;# Performing: Useless Copy Removal
+;# Performing: Dead Variable Elimination
+;# Performing: Loop Test at End
+;# Scale -oa -quiet -arch trips2 add.c -dir ..
+.app-file "add.c"
+; BSS 
+	.global a
+	.comm	a, 4, 4
+
+	.data	
+	.align	4
+	.global	b
+b:
+	.int	0x1
+
+	.text	
+	.global	main
+.bbegin main
+	read	$t0, $g1
+	read	$t1, $g2
+	mov	$t2, $t0
+	addi	$t3, $t0, -32
+	sd	($t3), $t2 S[0]
+	entera	$t4, b
+	lws	$t5, ($t4) L[1]
+	entera	$t6, a
+	sw	($t6), $t5 S[2]
+	add	$t7, $t5, $t5
+	sw	($t4), $t7 S[3]
+	ret	$t1	B[0]	; prob 1.0
+.bend
+
+
+
+

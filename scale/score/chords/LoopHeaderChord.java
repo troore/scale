@@ -99,6 +99,8 @@ public class LoopHeaderChord extends SequentialChord
   private int profIterationCnt; // The number of times the loop was iterated - supplied by profiling.
   private int loopNumber;       // The number of the loop in this CFG.
   private int unrollFactor;     // Programmer specified unroll factor.
+  
+  private int cloneNumber;		// Programmer specified clone factor.
 
   private boolean liComplete;            // True if all loop information for this loop nest was found.
   private boolean ddComplete;            // True if all data dependence information for this loop nest was found.
@@ -122,6 +124,8 @@ public class LoopHeaderChord extends SequentialChord
     this.loopNumber       = scribble.getNextLoopNumber();
     this.profEntryCnt     = -1;
     this.profIterationCnt = -1;
+    
+    this.cloneNumber = 1;
 
     setParent(parent);
     assert setTrace();
@@ -630,6 +634,11 @@ public class LoopHeaderChord extends SequentialChord
   public final void setUnrollFactor(int unrollFactor)
   {
     this.unrollFactor = unrollFactor;
+  }
+  
+  public final void setCloneNumber (int cloneNumber)
+  {
+	  this.cloneNumber = cloneNumber;
   }
 
   public final boolean inhibitLoopPermute()
