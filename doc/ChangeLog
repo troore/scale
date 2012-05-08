@@ -25,5 +25,23 @@ public void visitCloneForLoopStmt(CloneForLoopStmt n)	{ visitTestLoopStmt(n); }
 
 此外，还要分别在$(SCALERELEASE)/scale/clef/Clef2C.java和$(SCALERELEASE)/scale/clef2scribble.java中添加对visitCloneForLoopStmt的实现，因为它们直接或间接的继承了Predicate，目前里面还没有添加任何操作。
 
+2012-5-7
+$(SCALERELEASE)/scale/frontend/c/c99.g:
+iterationStatement
+<
+...|f:KEYWORD_for LParen (...)(expr2=expression)? Semi (expr3=expression)? RParen ((KEYWORD_clone)=> KEYWORD_clone LParen exprThdNum=expression RParen)? istmt=statement
+{ stmt = ((exprThdNum == null) ? buildForStmt (expr1, expr2, expr3, istmt, f) : buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprThdNum)); };
+---
+>
+...|f:KEYWORD_for LParen (...)(expr2=expression)? Semi (expr3=expression)? RParen ((KEYWORD_clone)=> KEYWORD_clone LParen n0:IntValue RParen {exprClnNum = (int)(n0.getText().charAt(0) - '0');})? istmt=statement
+{ stmt = ((exprClnNum > 1) ? buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprClnNum) : buildForStmt (expr1, expr2, expr3, istmt, f)); };
+因为要clone的线程数必须在编译时静态得到，而expr的值只有在运行时才能得到。另外，目前不知道antlr是怎样实现IntValue的，在c99.g的词法定义中明明没有定义IntValue的规则。
+
+将原来CloneForLoopStmt中的exprThdNum改为了clnNum，毕竟不是真的多线程，改为clone更准确一些。
+
+在LoopHeaderChord中添加了cloneNumber，标记克隆的份数。
+
+在Clef2Scribble中添加了visitCloneForLoopStmt方法的实现，基本模仿visitForLoopStmt，只是添加了cloneNumber的初始化。
+
 
 
