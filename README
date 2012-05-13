@@ -6,3 +6,4 @@ make all && make jar
 
 That will create scale.jar in your classes/ directory.
 
+hh
