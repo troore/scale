@@ -5295,330 +5295,306 @@ public C99Parser(ParserSharedInputState state) {
 	protected final Expression  primaryExpression() throws RecognitionException, TokenStreamException {
 		Expression exp=errExp;
 		
-		Token  n00 = null;
-		Token  n01 = null;
-		Token  n02 = null;
-		Token  n03 = null;
-		Token  n04 = null;
-		Token  n05 = null;
-		Token  n06 = null;
-		Token  n07 = null;
-		Token  n08 = null;
-		Token  n09 = null;
-		Token  n10 = null;
-		Token  n11 = null;
-		Token  n12 = null;
-		Token  n13 = null;
-		Token  n14 = null;
-		Token  n15 = null;
-		Token  n16 = null;
-		Token  n17 = null;
-		Token  n18 = null;
-		Token  n19 = null;
-		Token  n22 = null;
-		Token  n20 = null;
-		Token  n21 = null;
-		Token  n23 = null;
-		Token  n24 = null;
-		
-		BlockStmt s;
-		String    t = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Identifier:
-			{
-				n00 = LT(1);
-				match(Identifier);
-				if ( inputState.guessing==0 ) {
-					exp = buildVariableRef(n00.getText(), n00);
-				}
-				break;
-			}
-			case HexDoubleValue:
-			{
-				n01 = LT(1);
-				match(HexDoubleValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(parseHexDouble(n01.getText()), double_type);
-				}
-				break;
-			}
-			case HexFloatValue:
-			{
-				n02 = LT(1);
-				match(HexFloatValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(parseHexDouble(n02.getText()), float_type);
-				}
-				break;
-			}
-			case HexLongDoubleValue:
-			{
-				n03 = LT(1);
-				match(HexLongDoubleValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(parseHexDouble(n03.getText()), long_double_type);
-				}
-				break;
-			}
-			case HexUnsignedIntValue:
-			{
-				n04 = LT(1);
-				match(HexUnsignedIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n04.getText()), true, unsigned_int_type);
-				}
-				break;
-			}
-			case HexUnsignedLongIntValue:
-			{
-				n05 = LT(1);
-				match(HexUnsignedLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n05.getText()), true, unsigned_long_type);
-				}
-				break;
-			}
-			case HexUnsignedLongLongIntValue:
-			{
-				n06 = LT(1);
-				match(HexUnsignedLongLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n06.getText()), true, unsigned_long_long_type);
-				}
-				break;
-			}
-			case HexIntValue:
-			{
-				n07 = LT(1);
-				match(HexIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n07.getText()), true, int_type);
-				}
-				break;
-			}
-			case HexLongIntValue:
-			{
-				n08 = LT(1);
-				match(HexLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n08.getText()), true, long_type);
-				}
-				break;
-			}
-			case HexLongLongIntValue:
-			{
-				n09 = LT(1);
-				match(HexLongLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseHex(n09.getText()), true, long_long_type);
-				}
-				break;
-			}
-			case DoubleValue:
-			{
-				n10 = LT(1);
-				match(DoubleValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(java.lang.Double.parseDouble(n10.getText()), double_type);
-				}
-				break;
-			}
-			case FloatValue:
-			{
-				n11 = LT(1);
-				match(FloatValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(java.lang.Double.parseDouble(n11.getText()), double_type);
-				}
-				break;
-			}
-			case LongDoubleValue:
-			{
-				n12 = LT(1);
-				match(LongDoubleValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildFloatLiteral(java.lang.Double.parseDouble(n12.getText()), long_double_type);
-				}
-				break;
-			}
-			case UnsignedIntValue:
-			{
-				n13 = LT(1);
-				match(UnsignedIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n13.getText()), false, unsigned_int_type);
-				}
-				break;
-			}
-			case UnsignedLongIntValue:
-			{
-				n14 = LT(1);
-				match(UnsignedLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n14.getText()), false, unsigned_long_type);
-				}
-				break;
-			}
-			case UnsignedLongLongIntValue:
-			{
-				n15 = LT(1);
-				match(UnsignedLongLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n15.getText()), false, unsigned_long_long_type);
-				}
-				break;
-			}
-			case IntValue:
-			{
-				n16 = LT(1);
-				match(IntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n16.getText()), false, int_type);
-				}
-				break;
-			}
-			case LongIntValue:
-			{
-				n17 = LT(1);
-				match(LongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n17.getText()), false, long_type);
-				}
-				break;
-			}
-			case LongLongIntValue:
-			{
-				n18 = LT(1);
-				match(LongLongIntValue);
-				if ( inputState.guessing==0 ) {
-					exp = buildIntLiteral(parseLong(n18.getText()), false, long_long_type);
-				}
-				break;
-			}
-			case CharacterConstant:
-			{
-				n19 = LT(1);
-				match(CharacterConstant);
-				if ( inputState.guessing==0 ) {
-					exp = LiteralMap.put((int) n19.getText().charAt(0), char_type);
-				}
-				break;
-			}
-			case WideCharacterConstant:
-			{
-				n22 = LT(1);
-				match(WideCharacterConstant);
-				if ( inputState.guessing==0 ) {
-					exp = LiteralMap.put(0xffff & n22.getText().charAt(0), wchar_type);
-				}
-				break;
-			}
-			case StringLit:
-			{
-				n20 = LT(1);
-				match(StringLit);
-				if ( inputState.guessing==0 ) {
-					t = n20.getText();
-				}
+		traceIn("primaryExpression");
+		try { // debugging
+			Token  n00 = null;
+			Token  n01 = null;
+			Token  n02 = null;
+			Token  n03 = null;
+			Token  n04 = null;
+			Token  n05 = null;
+			Token  n06 = null;
+			Token  n07 = null;
+			Token  n08 = null;
+			Token  n09 = null;
+			Token  n10 = null;
+			Token  n11 = null;
+			Token  n12 = null;
+			Token  n13 = null;
+			Token  n14 = null;
+			Token  n15 = null;
+			Token  n16 = null;
+			Token  n17 = null;
+			Token  n18 = null;
+			Token  n19 = null;
+			Token  n22 = null;
+			Token  n20 = null;
+			Token  n21 = null;
+			Token  n23 = null;
+			Token  n24 = null;
+			
+			BlockStmt s;
+			String    t = null;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Identifier:
 				{
-				_loop3:
-				do {
-					if ((LA(1)==StringLit)) {
-						n21 = LT(1);
-						match(StringLit);
-						if ( inputState.guessing==0 ) {
-							t  = t.substring(0, t.length() - 1) + n21.getText();
-						}
-					}
-					else {
-						break _loop3;
-					}
-					
-				} while (true);
-				}
-				if ( inputState.guessing==0 ) {
-					exp = buildStringExpression(t, n20);
-				}
-				break;
-			}
-			case WideStringLiteral:
-			{
-				n23 = LT(1);
-				match(WideStringLiteral);
-				if ( inputState.guessing==0 ) {
-					t = n23.getText();
-				}
-				{
-				_loop5:
-				do {
-					if ((LA(1)==StringLit)) {
-						n24 = LT(1);
-						match(StringLit);
-						if ( inputState.guessing==0 ) {
-							t  = t.substring(0, t.length() - 1) + n24.getText();
-						}
-					}
-					else {
-						break _loop5;
-					}
-					
-				} while (true);
-				}
-				if ( inputState.guessing==0 ) {
-					exp = buildWStringExpression(t, n23);
-				}
-				break;
-			}
-			default:
-				boolean synPredMatched7 = false;
-				if ((((LA(1)==KEYWORD_Extension) && (LA(2)==LParen))&&(allowGNUExtensions))) {
-					int _m7 = mark();
-					synPredMatched7 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(KEYWORD_Extension);
-						match(LParen);
-						match(LBrace);
-						}
-					}
-					catch (RecognitionException pe) {
-						synPredMatched7 = false;
-					}
-					rewind(_m7);
-					inputState.guessing--;
-				}
-				if ( synPredMatched7 ) {
-					match(KEYWORD_Extension);
-					match(LParen);
-					s=compoundStatement(false);
-					match(RParen);
+					n00 = LT(1);
+					match(Identifier);
 					if ( inputState.guessing==0 ) {
-						exp = buildStmtExpression(s, LT(1));
+						exp = buildVariableRef(n00.getText(), n00);
 					}
+					break;
 				}
-				else {
-					boolean synPredMatched9 = false;
-					if ((((LA(1)==LParen) && (LA(2)==LBrace))&&(allowGNUExtensions))) {
-						int _m9 = mark();
-						synPredMatched9 = true;
+				case HexDoubleValue:
+				{
+					n01 = LT(1);
+					match(HexDoubleValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(parseHexDouble(n01.getText()), double_type);
+					}
+					break;
+				}
+				case HexFloatValue:
+				{
+					n02 = LT(1);
+					match(HexFloatValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(parseHexDouble(n02.getText()), float_type);
+					}
+					break;
+				}
+				case HexLongDoubleValue:
+				{
+					n03 = LT(1);
+					match(HexLongDoubleValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(parseHexDouble(n03.getText()), long_double_type);
+					}
+					break;
+				}
+				case HexUnsignedIntValue:
+				{
+					n04 = LT(1);
+					match(HexUnsignedIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n04.getText()), true, unsigned_int_type);
+					}
+					break;
+				}
+				case HexUnsignedLongIntValue:
+				{
+					n05 = LT(1);
+					match(HexUnsignedLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n05.getText()), true, unsigned_long_type);
+					}
+					break;
+				}
+				case HexUnsignedLongLongIntValue:
+				{
+					n06 = LT(1);
+					match(HexUnsignedLongLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n06.getText()), true, unsigned_long_long_type);
+					}
+					break;
+				}
+				case HexIntValue:
+				{
+					n07 = LT(1);
+					match(HexIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n07.getText()), true, int_type);
+					}
+					break;
+				}
+				case HexLongIntValue:
+				{
+					n08 = LT(1);
+					match(HexLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n08.getText()), true, long_type);
+					}
+					break;
+				}
+				case HexLongLongIntValue:
+				{
+					n09 = LT(1);
+					match(HexLongLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseHex(n09.getText()), true, long_long_type);
+					}
+					break;
+				}
+				case DoubleValue:
+				{
+					n10 = LT(1);
+					match(DoubleValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(java.lang.Double.parseDouble(n10.getText()), double_type);
+					}
+					break;
+				}
+				case FloatValue:
+				{
+					n11 = LT(1);
+					match(FloatValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(java.lang.Double.parseDouble(n11.getText()), double_type);
+					}
+					break;
+				}
+				case LongDoubleValue:
+				{
+					n12 = LT(1);
+					match(LongDoubleValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildFloatLiteral(java.lang.Double.parseDouble(n12.getText()), long_double_type);
+					}
+					break;
+				}
+				case UnsignedIntValue:
+				{
+					n13 = LT(1);
+					match(UnsignedIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n13.getText()), false, unsigned_int_type);
+					}
+					break;
+				}
+				case UnsignedLongIntValue:
+				{
+					n14 = LT(1);
+					match(UnsignedLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n14.getText()), false, unsigned_long_type);
+					}
+					break;
+				}
+				case UnsignedLongLongIntValue:
+				{
+					n15 = LT(1);
+					match(UnsignedLongLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n15.getText()), false, unsigned_long_long_type);
+					}
+					break;
+				}
+				case IntValue:
+				{
+					n16 = LT(1);
+					match(IntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n16.getText()), false, int_type);
+					}
+					break;
+				}
+				case LongIntValue:
+				{
+					n17 = LT(1);
+					match(LongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n17.getText()), false, long_type);
+					}
+					break;
+				}
+				case LongLongIntValue:
+				{
+					n18 = LT(1);
+					match(LongLongIntValue);
+					if ( inputState.guessing==0 ) {
+						exp = buildIntLiteral(parseLong(n18.getText()), false, long_long_type);
+					}
+					break;
+				}
+				case CharacterConstant:
+				{
+					n19 = LT(1);
+					match(CharacterConstant);
+					if ( inputState.guessing==0 ) {
+						exp = LiteralMap.put((int) n19.getText().charAt(0), char_type);
+					}
+					break;
+				}
+				case WideCharacterConstant:
+				{
+					n22 = LT(1);
+					match(WideCharacterConstant);
+					if ( inputState.guessing==0 ) {
+						exp = LiteralMap.put(0xffff & n22.getText().charAt(0), wchar_type);
+					}
+					break;
+				}
+				case StringLit:
+				{
+					n20 = LT(1);
+					match(StringLit);
+					if ( inputState.guessing==0 ) {
+						t = n20.getText();
+					}
+					{
+					_loop3:
+					do {
+						if ((LA(1)==StringLit)) {
+							n21 = LT(1);
+							match(StringLit);
+							if ( inputState.guessing==0 ) {
+								t  = t.substring(0, t.length() - 1) + n21.getText();
+							}
+						}
+						else {
+							break _loop3;
+						}
+						
+					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						exp = buildStringExpression(t, n20);
+					}
+					break;
+				}
+				case WideStringLiteral:
+				{
+					n23 = LT(1);
+					match(WideStringLiteral);
+					if ( inputState.guessing==0 ) {
+						t = n23.getText();
+					}
+					{
+					_loop5:
+					do {
+						if ((LA(1)==StringLit)) {
+							n24 = LT(1);
+							match(StringLit);
+							if ( inputState.guessing==0 ) {
+								t  = t.substring(0, t.length() - 1) + n24.getText();
+							}
+						}
+						else {
+							break _loop5;
+						}
+						
+					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						exp = buildWStringExpression(t, n23);
+					}
+					break;
+				}
+				default:
+					boolean synPredMatched7 = false;
+					if ((((LA(1)==KEYWORD_Extension) && (LA(2)==LParen))&&(allowGNUExtensions))) {
+						int _m7 = mark();
+						synPredMatched7 = true;
 						inputState.guessing++;
 						try {
 							{
+							match(KEYWORD_Extension);
 							match(LParen);
 							match(LBrace);
 							}
 						}
 						catch (RecognitionException pe) {
-							synPredMatched9 = false;
+							synPredMatched7 = false;
 						}
-						rewind(_m9);
+						rewind(_m7);
 						inputState.guessing--;
 					}
-					if ( synPredMatched9 ) {
+					if ( synPredMatched7 ) {
+						match(KEYWORD_Extension);
 						match(LParen);
 						s=compoundStatement(false);
 						match(RParen);
@@ -5626,21 +5602,588 @@ public C99Parser(ParserSharedInputState state) {
 							exp = buildStmtExpression(s, LT(1));
 						}
 					}
-					else if (((LA(1)==KEYWORD_Extension) && (LA(2)==LParen))&&(allowGNUExtensions)) {
-						match(KEYWORD_Extension);
-						match(LParen);
-						exp=expression();
-						match(RParen);
+					else {
+						boolean synPredMatched9 = false;
+						if ((((LA(1)==LParen) && (LA(2)==LBrace))&&(allowGNUExtensions))) {
+							int _m9 = mark();
+							synPredMatched9 = true;
+							inputState.guessing++;
+							try {
+								{
+								match(LParen);
+								match(LBrace);
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched9 = false;
+							}
+							rewind(_m9);
+							inputState.guessing--;
+						}
+						if ( synPredMatched9 ) {
+							match(LParen);
+							s=compoundStatement(false);
+							match(RParen);
+							if ( inputState.guessing==0 ) {
+								exp = buildStmtExpression(s, LT(1));
+							}
+						}
+						else if (((LA(1)==KEYWORD_Extension) && (LA(2)==LParen))&&(allowGNUExtensions)) {
+							match(KEYWORD_Extension);
+							match(LParen);
+							exp=expression();
+							match(RParen);
+						}
+						else if ((LA(1)==LParen) && (_tokenSet_0.member(LA(2)))) {
+							match(LParen);
+							exp=expression();
+							match(RParen);
+						}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
 					}
-					else if ((LA(1)==LParen) && (_tokenSet_0.member(LA(2)))) {
-						match(LParen);
-						exp=expression();
-						match(RParen);
+					}}
+				}
+				catch (RecognitionException ex) {
+					if (inputState.guessing==0) {
+						reportError(ex);
+						consume();
+						consumeUntil(_tokenSet_1);
+					} else {
+					  throw ex;
 					}
+				}
+				return exp;
+			} finally { // debugging
+				traceOut("primaryExpression");
+			}
+		}
+		
+	protected final BlockStmt  compoundStatement(
+		boolean ftn
+	) throws RecognitionException, TokenStreamException {
+		BlockStmt stmt=errBlkStmt;
+		
+		traceIn("compoundStatement");
+		try { // debugging
+			Token  s1 = null;
+			Token  n0 = null;
+			Token  p = null;
+			
+			Statement   stmti        = null;
+			SymtabScope cs           = null;
+			boolean     saveTopLevel = topLevel;
+			boolean     eStmtFnd     = false;
+			BlockStmt   saveStmts    = currentBlockStmt;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					saveTopLevel = topLevel;
+					topLevel = false;
+					stmt = new BlockStmt();
+					currentBlockStmt = stmt;
+					
+				}
+				s1 = LT(1);
+				match(LBrace);
+				if ( inputState.guessing==0 ) {
+					
+					cs = cg.getSymbolTable().beginScope();
+					compoundStmtNestedLevel++;
+					
+				}
+				{
+				_loop245:
+				do {
+					switch ( LA(1)) {
+					case KEYWORD_typedef:
+					{
+						typedef();
+						break;
+					}
+					case Pragma:
+					{
+						p = LT(1);
+						match(Pragma);
+						if ( inputState.guessing==0 ) {
+							processPragma(p.getText(), p);
+						}
+						break;
+					}
+					default:
+						boolean synPredMatched242 = false;
+						if ((((_tokenSet_2.member(LA(1))) && (_tokenSet_3.member(LA(2))))&&(!eStmtFnd || allowC99Extensions))) {
+							int _m242 = mark();
+							synPredMatched242 = true;
+							inputState.guessing++;
+							try {
+								{
+								declarationSpecifiersChk();
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched242 = false;
+							}
+							rewind(_m242);
+							inputState.guessing--;
+						}
+						if ( synPredMatched242 ) {
+							declaration(currentBlockStmt);
+						}
+						else {
+							boolean synPredMatched244 = false;
+							if (((LA(1)==KEYWORD_Extension) && (_tokenSet_4.member(LA(2))))) {
+								int _m244 = mark();
+								synPredMatched244 = true;
+								inputState.guessing++;
+								try {
+									{
+									match(KEYWORD_Extension);
+									}
+								}
+								catch (RecognitionException pe) {
+									synPredMatched244 = false;
+								}
+								rewind(_m244);
+								inputState.guessing--;
+							}
+							if ( synPredMatched244 ) {
+								n0 = LT(1);
+								match(KEYWORD_Extension);
+								if ( inputState.guessing==0 ) {
+									
+									if (!allowGNUExtensions)
+									userWarning(Msg.MSG_Ignored_s, n0.getText(), n0);
+									
+								}
+							}
+							else if ((_tokenSet_5.member(LA(1))) && (_tokenSet_6.member(LA(2)))) {
+								stmti=statement();
+								if ( inputState.guessing==0 ) {
+									
+									if (stmti != null) {
+									currentBlockStmt.addStmt(stmti);
+									eStmtFnd = true;
+									}
+									
+								}
+							}
+						else {
+							break _loop245;
+						}
+						}}
+					} while (true);
+					}
+					match(RBrace);
+					{
+					if (((LA(1)==Semi) && (_tokenSet_7.member(LA(2))))&&(allowGNUExtensions)) {
+						match(Semi);
+					}
+					else if ((_tokenSet_7.member(LA(1))) && (_tokenSet_8.member(LA(2)))) {
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					
+					}
+					if ( inputState.guessing==0 ) {
+						
+						finishBlockStmt(currentBlockStmt, ftn, cs, s1);
+						currentBlockStmt = saveStmts;
+						cg.getSymbolTable().endScope();
+						topLevel = saveTopLevel;
+						compoundStmtNestedLevel--;
+						
+					}
+				}
+				catch (RecognitionException ex) {
+					if (inputState.guessing==0) {
+						
+						reportError(ex);
+						consumeUntil(RBrace);
+						consume();
+						topLevel = saveTopLevel;
+						fatalError = true;
+						compoundStmtNestedLevel--;
+						currentBlockStmt = saveStmts;
+						return null;
+						
+					} else {
+						throw ex;
+					}
+				}
+				return stmt;
+			} finally { // debugging
+				traceOut("compoundStatement");
+			}
+		}
+		
+	protected final Expression  expression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("expression");
+		try { // debugging
+			
+			Expression expr;
+			
+			
+			try {      // for error handling
+				exp=assignmentExpression();
+				{
+				_loop85:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						expr=assignmentExpression();
+						if ( inputState.guessing==0 ) {
+							exp = new SeriesOp(exp, expr);
+						}
+					}
+					else {
+						break _loop85;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_9);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("expression");
+		}
+	}
+	
+	protected final Expression  postfixExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("postfixExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			Token  n2 = null;
+			Token  n3 = null;
+			
+			Expression expr0 = null;
+			Expression expr1 = null;
+			Type       ty    = null;
+			Vector<Expression> args  = null;
+			
+			
+			try {      // for error handling
+				{
+				boolean synPredMatched13 = false;
+				if (((LA(1)==LParen) && (_tokenSet_10.member(LA(2))))) {
+					int _m13 = mark();
+					synPredMatched13 = true;
+					inputState.guessing++;
+					try {
+						{
+						match(LParen);
+						typeName();
+						match(RParen);
+						match(LBrace);
+						}
+					}
+					catch (RecognitionException pe) {
+						synPredMatched13 = false;
+					}
+					rewind(_m13);
+					inputState.guessing--;
+				}
+				if ( synPredMatched13 ) {
+					match(LParen);
+					ty=typeName();
+					match(RParen);
+					exp=aggregationExpr(ty);
+				}
 				else {
+					boolean synPredMatched15 = false;
+					if (((LA(1)==Identifier) && (LA(2)==LParen))) {
+						int _m15 = mark();
+						synPredMatched15 = true;
+						inputState.guessing++;
+						try {
+							{
+							match(Identifier);
+							match(LParen);
+							}
+						}
+						catch (RecognitionException pe) {
+							synPredMatched15 = false;
+						}
+						rewind(_m15);
+						inputState.guessing--;
+					}
+					if ( synPredMatched15 ) {
+						exp=ftnCall();
+					}
+					else {
+						boolean synPredMatched18 = false;
+						if (((LA(1)==KEYWORD_va_arg||LA(1)==KEYWORD_builtin_va_arg))) {
+							int _m18 = mark();
+							synPredMatched18 = true;
+							inputState.guessing++;
+							try {
+								{
+								{
+								switch ( LA(1)) {
+								case KEYWORD_va_arg:
+								{
+									match(KEYWORD_va_arg);
+									break;
+								}
+								case KEYWORD_builtin_va_arg:
+								{
+									match(KEYWORD_builtin_va_arg);
+									break;
+								}
+								default:
+								{
+									throw new NoViableAltException(LT(1), getFilename());
+								}
+								}
+								}
+								match(LParen);
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched18 = false;
+							}
+							rewind(_m18);
+							inputState.guessing--;
+						}
+						if ( synPredMatched18 ) {
+							exp=vaArg();
+						}
+						else if ((_tokenSet_11.member(LA(1))) && (_tokenSet_12.member(LA(2)))) {
+							exp=primaryExpression();
+						}
+						else {
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}}
+						}
+						if ( inputState.guessing==0 ) {
+							expr0 = exp;
+						}
+						{
+						_loop21:
+						do {
+							switch ( LA(1)) {
+							case Dot:
+							{
+								match(Dot);
+								n0 = LT(1);
+								match(Identifier);
+								if ( inputState.guessing==0 ) {
+									expr0 = buildFieldRef(false, n0.getText(), expr0, n0);
+								}
+								break;
+							}
+							case Select:
+							{
+								match(Select);
+								n1 = LT(1);
+								match(Identifier);
+								if ( inputState.guessing==0 ) {
+									expr0 = buildFieldRef(true, n1.getText(), expr0, n1);
+								}
+								break;
+							}
+							case LBracket:
+							{
+								n2 = LT(1);
+								match(LBracket);
+								expr1=expression();
+								match(RBracket);
+								if ( inputState.guessing==0 ) {
+									expr0 = buildSubscriptValue(expr0, expr1, n2);
+								}
+								break;
+							}
+							case LParen:
+							{
+								n3 = LT(1);
+								match(LParen);
+								{
+								switch ( LA(1)) {
+								case KEYWORD_sizeof:
+								case KEYWORD_Extension:
+								case KEYWORD_alignof:
+								case KEYWORD_va_arg:
+								case KEYWORD_builtin_va_arg:
+								case KEYWORD_builtin_offsetof:
+								case Identifier:
+								case HexDoubleValue:
+								case HexFloatValue:
+								case HexLongDoubleValue:
+								case HexUnsignedIntValue:
+								case HexUnsignedLongIntValue:
+								case HexUnsignedLongLongIntValue:
+								case HexIntValue:
+								case HexLongIntValue:
+								case HexLongLongIntValue:
+								case DoubleValue:
+								case FloatValue:
+								case LongDoubleValue:
+								case UnsignedIntValue:
+								case UnsignedLongIntValue:
+								case UnsignedLongLongIntValue:
+								case IntValue:
+								case LongIntValue:
+								case LongLongIntValue:
+								case CharacterConstant:
+								case WideCharacterConstant:
+								case StringLit:
+								case WideStringLiteral:
+								case LParen:
+								case Dec:
+								case Inc:
+								case And:
+								case Mult:
+								case Plus:
+								case Sub:
+								case Comp:
+								case Not:
+								{
+									args=argumentExpressionList();
+									break;
+								}
+								case RParen:
+								{
+									break;
+								}
+								default:
+								{
+									throw new NoViableAltException(LT(1), getFilename());
+								}
+								}
+								}
+								match(RParen);
+								if ( inputState.guessing==0 ) {
+									expr0 = buildCall(expr0, args, n3);
+								}
+								break;
+							}
+							case Dec:
+							{
+								match(Dec);
+								if ( inputState.guessing==0 ) {
+									expr0 = new PostDecrementOp(expr0.getType(), makeLValue(expr0));
+								}
+								break;
+							}
+							case Inc:
+							{
+								match(Inc);
+								if ( inputState.guessing==0 ) {
+									expr0 = new PostIncrementOp(expr0.getType(), makeLValue(expr0));
+								}
+								break;
+							}
+							default:
+							{
+								break _loop21;
+							}
+							}
+						} while (true);
+						}
+						if ( inputState.guessing==0 ) {
+							exp = expr0;
+						}
+					}
+					catch (RecognitionException ex) {
+						if (inputState.guessing==0) {
+							reportError(ex);
+							consume();
+							consumeUntil(_tokenSet_13);
+						} else {
+						  throw ex;
+						}
+					}
+					return exp;
+				} finally { // debugging
+					traceOut("postfixExpression");
+				}
+			}
+			
+	protected final Type  typeName() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("typeName");
+		try { // debugging
+			
+			try {      // for error handling
+				type=specifierQualifierList();
+				{
+				switch ( LA(1)) {
+				case LParen:
+				case LBracket:
+				case Mult:
+				{
+					type=abstractDeclarator(type);
+					break;
+				}
+				case RParen:
+				{
+					break;
+				}
+				default:
+				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-				}}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_14);
+				} else {
+				  throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("typeName");
+		}
+	}
+	
+	protected final Expression  aggregationExpr(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Expression exp = errExp;
+		
+		traceIn("aggregationExpr");
+		try { // debugging
+			
+			Vector<Object> v = null;
+			
+			
+			try {      // for error handling
+				v=initializerList(type);
+				if ( inputState.guessing==0 ) {
+					
+					if (allConstants(v)) {
+					exp = buildAggregation(type, v, LT(1));
+					} else {
+					VariableDecl decl = genTemp(type.getNonConstType());
+					exp = buildSeries(decl, v, LT(1));
+					cg.addSymbol(decl);
+					}
+					
+				}
 			}
 			catch (RecognitionException ex) {
 				if (inputState.guessing==0) {
@@ -5652,352 +6195,1192 @@ public C99Parser(ParserSharedInputState state) {
 				}
 			}
 			return exp;
+		} finally { // debugging
+			traceOut("aggregationExpr");
 		}
+	}
+	
+	protected final Expression  ftnCall() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
 		
-	protected final BlockStmt  compoundStatement(
-		boolean ftn
-	) throws RecognitionException, TokenStreamException {
-		BlockStmt stmt=errBlkStmt;
-		
-		Token  s1 = null;
-		Token  n0 = null;
-		Token  p = null;
-		
-		Statement   stmti        = null;
-		SymtabScope cs           = null;
-		boolean     saveTopLevel = topLevel;
-		boolean     eStmtFnd     = false;
-		BlockStmt   saveStmts    = currentBlockStmt;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				saveTopLevel = topLevel;
-				topLevel = false;
-				stmt = new BlockStmt();
-				currentBlockStmt = stmt;
-				
-			}
-			s1 = LT(1);
-			match(LBrace);
-			if ( inputState.guessing==0 ) {
-				
-				cs = cg.getSymbolTable().beginScope();
-				compoundStmtNestedLevel++;
-				
-			}
-			{
-			_loop245:
-			do {
-				switch ( LA(1)) {
-				case KEYWORD_typedef:
+		traceIn("ftnCall");
+		try { // debugging
+			Token  n00 = null;
+			
+			Vector<Expression> args = null;
+			Type       ty   = null;
+			Expression call = null;
+			
+			
+			try {      // for error handling
+				n00 = LT(1);
+				match(Identifier);
+				match(LParen);
 				{
-					typedef();
-					break;
-				}
-				case Pragma:
-				{
-					p = LT(1);
-					match(Pragma);
+				if (((_tokenSet_2.member(LA(1))) && (_tokenSet_15.member(LA(2))))&&(n00.getText().equals("__builtin_isfloat"))) {
+					ty=singleType();
+					match(RParen);
 					if ( inputState.guessing==0 ) {
-						processPragma(p.getText(), p);
+						call = ty.isRealType() ? one : zero;
 					}
-					break;
 				}
-				default:
-					boolean synPredMatched242 = false;
-					if ((((_tokenSet_2.member(LA(1))) && (_tokenSet_3.member(LA(2))))&&(!eStmtFnd || allowC99Extensions))) {
-						int _m242 = mark();
-						synPredMatched242 = true;
-						inputState.guessing++;
-						try {
-							{
-							declarationSpecifiersChk();
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched242 = false;
-						}
-						rewind(_m242);
-						inputState.guessing--;
+				else if ((_tokenSet_16.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
+					{
+					switch ( LA(1)) {
+					case KEYWORD_sizeof:
+					case KEYWORD_Extension:
+					case KEYWORD_alignof:
+					case KEYWORD_va_arg:
+					case KEYWORD_builtin_va_arg:
+					case KEYWORD_builtin_offsetof:
+					case Identifier:
+					case HexDoubleValue:
+					case HexFloatValue:
+					case HexLongDoubleValue:
+					case HexUnsignedIntValue:
+					case HexUnsignedLongIntValue:
+					case HexUnsignedLongLongIntValue:
+					case HexIntValue:
+					case HexLongIntValue:
+					case HexLongLongIntValue:
+					case DoubleValue:
+					case FloatValue:
+					case LongDoubleValue:
+					case UnsignedIntValue:
+					case UnsignedLongIntValue:
+					case UnsignedLongLongIntValue:
+					case IntValue:
+					case LongIntValue:
+					case LongLongIntValue:
+					case CharacterConstant:
+					case WideCharacterConstant:
+					case StringLit:
+					case WideStringLiteral:
+					case LParen:
+					case Dec:
+					case Inc:
+					case And:
+					case Mult:
+					case Plus:
+					case Sub:
+					case Comp:
+					case Not:
+					{
+						args=argumentExpressionList();
+						break;
 					}
-					if ( synPredMatched242 ) {
-						declaration(currentBlockStmt);
+					case RParen:
+					{
+						break;
 					}
-					else {
-						boolean synPredMatched244 = false;
-						if (((LA(1)==KEYWORD_Extension) && (_tokenSet_4.member(LA(2))))) {
-							int _m244 = mark();
-							synPredMatched244 = true;
-							inputState.guessing++;
-							try {
-								{
-								match(KEYWORD_Extension);
-								}
-							}
-							catch (RecognitionException pe) {
-								synPredMatched244 = false;
-							}
-							rewind(_m244);
-							inputState.guessing--;
-						}
-						if ( synPredMatched244 ) {
-							n0 = LT(1);
-							match(KEYWORD_Extension);
-							if ( inputState.guessing==0 ) {
-								
-								if (!allowGNUExtensions)
-								userWarning(Msg.MSG_Ignored_s, n0.getText(), n0);
-								
-							}
-						}
-						else if ((_tokenSet_5.member(LA(1))) && (_tokenSet_6.member(LA(2)))) {
-							stmti=statement();
-							if ( inputState.guessing==0 ) {
-								
-								if (stmti != null) {
-								currentBlockStmt.addStmt(stmti);
-								eStmtFnd = true;
-								}
-								
-							}
-						}
-					else {
-						break _loop245;
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
 					}
-					}}
-				} while (true);
-				}
-				match(RBrace);
-				{
-				if (((LA(1)==Semi) && (_tokenSet_7.member(LA(2))))&&(allowGNUExtensions)) {
-					match(Semi);
-				}
-				else if ((_tokenSet_7.member(LA(1))) && (_tokenSet_8.member(LA(2)))) {
+					}
+					}
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						
+						if (call == null)
+						exp = buildCall(n00.getText(), args, n00);
+						else
+						exp = call;
+						
+					}
 				}
 				else {
 					throw new NoViableAltException(LT(1), getFilename());
 				}
 				
 				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_1);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("ftnCall");
+		}
+	}
+	
+	protected final Expression  vaArg() throws RecognitionException, TokenStreamException {
+		Expression exp = errExp;
+		
+		traceIn("vaArg");
+		try { // debugging
+			
+			Type ty;
+			
+			
+			try {      // for error handling
+				{
+				switch ( LA(1)) {
+				case KEYWORD_va_arg:
+				{
+					match(KEYWORD_va_arg);
+					break;
+				}
+				case KEYWORD_builtin_va_arg:
+				{
+					match(KEYWORD_builtin_va_arg);
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				match(LParen);
+				exp=conditionalExpression();
+				match(Comma);
+				ty=singleType();
 				if ( inputState.guessing==0 ) {
 					
-					finishBlockStmt(currentBlockStmt, ftn, cs, s1);
-					currentBlockStmt = saveStmts;
-					cg.getSymbolTable().endScope();
-					topLevel = saveTopLevel;
-					compoundStmtNestedLevel--;
+					if (exp instanceof IdReferenceOp)
+					((IdReferenceOp) exp).getDecl().setAddressTaken();
+					exp = new VaArgOp(ty, makeLValue(exp));
+					
+				}
+				match(RParen);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_1);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("vaArg");
+		}
+	}
+	
+	protected final Vector<Expression>  argumentExpressionList() throws RecognitionException, TokenStreamException {
+		Vector<Expression> v = null;
+		
+		traceIn("argumentExpressionList");
+		try { // debugging
+			
+			Expression expr1, expr2;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					v = new Vector<Expression>(4);
+					
+				}
+				expr1=assignmentExpression();
+				if ( inputState.guessing==0 ) {
+					
+					if (expr1 != null)
+					v.addElement(expr1);
+					
+				}
+				{
+				_loop29:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						expr2=assignmentExpression();
+						if ( inputState.guessing==0 ) {
+							
+							if (expr2 != null)
+							v.addElement(expr2);
+							
+						}
+					}
+					else {
+						break _loop29;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_14);
+				} else {
+				  throw ex;
+				}
+			}
+			return v;
+		} finally { // debugging
+			traceOut("argumentExpressionList");
+		}
+	}
+	
+	protected final Type  singleType() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("singleType");
+		try { // debugging
+			
+			String attributes        = null;
+			int    saveStorageClass  = storageClass;
+			
+			
+			try {      // for error handling
+				type=declarationSpecifiers();
+				if ( inputState.guessing==0 ) {
+					
+					storageClass  = saveStorageClass;
+					
+				}
+				{
+				switch ( LA(1)) {
+				case LParen:
+				case LBracket:
+				case Mult:
+				{
+					type=abstractDeclarator(type);
+					break;
+				}
+				case RParen:
+				case Comma:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					storageClass  = saveStorageClass;
+					reportError(ex);
+					consume();
+					fatalError = true;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("singleType");
+		}
+	}
+	
+	protected final Expression  conditionalExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("conditionalExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			Expression expr3;
+			
+			
+			try {      // for error handling
+				exp=orConditionExpression();
+				{
+				switch ( LA(1)) {
+				case QMark:
+				{
+					n0 = LT(1);
+					match(QMark);
+					expr2=expression();
+					match(Colon);
+					expr3=conditionalExpression();
+					if ( inputState.guessing==0 ) {
+						exp = buildExpressionIf(exp, expr2, expr3, n0);
+					}
+					break;
+				}
+				case RParen:
+				case RBracket:
+				case Comma:
+				case Colon:
+				case Assign:
+				case MultAssign:
+				case SlashAssign:
+				case ModAssign:
+				case PlusAssign:
+				case SubAssign:
+				case AndAssign:
+				case OrAssign:
+				case XorAssign:
+				case LSAssign:
+				case RSAssign:
+				case Semi:
+				case Attributes:
+				case RBrace:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_18);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("conditionalExpression");
+		}
+	}
+	
+	protected final Expression  assignmentExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("assignmentExpression");
+		try { // debugging
+			
+			int        op  = 0;
+			Expression rhs = null;
+			Token      t   = null;
+			
+			
+			try {      // for error handling
+				exp=conditionalExpression();
+				{
+				switch ( LA(1)) {
+				case Assign:
+				case MultAssign:
+				case SlashAssign:
+				case ModAssign:
+				case PlusAssign:
+				case SubAssign:
+				case AndAssign:
+				case OrAssign:
+				case XorAssign:
+				case LSAssign:
+				case RSAssign:
+				{
+					if ( inputState.guessing==0 ) {
+						t = LT(1);
+					}
+					op=assignmentOperator();
+					rhs=assignmentExpression();
+					if ( inputState.guessing==0 ) {
+						exp = buildAssignment(op, exp, rhs, t);
+					}
+					break;
+				}
+				case RParen:
+				case RBracket:
+				case Comma:
+				case Colon:
+				case Semi:
+				case RBrace:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_19);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("assignmentExpression");
+		}
+	}
+	
+	protected final Expression  unaryExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("unaryExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			Token  n2 = null;
+			Token  n3 = null;
+			Token  n4 = null;
+			Token  n5 = null;
+			Token  n6 = null;
+			Token  n7 = null;
+			Token  n8 = null;
+			Token  n9 = null;
+			Token  n10 = null;
+			Token  l1 = null;
+			
+			Expression expr;
+			Type       type;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Inc:
+				{
+					n0 = LT(1);
+					match(Inc);
+					expr=unaryExpression();
+					if ( inputState.guessing==0 ) {
+						exp = new PreIncrementOp(expr.getType(), makeLValue(expr));
+					}
+					break;
+				}
+				case Dec:
+				{
+					n1 = LT(1);
+					match(Dec);
+					expr=unaryExpression();
+					if ( inputState.guessing==0 ) {
+						exp = new PreDecrementOp(expr.getType(), makeLValue(expr));
+					}
+					break;
+				}
+				case And:
+				{
+					n2 = LT(1);
+					match(And);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = buildAddressOf(expr, n2);
+					}
+					break;
+				}
+				case Mult:
+				{
+					n3 = LT(1);
+					match(Mult);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = buildDereferenceOp(expr, n3);
+					}
+					break;
+				}
+				case Plus:
+				{
+					n4 = LT(1);
+					match(Plus);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = expr;
+					}
+					break;
+				}
+				case Sub:
+				{
+					n5 = LT(1);
+					match(Sub);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = new NegativeOp(expr.getType(), expr);
+					}
+					break;
+				}
+				case Comp:
+				{
+					n6 = LT(1);
+					match(Comp);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = new BitComplementOp(expr.getType(), expr);
+					}
+					break;
+				}
+				case Not:
+				{
+					n7 = LT(1);
+					match(Not);
+					expr=castExpression();
+					if ( inputState.guessing==0 ) {
+						exp = equal0(expr, LT(1));
+					}
+					break;
+				}
+				case KEYWORD_sizeof:
+				{
+					n8 = LT(1);
+					match(KEYWORD_sizeof);
+					exp=sizeof();
+					break;
+				}
+				case KEYWORD_builtin_offsetof:
+				{
+					n9 = LT(1);
+					match(KEYWORD_builtin_offsetof);
+					exp=offsetof();
+					break;
+				}
+				case KEYWORD_alignof:
+				{
+					n10 = LT(1);
+					match(KEYWORD_alignof);
+					l1 = LT(1);
+					match(LParen);
+					type=singleType();
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						
+						if (strictANSIC)
+						userWarning(Msg.MSG_alignof_is_non_standard, null, l1);
+						if (!allowGNUExtensions)
+						userWarning(Msg.MSG_alignof_is_non_standard, null, l1);
+						
+						int al = type.alignment(Machine.currentMachine);
+						exp = LiteralMap.put(al, unsigned_int_type);
+						
+					}
+					break;
+				}
+				case KEYWORD_Extension:
+				case KEYWORD_va_arg:
+				case KEYWORD_builtin_va_arg:
+				case Identifier:
+				case HexDoubleValue:
+				case HexFloatValue:
+				case HexLongDoubleValue:
+				case HexUnsignedIntValue:
+				case HexUnsignedLongIntValue:
+				case HexUnsignedLongLongIntValue:
+				case HexIntValue:
+				case HexLongIntValue:
+				case HexLongLongIntValue:
+				case DoubleValue:
+				case FloatValue:
+				case LongDoubleValue:
+				case UnsignedIntValue:
+				case UnsignedLongIntValue:
+				case UnsignedLongLongIntValue:
+				case IntValue:
+				case LongIntValue:
+				case LongLongIntValue:
+				case CharacterConstant:
+				case WideCharacterConstant:
+				case StringLit:
+				case WideStringLiteral:
+				case LParen:
+				{
+					exp=postfixExpression();
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_13);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("unaryExpression");
+		}
+	}
+	
+	protected final Expression  castExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("castExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Type type = null;
+			
+			
+			try {      // for error handling
+				boolean synPredMatched42 = false;
+				if (((LA(1)==LParen) && (_tokenSet_10.member(LA(2))))) {
+					int _m42 = mark();
+					synPredMatched42 = true;
+					inputState.guessing++;
+					try {
+						{
+						match(LParen);
+						typeName();
+						match(RParen);
+						}
+					}
+					catch (RecognitionException pe) {
+						synPredMatched42 = false;
+					}
+					rewind(_m42);
+					inputState.guessing--;
+				}
+				if ( synPredMatched42 ) {
+					match(LParen);
+					type=typeName();
+					n0 = LT(1);
+					match(RParen);
+					{
+					switch ( LA(1)) {
+					case LBrace:
+					{
+						exp=aggregationExpr(type);
+						break;
+					}
+					case KEYWORD_sizeof:
+					case KEYWORD_Extension:
+					case KEYWORD_alignof:
+					case KEYWORD_va_arg:
+					case KEYWORD_builtin_va_arg:
+					case KEYWORD_builtin_offsetof:
+					case Identifier:
+					case HexDoubleValue:
+					case HexFloatValue:
+					case HexLongDoubleValue:
+					case HexUnsignedIntValue:
+					case HexUnsignedLongIntValue:
+					case HexUnsignedLongLongIntValue:
+					case HexIntValue:
+					case HexLongIntValue:
+					case HexLongLongIntValue:
+					case DoubleValue:
+					case FloatValue:
+					case LongDoubleValue:
+					case UnsignedIntValue:
+					case UnsignedLongIntValue:
+					case UnsignedLongLongIntValue:
+					case IntValue:
+					case LongIntValue:
+					case LongLongIntValue:
+					case CharacterConstant:
+					case WideCharacterConstant:
+					case StringLit:
+					case WideStringLiteral:
+					case LParen:
+					case Dec:
+					case Inc:
+					case And:
+					case Mult:
+					case Plus:
+					case Sub:
+					case Comp:
+					case Not:
+					{
+						exp=castExpression();
+						if ( inputState.guessing==0 ) {
+							
+							if (!fatalError) {
+							if (type.isArrayType())
+							type = PointerType.create(type);
+							exp = cast(type, convertLiterals(exp), n0);
+							}
+							
+						}
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+				}
+				else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
+					exp=unaryExpression();
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_13);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("castExpression");
+		}
+	}
+	
+	protected final Expression  sizeof() throws RecognitionException, TokenStreamException {
+		Expression exp = errExp;
+		
+		traceIn("sizeof");
+		try { // debugging
+			Token  n0 = null;
+			
+			Type       type;
+			Expression expr;
+			
+			
+			try {      // for error handling
+				boolean synPredMatched33 = false;
+				if (((LA(1)==LParen) && (_tokenSet_2.member(LA(2))))) {
+					int _m33 = mark();
+					synPredMatched33 = true;
+					inputState.guessing++;
+					try {
+						{
+						match(LParen);
+						singleType();
+						match(RParen);
+						}
+					}
+					catch (RecognitionException pe) {
+						synPredMatched33 = false;
+					}
+					rewind(_m33);
+					inputState.guessing--;
+				}
+				if ( synPredMatched33 ) {
+					n0 = LT(1);
+					match(LParen);
+					type=singleType();
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						exp = buildSizeof(type, n0);
+					}
+				}
+				else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
+					expr=unaryExpression();
+					if ( inputState.guessing==0 ) {
+						exp = buildSizeof(expr, LT(0));
+					}
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consume();
+					fatalError = true;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("sizeof");
+		}
+	}
+	
+	protected final Expression  offsetof() throws RecognitionException, TokenStreamException {
+		Expression exp = errExp;
+		
+		traceIn("offsetof");
+		try { // debugging
+			
+			Type       type;
+			
+			
+			try {      // for error handling
+				match(LParen);
+				type=singleType();
+				match(Comma);
+				exp=memberDesignator(type);
+				match(RParen);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consume();
+					fatalError = true;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("offsetof");
+		}
+	}
+	
+	protected final Expression  memberDesignator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Expression exp = null;
+		
+		traceIn("memberDesignator");
+		try { // debugging
+			Token  id = null;
+			Token  id2 = null;
+			Token  n = null;
+			
+			long       offset = 0;
+			Expression exp2   = null;
+			
+			
+			try {      // for error handling
+				id = LT(1);
+				match(Identifier);
+				if ( inputState.guessing==0 ) {
+					
+					FieldDecl fd = getField(type, id.getText(), id);
+					if (fd != null) {
+					offset += fd.getFieldOffset();
+					type = fd.getType();
+					}
+					
+				}
+				{
+				_loop37:
+				do {
+					switch ( LA(1)) {
+					case Dot:
+					{
+						match(Dot);
+						id2 = LT(1);
+						match(Identifier);
+						if ( inputState.guessing==0 ) {
+							
+							FieldDecl fd = getField(type, id2.getText(), id2);
+							if (fd != null) {
+							offset += fd.getFieldOffset();
+							type = fd.getType();
+							}
+							
+						}
+						break;
+					}
+					case LBracket:
+					{
+						n = LT(1);
+						match(LBracket);
+						exp2=expression();
+						match(RBracket);
+						if ( inputState.guessing==0 ) {
+							
+							exp = getArrayOffset(type, exp, exp2, n);
+							
+						}
+						break;
+					}
+					default:
+					{
+						break _loop37;
+					}
+					}
+				} while (true);
+				}
+				if ( inputState.guessing==0 ) {
+					
+					Expression off = LiteralMap.put(offset, size_t_type);
+					if (exp == null)
+					exp = off;
+					else if (offset != 0)
+					exp = new AdditionOp(size_t_type, off, exp);
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_14);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("memberDesignator");
+		}
+	}
+	
+	protected final Type  declarationSpecifiers() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("declarationSpecifiers");
+		try { // debugging
+			Token  n0 = null;
+			
+			int     saveBaseType      = baseType;
+			int     saveTypeQualifier = typeQualifier;
+			Type    saveBuildType     = buildType;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					baseType      = cStart;
+					typeQualifier = 0;
+					storageClass  = cAuto;
+					
+				}
+				{
+				int _cnt91=0;
+				_loop91:
+				do {
+					switch ( LA(1)) {
+					case KEYWORD_auto:
+					case KEYWORD_extern:
+					case KEYWORD_register:
+					case KEYWORD_static:
+					{
+						storageClassSpecifier();
+						break;
+					}
+					case KEYWORD_const:
+					case KEYWORD___const:
+					case KEYWORD_restrict:
+					case KEYWORD_volatile:
+					case KEYWORD__volatile:
+					{
+						typeQualifier();
+						break;
+					}
+					case KEYWORD_inline:
+					case KEYWORD__inline__:
+					case KEYWORD__inline:
+					{
+						functionSpecifier();
+						break;
+					}
+					case KEYWORD_char:
+					case KEYWORD_double:
+					case KEYWORD_enum:
+					case KEYWORD_float:
+					case KEYWORD_int:
+					case KEYWORD_long:
+					case KEYWORD_short:
+					case KEYWORD_signed:
+					case KEYWORD___signed__:
+					case KEYWORD_struct:
+					case KEYWORD_typeof:
+					case KEYWORD_union:
+					case KEYWORD_unsigned:
+					case KEYWORD_void:
+					case KEYWORD__Bool:
+					case KEYWORD__Complex:
+					case KEYWORD__Imaginary:
+					{
+						typeSpecifier();
+						break;
+					}
+					default:
+						if (((LA(1)==Identifier) && (_tokenSet_20.member(LA(2))))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
+							n0 = LT(1);
+							match(Identifier);
+							if ( inputState.guessing==0 ) {
+								
+								String   name = n0.getText();
+								TypeName tn   = lookupTypedef(name);
+								buildType = tn.getType();
+								baseType = specifyBaseType(cOther, baseType);
+								
+							}
+						}
+					else {
+						if ( _cnt91>=1 ) { break _loop91; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					}
+					_cnt91++;
+				} while (true);
+				}
+				if ( inputState.guessing==0 ) {
+					
+					if (baseType == cStart)
+					baseType = cInt;
+					
+					buildType = buildType(baseType, buildType);
+					if (buildType == null) {
+					userError(Msg.MSG_Invalid_type, null, LT(1));
+					buildType = void_type;
+					}
+					
+					type          = buildType;
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
 					
 				}
 			}
 			catch (RecognitionException ex) {
 				if (inputState.guessing==0) {
 					
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
 					reportError(ex);
-					consumeUntil(RBrace);
 					consume();
-					topLevel = saveTopLevel;
 					fatalError = true;
-					compoundStmtNestedLevel--;
-					currentBlockStmt = saveStmts;
-					return null;
 					
 				} else {
 					throw ex;
 				}
 			}
-			return stmt;
+			return type;
+		} finally { // debugging
+			traceOut("declarationSpecifiers");
 		}
-		
-	protected final Expression  expression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		
-		Expression expr;
-		
-		
-		try {      // for error handling
-			exp=assignmentExpression();
-			{
-			_loop85:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					expr=assignmentExpression();
-					if ( inputState.guessing==0 ) {
-						exp = new SeriesOp(exp, expr);
-					}
-				}
-				else {
-					break _loop85;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
 	}
 	
-	protected final Expression  postfixExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
+	protected final Type  abstractDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype=type;
 		
-		Token  n0 = null;
-		Token  n1 = null;
-		Token  n2 = null;
-		Token  n3 = null;
-		
-		Expression expr0 = null;
-		Expression expr1 = null;
-		Type       ty    = null;
-		Vector<Expression> args  = null;
-		
-		
-		try {      // for error handling
-			{
-			boolean synPredMatched13 = false;
-			if (((LA(1)==LParen) && (_tokenSet_10.member(LA(2))))) {
-				int _m13 = mark();
-				synPredMatched13 = true;
-				inputState.guessing++;
-				try {
+		traceIn("abstractDeclarator");
+		try { // debugging
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Mult:
+				{
+					ntype=pointer(type);
 					{
-					match(LParen);
-					typeName();
-					match(RParen);
-					match(LBrace);
+					switch ( LA(1)) {
+					case LParen:
+					case LBracket:
+					{
+						ntype=directAbstractDeclarator(ntype);
+						break;
 					}
-				}
-				catch (RecognitionException pe) {
-					synPredMatched13 = false;
-				}
-				rewind(_m13);
-				inputState.guessing--;
-			}
-			if ( synPredMatched13 ) {
-				match(LParen);
-				ty=typeName();
-				match(RParen);
-				exp=aggregationExpr(ty);
-			}
-			else {
-				boolean synPredMatched15 = false;
-				if (((LA(1)==Identifier) && (LA(2)==LParen))) {
-					int _m15 = mark();
-					synPredMatched15 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(Identifier);
-						match(LParen);
-						}
+					case RParen:
+					case Comma:
+					case LITERAL___restrict:
+					{
+						break;
 					}
-					catch (RecognitionException pe) {
-						synPredMatched15 = false;
-					}
-					rewind(_m15);
-					inputState.guessing--;
-				}
-				if ( synPredMatched15 ) {
-					exp=ftnCall();
-				}
-				else {
-					boolean synPredMatched18 = false;
-					if (((LA(1)==KEYWORD_va_arg||LA(1)==KEYWORD_builtin_va_arg))) {
-						int _m18 = mark();
-						synPredMatched18 = true;
-						inputState.guessing++;
-						try {
-							{
-							{
-							switch ( LA(1)) {
-							case KEYWORD_va_arg:
-							{
-								match(KEYWORD_va_arg);
-								break;
-							}
-							case KEYWORD_builtin_va_arg:
-							{
-								match(KEYWORD_builtin_va_arg);
-								break;
-							}
-							default:
-							{
-								throw new NoViableAltException(LT(1), getFilename());
-							}
-							}
-							}
-							match(LParen);
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched18 = false;
-						}
-						rewind(_m18);
-						inputState.guessing--;
-					}
-					if ( synPredMatched18 ) {
-						exp=vaArg();
-					}
-					else if ((_tokenSet_11.member(LA(1))) && (_tokenSet_12.member(LA(2)))) {
-						exp=primaryExpression();
-					}
-					else {
+					default:
+					{
 						throw new NoViableAltException(LT(1), getFilename());
 					}
-					}}
 					}
-					if ( inputState.guessing==0 ) {
-						expr0 = exp;
 					}
+					break;
+				}
+				case LParen:
+				case LBracket:
+				{
+					ntype=directAbstractDeclarator(type);
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_21);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("abstractDeclarator");
+		}
+	}
+	
+	protected final Vector<Object>  initializerList(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Vector<Object> v = null;
+		
+		traceIn("initializerList");
+		try { // debugging
+			
+			int  npos  = 0;
+			Type ntype = null;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					v = new Vector<Object>(20);
+					
+				}
+				match(LBrace);
+				{
+				switch ( LA(1)) {
+				case KEYWORD_sizeof:
+				case KEYWORD_Extension:
+				case KEYWORD_alignof:
+				case KEYWORD_va_arg:
+				case KEYWORD_builtin_va_arg:
+				case KEYWORD_builtin_offsetof:
+				case Identifier:
+				case HexDoubleValue:
+				case HexFloatValue:
+				case HexLongDoubleValue:
+				case HexUnsignedIntValue:
+				case HexUnsignedLongIntValue:
+				case HexUnsignedLongLongIntValue:
+				case HexIntValue:
+				case HexLongIntValue:
+				case HexLongLongIntValue:
+				case DoubleValue:
+				case FloatValue:
+				case LongDoubleValue:
+				case UnsignedIntValue:
+				case UnsignedLongIntValue:
+				case UnsignedLongLongIntValue:
+				case IntValue:
+				case LongIntValue:
+				case LongLongIntValue:
+				case CharacterConstant:
+				case WideCharacterConstant:
+				case StringLit:
+				case WideStringLiteral:
+				case LParen:
+				case LBrace:
+				case Dot:
+				case LBracket:
+				case Dec:
+				case Inc:
+				case And:
+				case Mult:
+				case Plus:
+				case Sub:
+				case Comp:
+				case Not:
+				{
+					npos=initializerListItem(v, npos, type);
 					{
-					_loop21:
+					_loop229:
 					do {
-						switch ( LA(1)) {
-						case Dot:
-						{
-							match(Dot);
-							n0 = LT(1);
-							match(Identifier);
-							if ( inputState.guessing==0 ) {
-								expr0 = buildFieldRef(false, n0.getText(), expr0, n0);
-							}
-							break;
-						}
-						case Select:
-						{
-							match(Select);
-							n1 = LT(1);
-							match(Identifier);
-							if ( inputState.guessing==0 ) {
-								expr0 = buildFieldRef(true, n1.getText(), expr0, n1);
-							}
-							break;
-						}
-						case LBracket:
-						{
-							n2 = LT(1);
-							match(LBracket);
-							expr1=expression();
-							match(RBracket);
-							if ( inputState.guessing==0 ) {
-								expr0 = buildSubscriptValue(expr0, expr1, n2);
-							}
-							break;
-						}
-						case LParen:
-						{
-							n3 = LT(1);
-							match(LParen);
+						if ((LA(1)==Comma)) {
+							match(Comma);
 							{
 							switch ( LA(1)) {
 							case KEYWORD_sizeof:
@@ -6030,6 +7413,9 @@ public C99Parser(ParserSharedInputState state) {
 							case StringLit:
 							case WideStringLiteral:
 							case LParen:
+							case LBrace:
+							case Dot:
+							case LBracket:
 							case Dec:
 							case Inc:
 							case And:
@@ -6039,10 +7425,11 @@ public C99Parser(ParserSharedInputState state) {
 							case Comp:
 							case Not:
 							{
-								args=argumentExpressionList();
+								npos=initializerListItem(v, npos, type);
 								break;
 							}
-							case RParen:
+							case Comma:
+							case RBrace:
 							{
 								break;
 							}
@@ -6052,193 +7439,732 @@ public C99Parser(ParserSharedInputState state) {
 							}
 							}
 							}
-							match(RParen);
+						}
+						else {
+							break _loop229;
+						}
+						
+					} while (true);
+					}
+					break;
+				}
+				case RBrace:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				match(RBrace);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consumeUntil(RBrace);
+					consume();
+					fatalError = true;
+					return null;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return v;
+		} finally { // debugging
+			traceOut("initializerList");
+		}
+	}
+	
+	protected final Expression  multiplicativeExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("multiplicativeExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			Token  n2 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=castExpression();
+				{
+				_loop47:
+				do {
+					switch ( LA(1)) {
+					case Mult:
+					{
+						n0 = LT(1);
+						match(Mult);
+						expr2=castExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildMultExpr(0, exp, expr2, n0);
+						}
+						break;
+					}
+					case Slash:
+					{
+						n1 = LT(1);
+						match(Slash);
+						expr2=castExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildMultExpr(1, exp, expr2, n1);
+						}
+						break;
+					}
+					case Mod:
+					{
+						n2 = LT(1);
+						match(Mod);
+						expr2=castExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildMultExpr(2, exp, expr2, n2);
+						}
+						break;
+					}
+					default:
+					{
+						break _loop47;
+					}
+					}
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_22);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("multiplicativeExpression");
+		}
+	}
+	
+	protected final Expression  additiveExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("additiveExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=multiplicativeExpression();
+				{
+				_loop50:
+				do {
+					switch ( LA(1)) {
+					case Plus:
+					{
+						n0 = LT(1);
+						match(Plus);
+						expr2=multiplicativeExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildAddExpr(exp, expr2, n0);
+						}
+						break;
+					}
+					case Sub:
+					{
+						n1 = LT(1);
+						match(Sub);
+						expr2=multiplicativeExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildSubtractExpr(exp, expr2, n1);
+						}
+						break;
+					}
+					default:
+					{
+						break _loop50;
+					}
+					}
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_23);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("additiveExpression");
+		}
+	}
+	
+	protected final Expression  shiftExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("shiftExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			
+			Expression expr2;
+			ShiftMode  shift = ShiftMode.Left;
+			Token      t     = null;
+			
+			
+			try {      // for error handling
+				exp=additiveExpression();
+				{
+				_loop54:
+				do {
+					if ((LA(1)==LShift||LA(1)==RShift)) {
+						{
+						switch ( LA(1)) {
+						case LShift:
+						{
+							n0 = LT(1);
+							match(LShift);
 							if ( inputState.guessing==0 ) {
-								expr0 = buildCall(expr0, args, n3);
+								shift = ShiftMode.Left;        t = n0;
 							}
 							break;
 						}
-						case Dec:
+						case RShift:
 						{
-							match(Dec);
+							n1 = LT(1);
+							match(RShift);
 							if ( inputState.guessing==0 ) {
-								expr0 = new PostDecrementOp(expr0.getType(), makeLValue(expr0));
-							}
-							break;
-						}
-						case Inc:
-						{
-							match(Inc);
-							if ( inputState.guessing==0 ) {
-								expr0 = new PostIncrementOp(expr0.getType(), makeLValue(expr0));
+								shift = ShiftMode.SignedRight; t = n1;
 							}
 							break;
 						}
 						default:
 						{
-							break _loop21;
+							throw new NoViableAltException(LT(1), getFilename());
 						}
 						}
-					} while (true);
+						}
+						expr2=additiveExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildShiftExpr(shift, exp, expr2, t);
+						}
 					}
-					if ( inputState.guessing==0 ) {
-						exp = expr0;
+					else {
+						break _loop54;
 					}
+					
+				} while (true);
 				}
-				catch (RecognitionException ex) {
-					if (inputState.guessing==0) {
-						reportError(ex);
-						consume();
-						consumeUntil(_tokenSet_13);
-					} else {
-					  throw ex;
-					}
-				}
-				return exp;
 			}
-			
-	protected final Type  typeName() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		
-		try {      // for error handling
-			type=specifierQualifierList();
-			{
-			switch ( LA(1)) {
-			case LParen:
-			case LBracket:
-			case Mult:
-			{
-				type=abstractDeclarator(type);
-				break;
-			}
-			case RParen:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
-			} else {
-			  throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final Expression  aggregationExpr(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Expression exp = errExp;
-		
-		
-		Vector<Object> v = null;
-		
-		
-		try {      // for error handling
-			v=initializerList(type);
-			if ( inputState.guessing==0 ) {
-				
-				if (allConstants(v)) {
-				exp = buildAggregation(type, v, LT(1));
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_24);
 				} else {
-				VariableDecl decl = genTemp(type.getNonConstType());
-				exp = buildSeries(decl, v, LT(1));
-				cg.addSymbol(decl);
+				  throw ex;
 				}
-				
 			}
+			return exp;
+		} finally { // debugging
+			traceOut("shiftExpression");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
 	}
 	
-	protected final Expression  ftnCall() throws RecognitionException, TokenStreamException {
+	protected final Expression  relationalExpression() throws RecognitionException, TokenStreamException {
 		Expression exp=errExp;
 		
-		Token  n00 = null;
-		
-		Vector<Expression> args = null;
-		Type       ty   = null;
-		Expression call = null;
-		
-		
-		try {      // for error handling
-			n00 = LT(1);
-			match(Identifier);
-			match(LParen);
-			{
-			if (((_tokenSet_2.member(LA(1))) && (_tokenSet_15.member(LA(2))))&&(n00.getText().equals("__builtin_isfloat"))) {
-				ty=singleType();
-				match(RParen);
-				if ( inputState.guessing==0 ) {
-					call = ty.isRealType() ? one : zero;
+		traceIn("relationalExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			Token  n2 = null;
+			Token  n3 = null;
+			
+			Expression expr2 = null;
+			int        sw    = 0;
+			Token      t     = null;
+			
+			
+			try {      // for error handling
+				exp=shiftExpression();
+				{
+				_loop58:
+				do {
+					if (((LA(1) >= LAngle && LA(1) <= GEqual))) {
+						{
+						switch ( LA(1)) {
+						case LAngle:
+						{
+							n0 = LT(1);
+							match(LAngle);
+							if ( inputState.guessing==0 ) {
+								sw = 1; t = n0;
+							}
+							break;
+						}
+						case RAngle:
+						{
+							n1 = LT(1);
+							match(RAngle);
+							if ( inputState.guessing==0 ) {
+								sw = 2; t = n1;
+							}
+							break;
+						}
+						case LEqual:
+						{
+							n2 = LT(1);
+							match(LEqual);
+							if ( inputState.guessing==0 ) {
+								sw = 3; t = n2;
+							}
+							break;
+						}
+						case GEqual:
+						{
+							n3 = LT(1);
+							match(GEqual);
+							if ( inputState.guessing==0 ) {
+								sw = 4; t = n3;
+							}
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						expr2=shiftExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildCompare(sw, exp, expr2, t);
+						}
+					}
+					else {
+						break _loop58;
+					}
+					
+				} while (true);
 				}
 			}
-			else if ((_tokenSet_16.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_25);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("relationalExpression");
+		}
+	}
+	
+	protected final Expression  equalityExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("equalityExpression");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			
+			Expression expr2;
+			boolean    equals = true;
+			Token      t = null;
+			
+			
+			try {      // for error handling
+				exp=relationalExpression();
 				{
+				_loop62:
+				do {
+					if ((LA(1)==Equal||LA(1)==NEqual)) {
+						{
+						switch ( LA(1)) {
+						case Equal:
+						{
+							n0 = LT(1);
+							match(Equal);
+							if ( inputState.guessing==0 ) {
+								equals = true;  t = n0;
+							}
+							break;
+						}
+						case NEqual:
+						{
+							n1 = LT(1);
+							match(NEqual);
+							if ( inputState.guessing==0 ) {
+								equals = false; t = n1;
+							}
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						expr2=relationalExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildEqualCompare(equals, exp, expr2, t);
+						}
+					}
+					else {
+						break _loop62;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_26);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("equalityExpression");
+		}
+	}
+	
+	protected final Expression  andExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("andExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=equalityExpression();
+				{
+				_loop65:
+				do {
+					if ((LA(1)==And)) {
+						n0 = LT(1);
+						match(And);
+						expr2=equalityExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildBitExpr(0, exp, expr2, n0);
+						}
+					}
+					else {
+						break _loop65;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_27);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("andExpression");
+		}
+	}
+	
+	protected final Expression  xorExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("xorExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=andExpression();
+				{
+				_loop68:
+				do {
+					if ((LA(1)==Xor)) {
+						n0 = LT(1);
+						match(Xor);
+						expr2=andExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildBitExpr(2, exp, expr2, n0);
+						}
+					}
+					else {
+						break _loop68;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_28);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("xorExpression");
+		}
+	}
+	
+	protected final Expression  orExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("orExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=xorExpression();
+				{
+				_loop71:
+				do {
+					if ((LA(1)==Or)) {
+						n0 = LT(1);
+						match(Or);
+						expr2=xorExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildBitExpr(1, exp, expr2, n0);
+						}
+					}
+					else {
+						break _loop71;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_29);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("orExpression");
+		}
+	}
+	
+	protected final Expression  andConditionExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("andConditionExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=orExpression();
+				{
+				_loop74:
+				do {
+					if ((LA(1)==AndCond)) {
+						n0 = LT(1);
+						match(AndCond);
+						expr2=orExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildConditional(0, exp, expr2, n0);
+						}
+					}
+					else {
+						break _loop74;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_30);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("andConditionExpression");
+		}
+	}
+	
+	protected final Expression  orConditionExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("orConditionExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr2;
+			
+			
+			try {      // for error handling
+				exp=andConditionExpression();
+				{
+				_loop77:
+				do {
+					if ((LA(1)==OrCond)) {
+						n0 = LT(1);
+						match(OrCond);
+						expr2=andConditionExpression();
+						if ( inputState.guessing==0 ) {
+							exp = buildConditional(1, exp, expr2, n0);
+						}
+					}
+					else {
+						break _loop77;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_31);
+				} else {
+				  throw ex;
+				}
+			}
+			return exp;
+		} finally { // debugging
+			traceOut("orConditionExpression");
+		}
+	}
+	
+	protected final int  assignmentOperator() throws RecognitionException, TokenStreamException {
+		int op = 0;
+		
+		traceIn("assignmentOperator");
+		try { // debugging
+			
+			try {      // for error handling
 				switch ( LA(1)) {
-				case KEYWORD_sizeof:
-				case KEYWORD_Extension:
-				case KEYWORD_alignof:
-				case KEYWORD_va_arg:
-				case KEYWORD_builtin_va_arg:
-				case KEYWORD_builtin_offsetof:
-				case Identifier:
-				case HexDoubleValue:
-				case HexFloatValue:
-				case HexLongDoubleValue:
-				case HexUnsignedIntValue:
-				case HexUnsignedLongIntValue:
-				case HexUnsignedLongLongIntValue:
-				case HexIntValue:
-				case HexLongIntValue:
-				case HexLongLongIntValue:
-				case DoubleValue:
-				case FloatValue:
-				case LongDoubleValue:
-				case UnsignedIntValue:
-				case UnsignedLongIntValue:
-				case UnsignedLongLongIntValue:
-				case IntValue:
-				case LongIntValue:
-				case LongLongIntValue:
-				case CharacterConstant:
-				case WideCharacterConstant:
-				case StringLit:
-				case WideStringLiteral:
-				case LParen:
-				case Dec:
-				case Inc:
-				case And:
-				case Mult:
-				case Plus:
-				case Sub:
-				case Comp:
-				case Not:
+				case Assign:
 				{
-					args=argumentExpressionList();
+					match(Assign);
+					if ( inputState.guessing==0 ) {
+						op =  1;
+					}
 					break;
 				}
-				case RParen:
+				case MultAssign:
 				{
+					match(MultAssign);
+					if ( inputState.guessing==0 ) {
+						op =  2;
+					}
+					break;
+				}
+				case SlashAssign:
+				{
+					match(SlashAssign);
+					if ( inputState.guessing==0 ) {
+						op =  3;
+					}
+					break;
+				}
+				case ModAssign:
+				{
+					match(ModAssign);
+					if ( inputState.guessing==0 ) {
+						op =  4;
+					}
+					break;
+				}
+				case PlusAssign:
+				{
+					match(PlusAssign);
+					if ( inputState.guessing==0 ) {
+						op =  5;
+					}
+					break;
+				}
+				case SubAssign:
+				{
+					match(SubAssign);
+					if ( inputState.guessing==0 ) {
+						op =  6;
+					}
+					break;
+				}
+				case AndAssign:
+				{
+					match(AndAssign);
+					if ( inputState.guessing==0 ) {
+						op =  7;
+					}
+					break;
+				}
+				case OrAssign:
+				{
+					match(OrAssign);
+					if ( inputState.guessing==0 ) {
+						op =  8;
+					}
+					break;
+				}
+				case XorAssign:
+				{
+					match(XorAssign);
+					if ( inputState.guessing==0 ) {
+						op =  9;
+					}
+					break;
+				}
+				case LSAssign:
+				{
+					match(LSAssign);
+					if ( inputState.guessing==0 ) {
+						op = 10;
+					}
+					break;
+				}
+				case RSAssign:
+				{
+					match(RSAssign);
+					if ( inputState.guessing==0 ) {
+						op = 11;
+					}
 					break;
 				}
 				default:
@@ -6246,591 +8172,105 @@ public C99Parser(ParserSharedInputState state) {
 					throw new NoViableAltException(LT(1), getFilename());
 				}
 				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_0);
+				} else {
+				  throw ex;
 				}
-				match(RParen);
+			}
+			return op;
+		} finally { // debugging
+			traceOut("assignmentOperator");
+		}
+	}
+	
+	protected final Expression  constantExpression() throws RecognitionException, TokenStreamException {
+		Expression exp=errExp;
+		
+		traceIn("constantExpression");
+		try { // debugging
+			
+			boolean saveInConstant = inConstant;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					inConstant = true;
+				}
+				exp=conditionalExpression();
 				if ( inputState.guessing==0 ) {
 					
-					if (call == null)
-					exp = buildCall(n00.getText(), args, n00);
+					inConstant = saveInConstant;
+					if (!fatalError) {
+					Literal lit = exp.getConstantValue();
+					if ((lit == Lattice.Bot) || (lit == Lattice.Top))
+					userError(Msg.MSG_Not_a_constant, null, LT(1));
 					else
-					exp = call;
+					exp = lit;
+					}
 					
 				}
 			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_32);
+				} else {
+				  throw ex;
+				}
 			}
+			return exp;
+		} finally { // debugging
+			traceOut("constantExpression");
+		}
+	}
+	
+	protected final void declaration(
+		BlockStmt block
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("declaration");
+		try { // debugging
+			Token  s0 = null;
 			
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  vaArg() throws RecognitionException, TokenStreamException {
-		Expression exp = errExp;
-		
-		
-		Type ty;
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case KEYWORD_va_arg:
-			{
-				match(KEYWORD_va_arg);
-				break;
-			}
-			case KEYWORD_builtin_va_arg:
-			{
-				match(KEYWORD_builtin_va_arg);
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			match(LParen);
-			exp=conditionalExpression();
-			match(Comma);
-			ty=singleType();
-			if ( inputState.guessing==0 ) {
-				
-				if (exp instanceof IdReferenceOp)
-				((IdReferenceOp) exp).getDecl().setAddressTaken();
-				exp = new VaArgOp(ty, makeLValue(exp));
-				
-			}
-			match(RParen);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Vector<Expression>  argumentExpressionList() throws RecognitionException, TokenStreamException {
-		Vector<Expression> v = null;
-		
-		
-		Expression expr1, expr2;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				v = new Vector<Expression>(4);
-				
-			}
-			expr1=assignmentExpression();
-			if ( inputState.guessing==0 ) {
-				
-				if (expr1 != null)
-				v.addElement(expr1);
-				
-			}
-			{
-			_loop29:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					expr2=assignmentExpression();
-					if ( inputState.guessing==0 ) {
-						
-						if (expr2 != null)
-						v.addElement(expr2);
-						
-					}
-				}
-				else {
-					break _loop29;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
-			} else {
-			  throw ex;
-			}
-		}
-		return v;
-	}
-	
-	protected final Type  singleType() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		
-		String attributes        = null;
-		int    saveStorageClass  = storageClass;
-		
-		
-		try {      // for error handling
-			type=declarationSpecifiers();
-			if ( inputState.guessing==0 ) {
-				
-				storageClass  = saveStorageClass;
-				
-			}
-			{
-			switch ( LA(1)) {
-			case LParen:
-			case LBracket:
-			case Mult:
-			{
-				type=abstractDeclarator(type);
-				break;
-			}
-			case RParen:
-			case Comma:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				storageClass  = saveStorageClass;
-				reportError(ex);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final Expression  conditionalExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		Expression expr3;
-		
-		
-		try {      // for error handling
-			exp=orConditionExpression();
-			{
-			switch ( LA(1)) {
-			case QMark:
-			{
-				n0 = LT(1);
-				match(QMark);
-				expr2=expression();
-				match(Colon);
-				expr3=conditionalExpression();
-				if ( inputState.guessing==0 ) {
-					exp = buildExpressionIf(exp, expr2, expr3, n0);
-				}
-				break;
-			}
-			case RParen:
-			case RBracket:
-			case Comma:
-			case Colon:
-			case Assign:
-			case MultAssign:
-			case SlashAssign:
-			case ModAssign:
-			case PlusAssign:
-			case SubAssign:
-			case AndAssign:
-			case OrAssign:
-			case XorAssign:
-			case LSAssign:
-			case RSAssign:
-			case Semi:
-			case Attributes:
-			case RBrace:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_18);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  assignmentExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		
-		int        op  = 0;
-		Expression rhs = null;
-		Token      t   = null;
-		
-		
-		try {      // for error handling
-			exp=conditionalExpression();
-			{
-			switch ( LA(1)) {
-			case Assign:
-			case MultAssign:
-			case SlashAssign:
-			case ModAssign:
-			case PlusAssign:
-			case SubAssign:
-			case AndAssign:
-			case OrAssign:
-			case XorAssign:
-			case LSAssign:
-			case RSAssign:
-			{
-				if ( inputState.guessing==0 ) {
-					t = LT(1);
-				}
-				op=assignmentOperator();
-				rhs=assignmentExpression();
-				if ( inputState.guessing==0 ) {
-					exp = buildAssignment(op, exp, rhs, t);
-				}
-				break;
-			}
-			case RParen:
-			case RBracket:
-			case Comma:
-			case Colon:
-			case Semi:
-			case RBrace:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_19);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  unaryExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		Token  n2 = null;
-		Token  n3 = null;
-		Token  n4 = null;
-		Token  n5 = null;
-		Token  n6 = null;
-		Token  n7 = null;
-		Token  n8 = null;
-		Token  n9 = null;
-		Token  n10 = null;
-		Token  l1 = null;
-		
-		Expression expr;
-		Type       type;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Inc:
-			{
-				n0 = LT(1);
-				match(Inc);
-				expr=unaryExpression();
-				if ( inputState.guessing==0 ) {
-					exp = new PreIncrementOp(expr.getType(), makeLValue(expr));
-				}
-				break;
-			}
-			case Dec:
-			{
-				n1 = LT(1);
-				match(Dec);
-				expr=unaryExpression();
-				if ( inputState.guessing==0 ) {
-					exp = new PreDecrementOp(expr.getType(), makeLValue(expr));
-				}
-				break;
-			}
-			case And:
-			{
-				n2 = LT(1);
-				match(And);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = buildAddressOf(expr, n2);
-				}
-				break;
-			}
-			case Mult:
-			{
-				n3 = LT(1);
-				match(Mult);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = buildDereferenceOp(expr, n3);
-				}
-				break;
-			}
-			case Plus:
-			{
-				n4 = LT(1);
-				match(Plus);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = expr;
-				}
-				break;
-			}
-			case Sub:
-			{
-				n5 = LT(1);
-				match(Sub);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = new NegativeOp(expr.getType(), expr);
-				}
-				break;
-			}
-			case Comp:
-			{
-				n6 = LT(1);
-				match(Comp);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = new BitComplementOp(expr.getType(), expr);
-				}
-				break;
-			}
-			case Not:
-			{
-				n7 = LT(1);
-				match(Not);
-				expr=castExpression();
-				if ( inputState.guessing==0 ) {
-					exp = equal0(expr, LT(1));
-				}
-				break;
-			}
-			case KEYWORD_sizeof:
-			{
-				n8 = LT(1);
-				match(KEYWORD_sizeof);
-				exp=sizeof();
-				break;
-			}
-			case KEYWORD_builtin_offsetof:
-			{
-				n9 = LT(1);
-				match(KEYWORD_builtin_offsetof);
-				exp=offsetof();
-				break;
-			}
-			case KEYWORD_alignof:
-			{
-				n10 = LT(1);
-				match(KEYWORD_alignof);
-				l1 = LT(1);
-				match(LParen);
-				type=singleType();
-				match(RParen);
+			Type   type             = null;
+			Vector<Declaration> vars = null;
+			String attributes       = null;
+			int    saveStorageClass = storageClass;
+			int    sc               = 0;
+			
+			
+			try {      // for error handling
 				if ( inputState.guessing==0 ) {
 					
-					if (strictANSIC)
-					userWarning(Msg.MSG_alignof_is_non_standard, null, l1);
-					if (!allowGNUExtensions)
-					userWarning(Msg.MSG_alignof_is_non_standard, null, l1);
-					
-					int al = type.alignment(Machine.currentMachine);
-					exp = LiteralMap.put(al, unsigned_int_type);
+					vars = new Vector<Declaration>(10);
 					
 				}
-				break;
-			}
-			case KEYWORD_Extension:
-			case KEYWORD_va_arg:
-			case KEYWORD_builtin_va_arg:
-			case Identifier:
-			case HexDoubleValue:
-			case HexFloatValue:
-			case HexLongDoubleValue:
-			case HexUnsignedIntValue:
-			case HexUnsignedLongIntValue:
-			case HexUnsignedLongLongIntValue:
-			case HexIntValue:
-			case HexLongIntValue:
-			case HexLongLongIntValue:
-			case DoubleValue:
-			case FloatValue:
-			case LongDoubleValue:
-			case UnsignedIntValue:
-			case UnsignedLongIntValue:
-			case UnsignedLongLongIntValue:
-			case IntValue:
-			case LongIntValue:
-			case LongLongIntValue:
-			case CharacterConstant:
-			case WideCharacterConstant:
-			case StringLit:
-			case WideStringLiteral:
-			case LParen:
-			{
-				exp=postfixExpression();
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_13);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  castExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Type type = null;
-		
-		
-		try {      // for error handling
-			boolean synPredMatched42 = false;
-			if (((LA(1)==LParen) && (_tokenSet_10.member(LA(2))))) {
-				int _m42 = mark();
-				synPredMatched42 = true;
-				inputState.guessing++;
-				try {
-					{
-					match(LParen);
-					typeName();
-					match(RParen);
-					}
+				type=declarationSpecifiers();
+				if ( inputState.guessing==0 ) {
+					
+					sc = storageClass;
+					storageClass = saveStorageClass;
+					
 				}
-				catch (RecognitionException pe) {
-					synPredMatched42 = false;
-				}
-				rewind(_m42);
-				inputState.guessing--;
-			}
-			if ( synPredMatched42 ) {
-				match(LParen);
-				type=typeName();
-				n0 = LT(1);
-				match(RParen);
 				{
 				switch ( LA(1)) {
-				case LBrace:
+				case Identifier:
+				case LParen:
+				case Mult:
+				case LITERAL___restrict:
+				case Attributes:
 				{
-					exp=aggregationExpr(type);
+					initDeclaratorList(vars, type, sc);
 					break;
 				}
-				case KEYWORD_sizeof:
-				case KEYWORD_Extension:
-				case KEYWORD_alignof:
-				case KEYWORD_va_arg:
-				case KEYWORD_builtin_va_arg:
-				case KEYWORD_builtin_offsetof:
-				case Identifier:
-				case HexDoubleValue:
-				case HexFloatValue:
-				case HexLongDoubleValue:
-				case HexUnsignedIntValue:
-				case HexUnsignedLongIntValue:
-				case HexUnsignedLongLongIntValue:
-				case HexIntValue:
-				case HexLongIntValue:
-				case HexLongLongIntValue:
-				case DoubleValue:
-				case FloatValue:
-				case LongDoubleValue:
-				case UnsignedIntValue:
-				case UnsignedLongIntValue:
-				case UnsignedLongLongIntValue:
-				case IntValue:
-				case LongIntValue:
-				case LongLongIntValue:
-				case CharacterConstant:
-				case WideCharacterConstant:
-				case StringLit:
-				case WideStringLiteral:
-				case LParen:
-				case Dec:
-				case Inc:
-				case And:
-				case Mult:
-				case Plus:
-				case Sub:
-				case Comp:
-				case Not:
+				case Semi:
 				{
-					exp=castExpression();
-					if ( inputState.guessing==0 ) {
-						
-						if (!fatalError) {
-						if (type.isArrayType())
-						type = PointerType.create(type);
-						exp = cast(type, convertLiterals(exp), n0);
-						}
-						
-					}
 					break;
 				}
 				default:
@@ -6839,349 +8279,650 @@ public C99Parser(ParserSharedInputState state) {
 				}
 				}
 				}
-			}
-			else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
-				exp=unaryExpression();
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_13);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  sizeof() throws RecognitionException, TokenStreamException {
-		Expression exp = errExp;
-		
-		Token  n0 = null;
-		
-		Type       type;
-		Expression expr;
-		
-		
-		try {      // for error handling
-			boolean synPredMatched33 = false;
-			if (((LA(1)==LParen) && (_tokenSet_2.member(LA(2))))) {
-				int _m33 = mark();
-				synPredMatched33 = true;
-				inputState.guessing++;
-				try {
-					{
-					match(LParen);
-					singleType();
-					match(RParen);
-					}
-				}
-				catch (RecognitionException pe) {
-					synPredMatched33 = false;
-				}
-				rewind(_m33);
-				inputState.guessing--;
-			}
-			if ( synPredMatched33 ) {
-				n0 = LT(1);
-				match(LParen);
-				type=singleType();
-				match(RParen);
+				s0 = LT(1);
+				match(Semi);
 				if ( inputState.guessing==0 ) {
-					exp = buildSizeof(type, n0);
+					
+					processDeclarations(vars, block, s0);
+					
 				}
 			}
-			else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
-				expr=unaryExpression();
-				if ( inputState.guessing==0 ) {
-					exp = buildSizeof(expr, LT(0));
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_4);
+				} else {
+				  throw ex;
 				}
 			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
+		} finally { // debugging
+			traceOut("declaration");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return exp;
 	}
 	
-	protected final Expression  offsetof() throws RecognitionException, TokenStreamException {
-		Expression exp = errExp;
-		
-		
-		Type       type;
-		
-		
-		try {      // for error handling
-			match(LParen);
-			type=singleType();
-			match(Comma);
-			exp=memberDesignator(type);
-			match(RParen);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  memberDesignator(
-		Type type
+	protected final void initDeclaratorList(
+		Vector<Declaration> vars, Type type, int sc
 	) throws RecognitionException, TokenStreamException {
-		Expression exp = null;
 		
-		Token  id = null;
-		Token  id2 = null;
-		Token  n = null;
-		
-		long       offset = 0;
-		Expression exp2   = null;
-		
-		
-		try {      // for error handling
-			id = LT(1);
-			match(Identifier);
-			if ( inputState.guessing==0 ) {
-				
-				FieldDecl fd = getField(type, id.getText(), id);
-				if (fd != null) {
-				offset += fd.getFieldOffset();
-				type = fd.getType();
+		traceIn("initDeclaratorList");
+		try { // debugging
+			
+			Declaration decl = null;
+			
+			
+			try {      // for error handling
+				decl=initDeclarator(type, sc);
+				if ( inputState.guessing==0 ) {
+					vars.addElement(decl);
 				}
-				
-			}
-			{
-			_loop37:
-			do {
-				switch ( LA(1)) {
-				case Dot:
 				{
-					match(Dot);
-					id2 = LT(1);
-					match(Identifier);
-					if ( inputState.guessing==0 ) {
-						
-						FieldDecl fd = getField(type, id2.getText(), id2);
-						if (fd != null) {
-						offset += fd.getFieldOffset();
-						type = fd.getType();
+				_loop97:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						decl=initDeclarator(type, sc);
+						if ( inputState.guessing==0 ) {
+							vars.addElement(decl);
 						}
-						
 					}
-					break;
-				}
-				case LBracket:
-				{
-					n = LT(1);
-					match(LBracket);
-					exp2=expression();
-					match(RBracket);
-					if ( inputState.guessing==0 ) {
-						
-						exp = getArrayOffset(type, exp, exp2, n);
-						
+					else {
+						break _loop97;
 					}
-					break;
+					
+				} while (true);
 				}
-				default:
-				{
-					break _loop37;
-				}
-				}
-			} while (true);
 			}
-			if ( inputState.guessing==0 ) {
-				
-				Expression off = LiteralMap.put(offset, size_t_type);
-				if (exp == null)
-				exp = off;
-				else if (offset != 0)
-				exp = new AdditionOp(size_t_type, off, exp);
-				
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_33);
+				} else {
+				  throw ex;
+				}
 			}
+		} finally { // debugging
+			traceOut("initDeclaratorList");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
 	}
 	
-	protected final Type  declarationSpecifiers() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
+	protected final void storageClassSpecifier() throws RecognitionException, TokenStreamException {
 		
-		Token  n0 = null;
-		
-		int     saveBaseType      = baseType;
-		int     saveTypeQualifier = typeQualifier;
-		Type    saveBuildType     = buildType;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				baseType      = cStart;
-				typeQualifier = 0;
-				storageClass  = cAuto;
-				
-			}
-			{
-			int _cnt91=0;
-			_loop91:
-			do {
+		traceIn("storageClassSpecifier");
+		try { // debugging
+			
+			try {      // for error handling
 				switch ( LA(1)) {
-				case KEYWORD_auto:
 				case KEYWORD_extern:
-				case KEYWORD_register:
+				{
+					match(KEYWORD_extern);
+					if ( inputState.guessing==0 ) {
+						storageClass = specifyStorageClass(storageClass, cExtern, LT(1));
+					}
+					break;
+				}
 				case KEYWORD_static:
 				{
-					storageClassSpecifier();
+					match(KEYWORD_static);
+					if ( inputState.guessing==0 ) {
+						storageClass = specifyStorageClass(storageClass, cStatic, LT(1));
+					}
 					break;
 				}
+				case KEYWORD_auto:
+				{
+					match(KEYWORD_auto);
+					if ( inputState.guessing==0 ) {
+						storageClass = specifyStorageClass(storageClass, cAuto, LT(1));
+					}
+					break;
+				}
+				case KEYWORD_register:
+				{
+					match(KEYWORD_register);
+					if ( inputState.guessing==0 ) {
+						storageClass = specifyStorageClass(storageClass, cRegister, LT(1));
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_34);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("storageClassSpecifier");
+		}
+	}
+	
+	protected final void typeQualifier() throws RecognitionException, TokenStreamException {
+		
+		traceIn("typeQualifier");
+		try { // debugging
+			
+			try {      // for error handling
+				switch ( LA(1)) {
 				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_restrict:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
 				{
-					typeQualifier();
+					match(KEYWORD_const);
+					if ( inputState.guessing==0 ) {
+						specifyTypeQualifier(cConstantType);
+					}
 					break;
 				}
-				case KEYWORD_inline:
-				case KEYWORD__inline__:
-				case KEYWORD__inline:
+				case KEYWORD_restrict:
 				{
-					functionSpecifier();
+					match(KEYWORD_restrict);
+					if ( inputState.guessing==0 ) {
+						specifyTypeQualifier(cRestrict);
+					}
+					break;
+				}
+				case KEYWORD_volatile:
+				{
+					match(KEYWORD_volatile);
+					if ( inputState.guessing==0 ) {
+						specifyTypeQualifier(cVolatile);
+					}
+					break;
+				}
+				default:
+					if (((LA(1)==KEYWORD___const))&&(allowGNUExtensions)) {
+						match(KEYWORD___const);
+						if ( inputState.guessing==0 ) {
+							specifyTypeQualifier(cConstantType);
+						}
+					}
+					else if (((LA(1)==KEYWORD__volatile))&&(allowGNUExtensions)) {
+						match(KEYWORD__volatile);
+						if ( inputState.guessing==0 ) {
+							specifyTypeQualifier(cVolatile);
+						}
+					}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_35);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("typeQualifier");
+		}
+	}
+	
+	protected final void functionSpecifier() throws RecognitionException, TokenStreamException {
+		
+		traceIn("functionSpecifier");
+		try { // debugging
+			
+			try {      // for error handling
+				{
+				if ((LA(1)==KEYWORD_inline)) {
+					match(KEYWORD_inline);
+				}
+				else if (((LA(1)==KEYWORD__inline))&&(allowGNUExtensions)) {
+					match(KEYWORD__inline);
+				}
+				else if (((LA(1)==KEYWORD__inline__))&&(allowGNUExtensions)) {
+					match(KEYWORD__inline__);
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+				}
+				if ( inputState.guessing==0 ) {
+					storageClass |= cInlined;
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_34);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("functionSpecifier");
+		}
+	}
+	
+	protected final void typeSpecifier() throws RecognitionException, TokenStreamException {
+		
+		traceIn("typeSpecifier");
+		try { // debugging
+			
+			Expression exp;
+			
+			
+			try {      // for error handling
+				{
+				switch ( LA(1)) {
+				case KEYWORD_void:
+				{
+					match(KEYWORD_void);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cVoid, baseType);
+					}
 					break;
 				}
 				case KEYWORD_char:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_float:
-				case KEYWORD_int:
-				case KEYWORD_long:
+				{
+					match(KEYWORD_char);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cChar, baseType);
+					}
+					break;
+				}
 				case KEYWORD_short:
+				{
+					match(KEYWORD_short);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cShort, baseType);
+					}
+					break;
+				}
+				case KEYWORD_int:
+				{
+					match(KEYWORD_int);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cInt, baseType);
+					}
+					break;
+				}
+				case KEYWORD_long:
+				{
+					match(KEYWORD_long);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cLong, baseType);
+					}
+					break;
+				}
+				case KEYWORD_float:
+				{
+					match(KEYWORD_float);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cFloat, baseType);
+					}
+					break;
+				}
+				case KEYWORD_double:
+				{
+					match(KEYWORD_double);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cDouble, baseType);
+					}
+					break;
+				}
 				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
+				{
+					match(KEYWORD_signed);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cSigned, baseType);
+					}
+					break;
+				}
 				case KEYWORD_unsigned:
-				case KEYWORD_void:
+				{
+					match(KEYWORD_unsigned);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cUnsigned, baseType);
+					}
+					break;
+				}
 				case KEYWORD__Bool:
+				{
+					match(KEYWORD__Bool);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cBool, baseType);
+					}
+					break;
+				}
 				case KEYWORD__Complex:
+				{
+					match(KEYWORD__Complex);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cComplex, baseType);
+					}
+					break;
+				}
 				case KEYWORD__Imaginary:
 				{
-					typeSpecifier();
+					match(KEYWORD__Imaginary);
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cImaginary, baseType);
+					}
+					break;
+				}
+				case KEYWORD_struct:
+				case KEYWORD_union:
+				{
+					buildType=structOrUnionSpecifier();
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cOther, baseType);
+					}
+					break;
+				}
+				case KEYWORD_enum:
+				{
+					buildType=enumSpecifier();
+					if ( inputState.guessing==0 ) {
+						baseType = specifyBaseType(cOther, baseType);
+					}
 					break;
 				}
 				default:
-					if (((LA(1)==Identifier) && (_tokenSet_20.member(LA(2))))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
-						n0 = LT(1);
-						match(Identifier);
+					if (((LA(1)==KEYWORD___signed__))&&(allowGNUExtensions)) {
+						match(KEYWORD___signed__);
+						if ( inputState.guessing==0 ) {
+							baseType = specifyBaseType(cSigned, baseType);
+						}
+					}
+					else if (((LA(1)==KEYWORD_typeof))&&(allowGNUExtensions)) {
+						match(KEYWORD_typeof);
+						match(LParen);
+						exp=expression();
+						match(RParen);
 						if ( inputState.guessing==0 ) {
 							
-							String   name = n0.getText();
-							TypeName tn   = lookupTypedef(name);
-							buildType = tn.getType();
+							buildType = exp.getType();
 							baseType = specifyBaseType(cOther, baseType);
 							
 						}
 					}
 				else {
-					if ( _cnt91>=1 ) { break _loop91; } else {throw new NoViableAltException(LT(1), getFilename());}
+					throw new NoViableAltException(LT(1), getFilename());
 				}
 				}
-				_cnt91++;
-			} while (true);
+				}
 			}
-			if ( inputState.guessing==0 ) {
-				
-				if (baseType == cStart)
-				baseType = cInt;
-				
-				buildType = buildType(baseType, buildType);
-				if (buildType == null) {
-				userError(Msg.MSG_Invalid_type, null, LT(1));
-				buildType = void_type;
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_36);
+				} else {
+				  throw ex;
 				}
-				
-				type          = buildType;
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				
 			}
+		} finally { // debugging
+			traceOut("typeSpecifier");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				reportError(ex);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return type;
 	}
 	
-	protected final Type  abstractDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype=type;
+	protected final Type  declarationSpecifiersChk() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
 		
+		traceIn("declarationSpecifiersChk");
+		try { // debugging
+			Token  n0 = null;
+			
+			int     saveBaseType      = baseType;
+			int     saveTypeQualifier = typeQualifier;
+			Type    saveBuildType     = buildType;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					baseType      = cStart;
+					typeQualifier = 0;
+					storageClass  = cAuto;
+					
+				}
+				{
+				int _cnt94=0;
+				_loop94:
+				do {
+					switch ( LA(1)) {
+					case KEYWORD_auto:
+					case KEYWORD_extern:
+					case KEYWORD_register:
+					case KEYWORD_static:
+					{
+						storageClassSpecifier();
+						break;
+					}
+					case KEYWORD_const:
+					case KEYWORD___const:
+					case KEYWORD_restrict:
+					case KEYWORD_volatile:
+					case KEYWORD__volatile:
+					{
+						typeQualifier();
+						break;
+					}
+					case KEYWORD_inline:
+					case KEYWORD__inline__:
+					case KEYWORD__inline:
+					{
+						functionSpecifier();
+						break;
+					}
+					case KEYWORD_char:
+					case KEYWORD_double:
+					case KEYWORD_enum:
+					case KEYWORD_float:
+					case KEYWORD_int:
+					case KEYWORD_long:
+					case KEYWORD_short:
+					case KEYWORD_signed:
+					case KEYWORD___signed__:
+					case KEYWORD_struct:
+					case KEYWORD_typeof:
+					case KEYWORD_union:
+					case KEYWORD_unsigned:
+					case KEYWORD_void:
+					case KEYWORD__Bool:
+					case KEYWORD__Complex:
+					case KEYWORD__Imaginary:
+					{
+						typeSpecifierChk();
+						break;
+					}
+					default:
+						if (((LA(1)==Identifier))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
+							n0 = LT(1);
+							match(Identifier);
+						}
+					else {
+						if ( _cnt94>=1 ) { break _loop94; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					}
+					_cnt94++;
+				} while (true);
+				}
+				if ( inputState.guessing==0 ) {
+					
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("declarationSpecifiersChk");
+		}
+	}
+	
+	protected final void typeSpecifierChk() throws RecognitionException, TokenStreamException {
 		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Mult:
-			{
-				ntype=pointer(type);
+		traceIn("typeSpecifierChk");
+		try { // debugging
+			
+			Expression exp;
+			
+			
+			try {      // for error handling
 				{
 				switch ( LA(1)) {
-				case LParen:
-				case LBracket:
+				case KEYWORD_void:
 				{
-					ntype=directAbstractDeclarator(ntype);
+					match(KEYWORD_void);
 					break;
 				}
-				case RParen:
+				case KEYWORD_char:
+				{
+					match(KEYWORD_char);
+					break;
+				}
+				case KEYWORD_short:
+				{
+					match(KEYWORD_short);
+					break;
+				}
+				case KEYWORD_int:
+				{
+					match(KEYWORD_int);
+					break;
+				}
+				case KEYWORD_long:
+				{
+					match(KEYWORD_long);
+					break;
+				}
+				case KEYWORD_float:
+				{
+					match(KEYWORD_float);
+					break;
+				}
+				case KEYWORD_double:
+				{
+					match(KEYWORD_double);
+					break;
+				}
+				case KEYWORD_signed:
+				{
+					match(KEYWORD_signed);
+					break;
+				}
+				case KEYWORD_unsigned:
+				{
+					match(KEYWORD_unsigned);
+					break;
+				}
+				case KEYWORD__Bool:
+				{
+					match(KEYWORD__Bool);
+					break;
+				}
+				case KEYWORD__Complex:
+				{
+					match(KEYWORD__Complex);
+					break;
+				}
+				case KEYWORD__Imaginary:
+				{
+					match(KEYWORD__Imaginary);
+					break;
+				}
+				case KEYWORD_struct:
+				{
+					match(KEYWORD_struct);
+					break;
+				}
+				case KEYWORD_union:
+				{
+					match(KEYWORD_union);
+					break;
+				}
+				case KEYWORD_enum:
+				{
+					match(KEYWORD_enum);
+					break;
+				}
+				default:
+					if (((LA(1)==KEYWORD___signed__))&&(allowGNUExtensions)) {
+						match(KEYWORD___signed__);
+					}
+					else if (((LA(1)==KEYWORD_typeof))&&(allowGNUExtensions)) {
+						match(KEYWORD_typeof);
+						match(LParen);
+					}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_37);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("typeSpecifierChk");
+		}
+	}
+	
+	protected final Declaration  initDeclarator(
+		Type type, int sc
+	) throws RecognitionException, TokenStreamException {
+		Declaration decl = null;
+		
+		traceIn("initDeclarator");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr = null;
+			
+			
+			try {      // for error handling
+				decl=declarator(type, sc);
+				if ( inputState.guessing==0 ) {
+					
+					if (decl != null)
+					type = decl.getType();
+					
+				}
+				{
+				switch ( LA(1)) {
+				case Assign:
+				{
+					n0 = LT(1);
+					match(Assign);
+					expr=initializer(type);
+					break;
+				}
 				case Comma:
-				case LITERAL___restrict:
+				case Semi:
 				{
 					break;
 				}
@@ -7191,148 +8932,477 @@ public C99Parser(ParserSharedInputState state) {
 				}
 				}
 				}
-				break;
+				if ( inputState.guessing==0 ) {
+					processDeclInitializer(decl, type, expr, n0);
+				}
 			}
-			case LParen:
-			case LBracket:
-			{
-				ntype=directAbstractDeclarator(type);
-				break;
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_38);
+				} else {
+				  throw ex;
+				}
 			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
+			return decl;
+		} finally { // debugging
+			traceOut("initDeclarator");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_21);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
 	}
 	
-	protected final Vector<Object>  initializerList(
+	protected final Declaration  declarator(
+		Type type, int sc
+	) throws RecognitionException, TokenStreamException {
+		Declaration decl = null;
+		
+		traceIn("declarator");
+		try { // debugging
+			
+			String saveIdentifier = declID;
+			
+			
+			try {      // for error handling
+				type=declarator2(type);
+				if ( inputState.guessing==0 ) {
+					
+					decl = defineDecl(declID, type, sc, LT(1));
+					processAttributes(declAtts, decl, LT(1));
+					declAtts = "";
+					declID = saveIdentifier;
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_39);
+				} else {
+				  throw ex;
+				}
+			}
+			return decl;
+		} finally { // debugging
+			traceOut("declarator");
+		}
+	}
+	
+	protected final Expression  initializer(
 		Type type
 	) throws RecognitionException, TokenStreamException {
-		Vector<Object> v = null;
+		Expression expr = errExp;
 		
-		
-		int  npos  = 0;
-		Type ntype = null;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				v = new Vector<Object>(20);
-				
-			}
-			match(LBrace);
-			{
-			switch ( LA(1)) {
-			case KEYWORD_sizeof:
-			case KEYWORD_Extension:
-			case KEYWORD_alignof:
-			case KEYWORD_va_arg:
-			case KEYWORD_builtin_va_arg:
-			case KEYWORD_builtin_offsetof:
-			case Identifier:
-			case HexDoubleValue:
-			case HexFloatValue:
-			case HexLongDoubleValue:
-			case HexUnsignedIntValue:
-			case HexUnsignedLongIntValue:
-			case HexUnsignedLongLongIntValue:
-			case HexIntValue:
-			case HexLongIntValue:
-			case HexLongLongIntValue:
-			case DoubleValue:
-			case FloatValue:
-			case LongDoubleValue:
-			case UnsignedIntValue:
-			case UnsignedLongIntValue:
-			case UnsignedLongLongIntValue:
-			case IntValue:
-			case LongIntValue:
-			case LongLongIntValue:
-			case CharacterConstant:
-			case WideCharacterConstant:
-			case StringLit:
-			case WideStringLiteral:
-			case LParen:
-			case LBrace:
-			case Dot:
-			case LBracket:
-			case Dec:
-			case Inc:
-			case And:
-			case Mult:
-			case Plus:
-			case Sub:
-			case Comp:
-			case Not:
-			{
-				npos=initializerListItem(v, npos, type);
+		traceIn("initializer");
+		try { // debugging
+			
+			Vector<Object>  v   = null;
+			boolean         sic = inConstant;
+			
+			
+			try {      // for error handling
 				{
-				_loop229:
+				switch ( LA(1)) {
+				case LBrace:
+				{
+					if ( inputState.guessing==0 ) {
+						inConstant = true;
+					}
+					v=initializerList(type);
+					if ( inputState.guessing==0 ) {
+						expr = buildAggregation(type, v, LT(1)); inConstant = sic;
+					}
+					break;
+				}
+				case KEYWORD_sizeof:
+				case KEYWORD_Extension:
+				case KEYWORD_alignof:
+				case KEYWORD_va_arg:
+				case KEYWORD_builtin_va_arg:
+				case KEYWORD_builtin_offsetof:
+				case Identifier:
+				case HexDoubleValue:
+				case HexFloatValue:
+				case HexLongDoubleValue:
+				case HexUnsignedIntValue:
+				case HexUnsignedLongIntValue:
+				case HexUnsignedLongLongIntValue:
+				case HexIntValue:
+				case HexLongIntValue:
+				case HexLongLongIntValue:
+				case DoubleValue:
+				case FloatValue:
+				case LongDoubleValue:
+				case UnsignedIntValue:
+				case UnsignedLongIntValue:
+				case UnsignedLongLongIntValue:
+				case IntValue:
+				case LongIntValue:
+				case LongLongIntValue:
+				case CharacterConstant:
+				case WideCharacterConstant:
+				case StringLit:
+				case WideStringLiteral:
+				case LParen:
+				case Dec:
+				case Inc:
+				case And:
+				case Mult:
+				case Plus:
+				case Sub:
+				case Comp:
+				case Not:
+				{
+					expr=assignmentExpression();
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_40);
+				} else {
+				  throw ex;
+				}
+			}
+			return expr;
+		} finally { // debugging
+			traceOut("initializer");
+		}
+	}
+	
+	protected final Type  declarator2(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype = type;
+		
+		traceIn("declarator2");
+		try { // debugging
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Mult:
+				{
+					ntype=pointer(ntype);
+					ntype=directDeclarator(ntype);
+					break;
+				}
+				case Identifier:
+				case LParen:
+				case LITERAL___restrict:
+				case Attributes:
+				{
+					ntype=directDeclarator(ntype);
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_41);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("declarator2");
+		}
+	}
+	
+	protected final Type  pointer(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype = type;
+		
+		traceIn("pointer");
+		try { // debugging
+			
+			int saveTypeQualifier = typeQualifier;
+			
+			
+			try {      // for error handling
+				{
+				int _cnt185=0;
+				_loop185:
 				do {
-					if ((LA(1)==Comma)) {
-						match(Comma);
+					if ((LA(1)==Mult)) {
+						match(Mult);
+						if ( inputState.guessing==0 ) {
+							typeQualifier = 0;
+						}
 						{
 						switch ( LA(1)) {
-						case KEYWORD_sizeof:
-						case KEYWORD_Extension:
-						case KEYWORD_alignof:
-						case KEYWORD_va_arg:
-						case KEYWORD_builtin_va_arg:
-						case KEYWORD_builtin_offsetof:
-						case Identifier:
-						case HexDoubleValue:
-						case HexFloatValue:
-						case HexLongDoubleValue:
-						case HexUnsignedIntValue:
-						case HexUnsignedLongIntValue:
-						case HexUnsignedLongLongIntValue:
-						case HexIntValue:
-						case HexLongIntValue:
-						case HexLongLongIntValue:
-						case DoubleValue:
-						case FloatValue:
-						case LongDoubleValue:
-						case UnsignedIntValue:
-						case UnsignedLongIntValue:
-						case UnsignedLongLongIntValue:
-						case IntValue:
-						case LongIntValue:
-						case LongLongIntValue:
-						case CharacterConstant:
-						case WideCharacterConstant:
-						case StringLit:
-						case WideStringLiteral:
-						case LParen:
-						case LBrace:
-						case Dot:
-						case LBracket:
-						case Dec:
-						case Inc:
-						case And:
-						case Mult:
-						case Plus:
-						case Sub:
-						case Comp:
-						case Not:
+						case KEYWORD_const:
+						case KEYWORD___const:
+						case KEYWORD_restrict:
+						case KEYWORD_volatile:
+						case KEYWORD__volatile:
 						{
-							npos=initializerListItem(v, npos, type);
+							typeQualifierList();
 							break;
 						}
+						case Identifier:
+						case LParen:
+						case RParen:
+						case LBracket:
 						case Comma:
-						case RBrace:
+						case Mult:
+						case LITERAL___restrict:
+						case Attributes:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						if ( inputState.guessing==0 ) {
+							
+							ntype = PointerType.create(ntype);
+							if (typeQualifier != 0)
+							ntype = addTypeQualifier(ntype, typeQualifier);
+							
+						}
+					}
+					else {
+						if ( _cnt185>=1 ) { break _loop185; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					
+					_cnt185++;
+				} while (true);
+				}
+				if ( inputState.guessing==0 ) {
+					typeQualifier = saveTypeQualifier;
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_42);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("pointer");
+		}
+	}
+	
+	protected final Type  directDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype=type;
+		
+		traceIn("directDeclarator");
+		try { // debugging
+			Token  att0 = null;
+			Token  id = null;
+			Token  att1 = null;
+			
+			IncompleteType ictype = null;
+			Type           xtype  = null;
+			String         name   = null;
+			int            pos    = 0;
+			String         atts   = "";
+			declID = "";
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Identifier:
+				case LITERAL___restrict:
+				case Attributes:
+				{
+					{
+					if (((LA(1)==LITERAL___restrict))&&(allowGNUExtensions)) {
+						match(LITERAL___restrict);
+					}
+					else if ((LA(1)==Identifier||LA(1)==Attributes)) {
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					
+					}
+					{
+					_loop105:
+					do {
+						if ((LA(1)==Attributes)) {
+							att0 = LT(1);
+							match(Attributes);
+							if ( inputState.guessing==0 ) {
+								declAtts = declAtts + att0.getText();
+							}
+						}
+						else {
+							break _loop105;
+						}
+						
+					} while (true);
+					}
+					id = LT(1);
+					match(Identifier);
+					{
+					if ((((LA(1) >= LITERAL___asm__ && LA(1) <= LITERAL___asm)) && (_tokenSet_43.member(LA(2))))&&(allowGNUExtensions)) {
+						{
+						switch ( LA(1)) {
+						case LITERAL___asm__:
+						{
+							match(LITERAL___asm__);
+							break;
+						}
+						case LITERAL_asm:
+						{
+							match(LITERAL_asm);
+							break;
+						}
+						case LITERAL___asm:
+						{
+							match(LITERAL___asm);
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+					}
+					else if ((_tokenSet_43.member(LA(1))) && (_tokenSet_44.member(LA(2)))) {
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					
+					}
+					{
+					_loop109:
+					do {
+						switch ( LA(1)) {
+						case LParen:
+						{
+							ntype=parenGroup(ntype);
+							if ( inputState.guessing==0 ) {
+								pos = 0;
+							}
+							break;
+						}
+						case LBracket:
+						{
+							ntype=bracketGroup(ntype, pos++);
+							break;
+						}
+						default:
+						{
+							break _loop109;
+						}
+						}
+					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						declID = id.getText();
+					}
+					{
+					if ((((LA(1) >= LITERAL___asm__ && LA(1) <= LITERAL___asm)))&&(allowGNUExtensions)) {
+						{
+						switch ( LA(1)) {
+						case LITERAL___asm__:
+						{
+							match(LITERAL___asm__);
+							break;
+						}
+						case LITERAL_asm:
+						{
+							match(LITERAL_asm);
+							break;
+						}
+						case LITERAL___asm:
+						{
+							match(LITERAL___asm);
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						{
+						switch ( LA(1)) {
+						case LParen:
+						{
+							match(LParen);
+							match(StringLit);
+							{
+							_loop114:
+							do {
+								if ((LA(1)==StringLit)) {
+									match(StringLit);
+								}
+								else {
+									break _loop114;
+								}
+								
+							} while (true);
+							}
+							match(RParen);
+							break;
+						}
+						case KEYWORD_auto:
+						case KEYWORD_char:
+						case KEYWORD_const:
+						case KEYWORD___const:
+						case KEYWORD_double:
+						case KEYWORD_enum:
+						case KEYWORD_extern:
+						case KEYWORD_float:
+						case KEYWORD_inline:
+						case KEYWORD_int:
+						case KEYWORD_long:
+						case KEYWORD_register:
+						case KEYWORD_restrict:
+						case KEYWORD_short:
+						case KEYWORD_signed:
+						case KEYWORD___signed__:
+						case KEYWORD_static:
+						case KEYWORD_struct:
+						case KEYWORD_typeof:
+						case KEYWORD_union:
+						case KEYWORD_unsigned:
+						case KEYWORD_void:
+						case KEYWORD_volatile:
+						case KEYWORD__volatile:
+						case KEYWORD__Bool:
+						case KEYWORD__Complex:
+						case KEYWORD__Imaginary:
+						case KEYWORD__inline__:
+						case KEYWORD__inline:
+						case Identifier:
+						case LBrace:
+						case RParen:
+						case Comma:
+						case Colon:
+						case Assign:
+						case Semi:
+						case Attributes:
 						{
 							break;
 						}
@@ -7343,1585 +9413,224 @@ public C99Parser(ParserSharedInputState state) {
 						}
 						}
 					}
+					else if ((_tokenSet_41.member(LA(1)))) {
+					}
 					else {
-						break _loop229;
+						throw new NoViableAltException(LT(1), getFilename());
 					}
 					
-				} while (true);
-				}
-				break;
-			}
-			case RBrace:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			match(RBrace);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consumeUntil(RBrace);
-				consume();
-				fatalError = true;
-				return null;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return v;
-	}
-	
-	protected final Expression  multiplicativeExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		Token  n2 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=castExpression();
-			{
-			_loop47:
-			do {
-				switch ( LA(1)) {
-				case Mult:
-				{
-					n0 = LT(1);
-					match(Mult);
-					expr2=castExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildMultExpr(0, exp, expr2, n0);
+					}
+					{
+					_loop116:
+					do {
+						if ((LA(1)==Attributes) && (_tokenSet_41.member(LA(2)))) {
+							att1 = LT(1);
+							match(Attributes);
+							if ( inputState.guessing==0 ) {
+								declAtts = declAtts + att1.getText();
+							}
+						}
+						else {
+							break _loop116;
+						}
+						
+					} while (true);
 					}
 					break;
 				}
-				case Slash:
+				case LParen:
 				{
-					n1 = LT(1);
-					match(Slash);
-					expr2=castExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildMultExpr(1, exp, expr2, n1);
-					}
-					break;
-				}
-				case Mod:
-				{
-					n2 = LT(1);
-					match(Mod);
-					expr2=castExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildMultExpr(2, exp, expr2, n2);
-					}
-					break;
-				}
-				default:
-				{
-					break _loop47;
-				}
-				}
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_22);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  additiveExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=multiplicativeExpression();
-			{
-			_loop50:
-			do {
-				switch ( LA(1)) {
-				case Plus:
-				{
-					n0 = LT(1);
-					match(Plus);
-					expr2=multiplicativeExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildAddExpr(exp, expr2, n0);
-					}
-					break;
-				}
-				case Sub:
-				{
-					n1 = LT(1);
-					match(Sub);
-					expr2=multiplicativeExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildSubtractExpr(exp, expr2, n1);
-					}
-					break;
-				}
-				default:
-				{
-					break _loop50;
-				}
-				}
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_23);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  shiftExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		
-		Expression expr2;
-		ShiftMode  shift = ShiftMode.Left;
-		Token      t     = null;
-		
-		
-		try {      // for error handling
-			exp=additiveExpression();
-			{
-			_loop54:
-			do {
-				if ((LA(1)==LShift||LA(1)==RShift)) {
-					{
-					switch ( LA(1)) {
-					case LShift:
-					{
-						n0 = LT(1);
-						match(LShift);
-						if ( inputState.guessing==0 ) {
-							shift = ShiftMode.Left;        t = n0;
-						}
-						break;
-					}
-					case RShift:
-					{
-						n1 = LT(1);
-						match(RShift);
-						if ( inputState.guessing==0 ) {
-							shift = ShiftMode.SignedRight; t = n1;
-						}
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					expr2=additiveExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildShiftExpr(shift, exp, expr2, t);
-					}
-				}
-				else {
-					break _loop54;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_24);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  relationalExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		Token  n2 = null;
-		Token  n3 = null;
-		
-		Expression expr2 = null;
-		int        sw    = 0;
-		Token      t     = null;
-		
-		
-		try {      // for error handling
-			exp=shiftExpression();
-			{
-			_loop58:
-			do {
-				if (((LA(1) >= LAngle && LA(1) <= GEqual))) {
-					{
-					switch ( LA(1)) {
-					case LAngle:
-					{
-						n0 = LT(1);
-						match(LAngle);
-						if ( inputState.guessing==0 ) {
-							sw = 1; t = n0;
-						}
-						break;
-					}
-					case RAngle:
-					{
-						n1 = LT(1);
-						match(RAngle);
-						if ( inputState.guessing==0 ) {
-							sw = 2; t = n1;
-						}
-						break;
-					}
-					case LEqual:
-					{
-						n2 = LT(1);
-						match(LEqual);
-						if ( inputState.guessing==0 ) {
-							sw = 3; t = n2;
-						}
-						break;
-					}
-					case GEqual:
-					{
-						n3 = LT(1);
-						match(GEqual);
-						if ( inputState.guessing==0 ) {
-							sw = 4; t = n3;
-						}
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					expr2=shiftExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildCompare(sw, exp, expr2, t);
-					}
-				}
-				else {
-					break _loop58;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_25);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  equalityExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		
-		Expression expr2;
-		boolean    equals = true;
-		Token      t = null;
-		
-		
-		try {      // for error handling
-			exp=relationalExpression();
-			{
-			_loop62:
-			do {
-				if ((LA(1)==Equal||LA(1)==NEqual)) {
-					{
-					switch ( LA(1)) {
-					case Equal:
-					{
-						n0 = LT(1);
-						match(Equal);
-						if ( inputState.guessing==0 ) {
-							equals = true;  t = n0;
-						}
-						break;
-					}
-					case NEqual:
-					{
-						n1 = LT(1);
-						match(NEqual);
-						if ( inputState.guessing==0 ) {
-							equals = false; t = n1;
-						}
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					expr2=relationalExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildEqualCompare(equals, exp, expr2, t);
-					}
-				}
-				else {
-					break _loop62;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_26);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  andExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=equalityExpression();
-			{
-			_loop65:
-			do {
-				if ((LA(1)==And)) {
-					n0 = LT(1);
-					match(And);
-					expr2=equalityExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildBitExpr(0, exp, expr2, n0);
-					}
-				}
-				else {
-					break _loop65;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_27);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  xorExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=andExpression();
-			{
-			_loop68:
-			do {
-				if ((LA(1)==Xor)) {
-					n0 = LT(1);
-					match(Xor);
-					expr2=andExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildBitExpr(2, exp, expr2, n0);
-					}
-				}
-				else {
-					break _loop68;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_28);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  orExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=xorExpression();
-			{
-			_loop71:
-			do {
-				if ((LA(1)==Or)) {
-					n0 = LT(1);
-					match(Or);
-					expr2=xorExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildBitExpr(1, exp, expr2, n0);
-					}
-				}
-				else {
-					break _loop71;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_29);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  andConditionExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=orExpression();
-			{
-			_loop74:
-			do {
-				if ((LA(1)==AndCond)) {
-					n0 = LT(1);
-					match(AndCond);
-					expr2=orExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildConditional(0, exp, expr2, n0);
-					}
-				}
-				else {
-					break _loop74;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_30);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final Expression  orConditionExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		Token  n0 = null;
-		
-		Expression expr2;
-		
-		
-		try {      // for error handling
-			exp=andConditionExpression();
-			{
-			_loop77:
-			do {
-				if ((LA(1)==OrCond)) {
-					n0 = LT(1);
-					match(OrCond);
-					expr2=andConditionExpression();
-					if ( inputState.guessing==0 ) {
-						exp = buildConditional(1, exp, expr2, n0);
-					}
-				}
-				else {
-					break _loop77;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_31);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final int  assignmentOperator() throws RecognitionException, TokenStreamException {
-		int op = 0;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Assign:
-			{
-				match(Assign);
-				if ( inputState.guessing==0 ) {
-					op =  1;
-				}
-				break;
-			}
-			case MultAssign:
-			{
-				match(MultAssign);
-				if ( inputState.guessing==0 ) {
-					op =  2;
-				}
-				break;
-			}
-			case SlashAssign:
-			{
-				match(SlashAssign);
-				if ( inputState.guessing==0 ) {
-					op =  3;
-				}
-				break;
-			}
-			case ModAssign:
-			{
-				match(ModAssign);
-				if ( inputState.guessing==0 ) {
-					op =  4;
-				}
-				break;
-			}
-			case PlusAssign:
-			{
-				match(PlusAssign);
-				if ( inputState.guessing==0 ) {
-					op =  5;
-				}
-				break;
-			}
-			case SubAssign:
-			{
-				match(SubAssign);
-				if ( inputState.guessing==0 ) {
-					op =  6;
-				}
-				break;
-			}
-			case AndAssign:
-			{
-				match(AndAssign);
-				if ( inputState.guessing==0 ) {
-					op =  7;
-				}
-				break;
-			}
-			case OrAssign:
-			{
-				match(OrAssign);
-				if ( inputState.guessing==0 ) {
-					op =  8;
-				}
-				break;
-			}
-			case XorAssign:
-			{
-				match(XorAssign);
-				if ( inputState.guessing==0 ) {
-					op =  9;
-				}
-				break;
-			}
-			case LSAssign:
-			{
-				match(LSAssign);
-				if ( inputState.guessing==0 ) {
-					op = 10;
-				}
-				break;
-			}
-			case RSAssign:
-			{
-				match(RSAssign);
-				if ( inputState.guessing==0 ) {
-					op = 11;
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_0);
-			} else {
-			  throw ex;
-			}
-		}
-		return op;
-	}
-	
-	protected final Expression  constantExpression() throws RecognitionException, TokenStreamException {
-		Expression exp=errExp;
-		
-		
-		boolean saveInConstant = inConstant;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				inConstant = true;
-			}
-			exp=conditionalExpression();
-			if ( inputState.guessing==0 ) {
-				
-				inConstant = saveInConstant;
-				if (!fatalError) {
-				Literal lit = exp.getConstantValue();
-				if ((lit == Lattice.Bot) || (lit == Lattice.Top))
-				userError(Msg.MSG_Not_a_constant, null, LT(1));
-				else
-				exp = lit;
-				}
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_32);
-			} else {
-			  throw ex;
-			}
-		}
-		return exp;
-	}
-	
-	protected final void declaration(
-		BlockStmt block
-	) throws RecognitionException, TokenStreamException {
-		
-		Token  s0 = null;
-		
-		Type   type             = null;
-		Vector<Declaration> vars = null;
-		String attributes       = null;
-		int    saveStorageClass = storageClass;
-		int    sc               = 0;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				vars = new Vector<Declaration>(10);
-				
-			}
-			type=declarationSpecifiers();
-			if ( inputState.guessing==0 ) {
-				
-				sc = storageClass;
-				storageClass = saveStorageClass;
-				
-			}
-			{
-			switch ( LA(1)) {
-			case Identifier:
-			case LParen:
-			case Mult:
-			case LITERAL___restrict:
-			case Attributes:
-			{
-				initDeclaratorList(vars, type, sc);
-				break;
-			}
-			case Semi:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			s0 = LT(1);
-			match(Semi);
-			if ( inputState.guessing==0 ) {
-				
-				processDeclarations(vars, block, s0);
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_4);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void initDeclaratorList(
-		Vector<Declaration> vars, Type type, int sc
-	) throws RecognitionException, TokenStreamException {
-		
-		
-		Declaration decl = null;
-		
-		
-		try {      // for error handling
-			decl=initDeclarator(type, sc);
-			if ( inputState.guessing==0 ) {
-				vars.addElement(decl);
-			}
-			{
-			_loop97:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					decl=initDeclarator(type, sc);
-					if ( inputState.guessing==0 ) {
-						vars.addElement(decl);
-					}
-				}
-				else {
-					break _loop97;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_33);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void storageClassSpecifier() throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_extern:
-			{
-				match(KEYWORD_extern);
-				if ( inputState.guessing==0 ) {
-					storageClass = specifyStorageClass(storageClass, cExtern, LT(1));
-				}
-				break;
-			}
-			case KEYWORD_static:
-			{
-				match(KEYWORD_static);
-				if ( inputState.guessing==0 ) {
-					storageClass = specifyStorageClass(storageClass, cStatic, LT(1));
-				}
-				break;
-			}
-			case KEYWORD_auto:
-			{
-				match(KEYWORD_auto);
-				if ( inputState.guessing==0 ) {
-					storageClass = specifyStorageClass(storageClass, cAuto, LT(1));
-				}
-				break;
-			}
-			case KEYWORD_register:
-			{
-				match(KEYWORD_register);
-				if ( inputState.guessing==0 ) {
-					storageClass = specifyStorageClass(storageClass, cRegister, LT(1));
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_34);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void typeQualifier() throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_const:
-			{
-				match(KEYWORD_const);
-				if ( inputState.guessing==0 ) {
-					specifyTypeQualifier(cConstantType);
-				}
-				break;
-			}
-			case KEYWORD_restrict:
-			{
-				match(KEYWORD_restrict);
-				if ( inputState.guessing==0 ) {
-					specifyTypeQualifier(cRestrict);
-				}
-				break;
-			}
-			case KEYWORD_volatile:
-			{
-				match(KEYWORD_volatile);
-				if ( inputState.guessing==0 ) {
-					specifyTypeQualifier(cVolatile);
-				}
-				break;
-			}
-			default:
-				if (((LA(1)==KEYWORD___const))&&(allowGNUExtensions)) {
-					match(KEYWORD___const);
-					if ( inputState.guessing==0 ) {
-						specifyTypeQualifier(cConstantType);
-					}
-				}
-				else if (((LA(1)==KEYWORD__volatile))&&(allowGNUExtensions)) {
-					match(KEYWORD__volatile);
-					if ( inputState.guessing==0 ) {
-						specifyTypeQualifier(cVolatile);
-					}
-				}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_35);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void functionSpecifier() throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			{
-			if ((LA(1)==KEYWORD_inline)) {
-				match(KEYWORD_inline);
-			}
-			else if (((LA(1)==KEYWORD__inline))&&(allowGNUExtensions)) {
-				match(KEYWORD__inline);
-			}
-			else if (((LA(1)==KEYWORD__inline__))&&(allowGNUExtensions)) {
-				match(KEYWORD__inline__);
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-			}
-			if ( inputState.guessing==0 ) {
-				storageClass |= cInlined;
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_34);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void typeSpecifier() throws RecognitionException, TokenStreamException {
-		
-		
-		Expression exp;
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case KEYWORD_void:
-			{
-				match(KEYWORD_void);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cVoid, baseType);
-				}
-				break;
-			}
-			case KEYWORD_char:
-			{
-				match(KEYWORD_char);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cChar, baseType);
-				}
-				break;
-			}
-			case KEYWORD_short:
-			{
-				match(KEYWORD_short);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cShort, baseType);
-				}
-				break;
-			}
-			case KEYWORD_int:
-			{
-				match(KEYWORD_int);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cInt, baseType);
-				}
-				break;
-			}
-			case KEYWORD_long:
-			{
-				match(KEYWORD_long);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cLong, baseType);
-				}
-				break;
-			}
-			case KEYWORD_float:
-			{
-				match(KEYWORD_float);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cFloat, baseType);
-				}
-				break;
-			}
-			case KEYWORD_double:
-			{
-				match(KEYWORD_double);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cDouble, baseType);
-				}
-				break;
-			}
-			case KEYWORD_signed:
-			{
-				match(KEYWORD_signed);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cSigned, baseType);
-				}
-				break;
-			}
-			case KEYWORD_unsigned:
-			{
-				match(KEYWORD_unsigned);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cUnsigned, baseType);
-				}
-				break;
-			}
-			case KEYWORD__Bool:
-			{
-				match(KEYWORD__Bool);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cBool, baseType);
-				}
-				break;
-			}
-			case KEYWORD__Complex:
-			{
-				match(KEYWORD__Complex);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cComplex, baseType);
-				}
-				break;
-			}
-			case KEYWORD__Imaginary:
-			{
-				match(KEYWORD__Imaginary);
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cImaginary, baseType);
-				}
-				break;
-			}
-			case KEYWORD_struct:
-			case KEYWORD_union:
-			{
-				buildType=structOrUnionSpecifier();
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cOther, baseType);
-				}
-				break;
-			}
-			case KEYWORD_enum:
-			{
-				buildType=enumSpecifier();
-				if ( inputState.guessing==0 ) {
-					baseType = specifyBaseType(cOther, baseType);
-				}
-				break;
-			}
-			default:
-				if (((LA(1)==KEYWORD___signed__))&&(allowGNUExtensions)) {
-					match(KEYWORD___signed__);
-					if ( inputState.guessing==0 ) {
-						baseType = specifyBaseType(cSigned, baseType);
-					}
-				}
-				else if (((LA(1)==KEYWORD_typeof))&&(allowGNUExtensions)) {
-					match(KEYWORD_typeof);
 					match(LParen);
-					exp=expression();
+					if ( inputState.guessing==0 ) {
+						
+						ictype = new IncompleteType();
+						ntype = type;
+						
+					}
+					xtype=declarator2(ictype);
 					match(RParen);
 					if ( inputState.guessing==0 ) {
 						
-						buildType = exp.getType();
-						baseType = specifyBaseType(cOther, baseType);
+						name = declID;
 						
 					}
-				}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_36);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final Type  declarationSpecifiersChk() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		Token  n0 = null;
-		
-		int     saveBaseType      = baseType;
-		int     saveTypeQualifier = typeQualifier;
-		Type    saveBuildType     = buildType;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				baseType      = cStart;
-				typeQualifier = 0;
-				storageClass  = cAuto;
-				
-			}
-			{
-			int _cnt94=0;
-			_loop94:
-			do {
-				switch ( LA(1)) {
-				case KEYWORD_auto:
-				case KEYWORD_extern:
-				case KEYWORD_register:
-				case KEYWORD_static:
-				{
-					storageClassSpecifier();
-					break;
-				}
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_restrict:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				{
-					typeQualifier();
-					break;
-				}
-				case KEYWORD_inline:
-				case KEYWORD__inline__:
-				case KEYWORD__inline:
-				{
-					functionSpecifier();
-					break;
-				}
-				case KEYWORD_char:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_float:
-				case KEYWORD_int:
-				case KEYWORD_long:
-				case KEYWORD_short:
-				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
-				case KEYWORD_unsigned:
-				case KEYWORD_void:
-				case KEYWORD__Bool:
-				case KEYWORD__Complex:
-				case KEYWORD__Imaginary:
-				{
-					typeSpecifierChk();
+					{
+					_loop118:
+					do {
+						switch ( LA(1)) {
+						case LParen:
+						{
+							ntype=parenGroup(ntype);
+							if ( inputState.guessing==0 ) {
+								pos = 0;
+							}
+							break;
+						}
+						case LBracket:
+						{
+							ntype=bracketGroup(ntype, pos++);
+							break;
+						}
+						default:
+						{
+							break _loop118;
+						}
+						}
+					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						
+						if (!fatalError) {
+						ictype.setCompleteType(ntype);
+						ntype = xtype;
+						ArrayType at = ntype.getCoreType().returnArrayType();
+						if (at != null) {
+						if (at.getElementType().isProcedureType())
+						userError(Msg.MSG_Array_of_functions_is_not_allowed, null, LT(0));
+						}
+						declID = name;
+						}
+						
+					}
 					break;
 				}
 				default:
-					if (((LA(1)==Identifier))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
-						n0 = LT(1);
-						match(Identifier);
-					}
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_41);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("directDeclarator");
+		}
+	}
+	
+	protected final Type  parenGroup(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype=type;
+		
+		traceIn("parenGroup");
+		try { // debugging
+			
+			Vector<? extends Object> formals = null;
+			
+			
+			try {      // for error handling
+				match(LParen);
+				{
+				if ((LA(1)==RParen)) {
+				}
 				else {
-					if ( _cnt94>=1 ) { break _loop94; } else {throw new NoViableAltException(LT(1), getFilename());}
-				}
-				}
-				_cnt94++;
-			} while (true);
-			}
-			if ( inputState.guessing==0 ) {
-				
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final void typeSpecifierChk() throws RecognitionException, TokenStreamException {
-		
-		
-		Expression exp;
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case KEYWORD_void:
-			{
-				match(KEYWORD_void);
-				break;
-			}
-			case KEYWORD_char:
-			{
-				match(KEYWORD_char);
-				break;
-			}
-			case KEYWORD_short:
-			{
-				match(KEYWORD_short);
-				break;
-			}
-			case KEYWORD_int:
-			{
-				match(KEYWORD_int);
-				break;
-			}
-			case KEYWORD_long:
-			{
-				match(KEYWORD_long);
-				break;
-			}
-			case KEYWORD_float:
-			{
-				match(KEYWORD_float);
-				break;
-			}
-			case KEYWORD_double:
-			{
-				match(KEYWORD_double);
-				break;
-			}
-			case KEYWORD_signed:
-			{
-				match(KEYWORD_signed);
-				break;
-			}
-			case KEYWORD_unsigned:
-			{
-				match(KEYWORD_unsigned);
-				break;
-			}
-			case KEYWORD__Bool:
-			{
-				match(KEYWORD__Bool);
-				break;
-			}
-			case KEYWORD__Complex:
-			{
-				match(KEYWORD__Complex);
-				break;
-			}
-			case KEYWORD__Imaginary:
-			{
-				match(KEYWORD__Imaginary);
-				break;
-			}
-			case KEYWORD_struct:
-			{
-				match(KEYWORD_struct);
-				break;
-			}
-			case KEYWORD_union:
-			{
-				match(KEYWORD_union);
-				break;
-			}
-			case KEYWORD_enum:
-			{
-				match(KEYWORD_enum);
-				break;
-			}
-			default:
-				if (((LA(1)==KEYWORD___signed__))&&(allowGNUExtensions)) {
-					match(KEYWORD___signed__);
-				}
-				else if (((LA(1)==KEYWORD_typeof))&&(allowGNUExtensions)) {
-					match(KEYWORD_typeof);
-					match(LParen);
-				}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_37);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final Declaration  initDeclarator(
-		Type type, int sc
-	) throws RecognitionException, TokenStreamException {
-		Declaration decl = null;
-		
-		Token  n0 = null;
-		
-		Expression expr = null;
-		
-		
-		try {      // for error handling
-			decl=declarator(type, sc);
-			if ( inputState.guessing==0 ) {
-				
-				if (decl != null)
-				type = decl.getType();
-				
-			}
-			{
-			switch ( LA(1)) {
-			case Assign:
-			{
-				n0 = LT(1);
-				match(Assign);
-				expr=initializer(type);
-				break;
-			}
-			case Comma:
-			case Semi:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			if ( inputState.guessing==0 ) {
-				processDeclInitializer(decl, type, expr, n0);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_38);
-			} else {
-			  throw ex;
-			}
-		}
-		return decl;
-	}
-	
-	protected final Declaration  declarator(
-		Type type, int sc
-	) throws RecognitionException, TokenStreamException {
-		Declaration decl = null;
-		
-		
-		String saveIdentifier = declID;
-		
-		
-		try {      // for error handling
-			type=declarator2(type);
-			if ( inputState.guessing==0 ) {
-				
-				decl = defineDecl(declID, type, sc, LT(1));
-				processAttributes(declAtts, decl, LT(1));
-				declAtts = "";
-				declID = saveIdentifier;
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_39);
-			} else {
-			  throw ex;
-			}
-		}
-		return decl;
-	}
-	
-	protected final Expression  initializer(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Expression expr = errExp;
-		
-		
-		Vector<Object>  v   = null;
-		boolean         sic = inConstant;
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case LBrace:
-			{
-				if ( inputState.guessing==0 ) {
-					inConstant = true;
-				}
-				v=initializerList(type);
-				if ( inputState.guessing==0 ) {
-					expr = buildAggregation(type, v, LT(1)); inConstant = sic;
-				}
-				break;
-			}
-			case KEYWORD_sizeof:
-			case KEYWORD_Extension:
-			case KEYWORD_alignof:
-			case KEYWORD_va_arg:
-			case KEYWORD_builtin_va_arg:
-			case KEYWORD_builtin_offsetof:
-			case Identifier:
-			case HexDoubleValue:
-			case HexFloatValue:
-			case HexLongDoubleValue:
-			case HexUnsignedIntValue:
-			case HexUnsignedLongIntValue:
-			case HexUnsignedLongLongIntValue:
-			case HexIntValue:
-			case HexLongIntValue:
-			case HexLongLongIntValue:
-			case DoubleValue:
-			case FloatValue:
-			case LongDoubleValue:
-			case UnsignedIntValue:
-			case UnsignedLongIntValue:
-			case UnsignedLongLongIntValue:
-			case IntValue:
-			case LongIntValue:
-			case LongLongIntValue:
-			case CharacterConstant:
-			case WideCharacterConstant:
-			case StringLit:
-			case WideStringLiteral:
-			case LParen:
-			case Dec:
-			case Inc:
-			case And:
-			case Mult:
-			case Plus:
-			case Sub:
-			case Comp:
-			case Not:
-			{
-				expr=assignmentExpression();
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_40);
-			} else {
-			  throw ex;
-			}
-		}
-		return expr;
-	}
-	
-	protected final Type  declarator2(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype = type;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Mult:
-			{
-				ntype=pointer(ntype);
-				ntype=directDeclarator(ntype);
-				break;
-			}
-			case Identifier:
-			case LParen:
-			case LITERAL___restrict:
-			case Attributes:
-			{
-				ntype=directDeclarator(ntype);
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_41);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
-	}
-	
-	protected final Type  pointer(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype = type;
-		
-		
-		int saveTypeQualifier = typeQualifier;
-		
-		
-		try {      // for error handling
-			{
-			int _cnt185=0;
-			_loop185:
-			do {
-				if ((LA(1)==Mult)) {
-					match(Mult);
-					if ( inputState.guessing==0 ) {
-						typeQualifier = 0;
+					boolean synPredMatched179 = false;
+					if (((LA(1)==KEYWORD_void) && (LA(2)==RParen))) {
+						int _m179 = mark();
+						synPredMatched179 = true;
+						inputState.guessing++;
+						try {
+							{
+							match(KEYWORD_void);
+							match(RParen);
+							}
+						}
+						catch (RecognitionException pe) {
+							synPredMatched179 = false;
+						}
+						rewind(_m179);
+						inputState.guessing--;
 					}
+					if ( synPredMatched179 ) {
+						match(KEYWORD_void);
+					}
+					else {
+						boolean synPredMatched181 = false;
+						if ((((LA(1)==Identifier) && (LA(2)==RParen||LA(2)==Comma))&&(!isTypedef(LT(1).getText())))) {
+							int _m181 = mark();
+							synPredMatched181 = true;
+							inputState.guessing++;
+							try {
+								{
+								match(Identifier);
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched181 = false;
+							}
+							rewind(_m181);
+							inputState.guessing--;
+						}
+						if ( synPredMatched181 ) {
+							formals=identifierList();
+						}
+						else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_45.member(LA(2)))) {
+							formals=parameterTypeList();
+						}
+						else {
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}}
+						}
+						match(RParen);
+						if ( inputState.guessing==0 ) {
+							
+							ntype = makeProcedureType(type, formals);
+							
+						}
+					}
+					catch (RecognitionException ex) {
+						if (inputState.guessing==0) {
+							reportError(ex);
+							consume();
+							consumeUntil(_tokenSet_43);
+						} else {
+						  throw ex;
+						}
+					}
+					return ntype;
+				} finally { // debugging
+					traceOut("parenGroup");
+				}
+			}
+			
+	protected final Type  bracketGroup(
+		Type type, int pos
+	) throws RecognitionException, TokenStreamException {
+		Type ntype=type;
+		
+		traceIn("bracketGroup");
+		try { // debugging
+			Token  s0 = null;
+			Token  s1 = null;
+			Token  s2 = null;
+			
+			Expression expr1 = null;
+			
+			
+			try {      // for error handling
+				s0 = LT(1);
+				match(LBracket);
+				{
+				switch ( LA(1)) {
+				case RBracket:
+				{
+					if ( inputState.guessing==0 ) {
+						ntype = createArrayType(pos == 0, type, s0);
+					}
+					break;
+				}
+				case KEYWORD_static:
+				{
+					match(KEYWORD_static);
 					{
 					switch ( LA(1)) {
 					case KEYWORD_const:
@@ -8933,14 +9642,44 @@ public C99Parser(ParserSharedInputState state) {
 						typeQualifierList();
 						break;
 					}
+					case KEYWORD_sizeof:
+					case KEYWORD_Extension:
+					case KEYWORD_alignof:
+					case KEYWORD_va_arg:
+					case KEYWORD_builtin_va_arg:
+					case KEYWORD_builtin_offsetof:
 					case Identifier:
+					case HexDoubleValue:
+					case HexFloatValue:
+					case HexLongDoubleValue:
+					case HexUnsignedIntValue:
+					case HexUnsignedLongIntValue:
+					case HexUnsignedLongLongIntValue:
+					case HexIntValue:
+					case HexLongIntValue:
+					case HexLongLongIntValue:
+					case DoubleValue:
+					case FloatValue:
+					case LongDoubleValue:
+					case UnsignedIntValue:
+					case UnsignedLongIntValue:
+					case UnsignedLongLongIntValue:
+					case IntValue:
+					case LongIntValue:
+					case LongLongIntValue:
+					case CharacterConstant:
+					case WideCharacterConstant:
+					case StringLit:
+					case WideStringLiteral:
 					case LParen:
-					case RParen:
-					case LBracket:
-					case Comma:
+					case Dec:
+					case Inc:
+					case And:
 					case Mult:
-					case LITERAL___restrict:
-					case Attributes:
+					case Plus:
+					case Sub:
+					case Comp:
+					case Not:
 					{
 						break;
 					}
@@ -8950,193 +9689,272 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-					if ( inputState.guessing==0 ) {
-						
-						ntype = PointerType.create(ntype);
-						if (typeQualifier != 0)
-						ntype = addTypeQualifier(ntype, typeQualifier);
-						
+					expr1=assignmentExpression();
+					break;
+				}
+				case KEYWORD_const:
+				case KEYWORD___const:
+				case KEYWORD_restrict:
+				case KEYWORD_volatile:
+				case KEYWORD__volatile:
+				{
+					typeQualifierList();
+					{
+					if ((LA(1)==KEYWORD_static)) {
+						s1 = LT(1);
+						match(KEYWORD_static);
+						expr1=constantExpression();
+						if ( inputState.guessing==0 ) {
+							notImplementedError("static in array declaration ", s0);
+						}
+					}
+					else {
+						boolean synPredMatched173 = false;
+						if (((LA(1)==Mult) && (LA(2)==RBracket))) {
+							int _m173 = mark();
+							synPredMatched173 = true;
+							inputState.guessing++;
+							try {
+								{
+								match(Mult);
+								match(RBracket);
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched173 = false;
+							}
+							rewind(_m173);
+							inputState.guessing--;
+						}
+						if ( synPredMatched173 ) {
+							match(Mult);
+						}
+						else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_46.member(LA(2)))) {
+							expr1=assignmentExpression();
+						}
+						else {
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						if ( inputState.guessing==0 ) {
+							notImplementedError("static in array declaration ", s1);
+						}
+						break;
+					}
+					default:
+						boolean synPredMatched175 = false;
+						if (((LA(1)==Mult) && (LA(2)==RBracket))) {
+							int _m175 = mark();
+							synPredMatched175 = true;
+							inputState.guessing++;
+							try {
+								{
+								match(Mult);
+								match(RBracket);
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched175 = false;
+							}
+							rewind(_m175);
+							inputState.guessing--;
+						}
+						if ( synPredMatched175 ) {
+							s2 = LT(1);
+							match(Mult);
+							if ( inputState.guessing==0 ) {
+								ntype = createArrayType(pos == 0, type, s0);
+							}
+						}
+						else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_47.member(LA(2)))) {
+							expr1=constantExpression();
+							if ( inputState.guessing==0 ) {
+								ntype = createArrayType(pos == 0, type, expr1, s0);
+							}
+						}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+					match(RBracket);
+				}
+				catch (RecognitionException ex) {
+					if (inputState.guessing==0) {
+						reportError(ex);
+						consume();
+						consumeUntil(_tokenSet_43);
+					} else {
+					  throw ex;
 					}
 				}
-				else {
-					if ( _cnt185>=1 ) { break _loop185; } else {throw new NoViableAltException(LT(1), getFilename());}
+				return ntype;
+			} finally { // debugging
+				traceOut("bracketGroup");
+			}
+		}
+		
+	protected final Type  structOrUnionSpecifier() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("structOrUnionSpecifier");
+		try { // debugging
+			Token  att0 = null;
+			Token  att1 = null;
+			Token  n0 = null;
+			Token  att2 = null;
+			
+			Vector<FieldDecl>   fields  = null;
+			boolean  isUnion = false;
+			TypeDecl decl    = null;
+			String   atts    = "";
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					fields = new Vector<FieldDecl>(8);
+					
 				}
-				
-				_cnt185++;
-			} while (true);
-			}
-			if ( inputState.guessing==0 ) {
-				typeQualifier = saveTypeQualifier;
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_42);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
-	}
-	
-	protected final Type  directDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype=type;
-		
-		Token  att0 = null;
-		Token  id = null;
-		Token  att1 = null;
-		
-		IncompleteType ictype = null;
-		Type           xtype  = null;
-		String         name   = null;
-		int            pos    = 0;
-		String         atts   = "";
-		declID = "";
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Identifier:
-			case LITERAL___restrict:
-			case Attributes:
-			{
 				{
-				if (((LA(1)==LITERAL___restrict))&&(allowGNUExtensions)) {
-					match(LITERAL___restrict);
+				switch ( LA(1)) {
+				case KEYWORD_struct:
+				{
+					match(KEYWORD_struct);
+					break;
 				}
-				else if ((LA(1)==Identifier||LA(1)==Attributes)) {
+				case KEYWORD_union:
+				{
+					match(KEYWORD_union);
+					if ( inputState.guessing==0 ) {
+						isUnion = true;
+					}
+					break;
 				}
-				else {
+				default:
+				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-				
+				}
 				}
 				{
-				_loop105:
+				_loop130:
 				do {
 					if ((LA(1)==Attributes)) {
 						att0 = LT(1);
 						match(Attributes);
 						if ( inputState.guessing==0 ) {
-							declAtts = declAtts + att0.getText();
+							atts = atts + att0.getText();
 						}
 					}
 					else {
-						break _loop105;
+						break _loop130;
 					}
 					
 				} while (true);
 				}
-				id = LT(1);
-				match(Identifier);
 				{
-				if ((((LA(1) >= LITERAL___asm__ && LA(1) <= LITERAL___asm)) && (_tokenSet_43.member(LA(2))))&&(allowGNUExtensions)) {
-					{
-					switch ( LA(1)) {
-					case LITERAL___asm__:
-					{
-						match(LITERAL___asm__);
-						break;
-					}
-					case LITERAL_asm:
-					{
-						match(LITERAL_asm);
-						break;
-					}
-					case LITERAL___asm:
-					{
-						match(LITERAL___asm);
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-				}
-				else if ((_tokenSet_43.member(LA(1))) && (_tokenSet_44.member(LA(2)))) {
-				}
-				else {
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				
-				}
+				switch ( LA(1)) {
+				case LBrace:
 				{
-				_loop109:
-				do {
-					switch ( LA(1)) {
-					case LParen:
+					match(LBrace);
+					structDeclarationList(fields);
+					match(RBrace);
 					{
-						ntype=parenGroup(ntype);
-						if ( inputState.guessing==0 ) {
-							pos = 0;
+					_loop133:
+					do {
+						if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
+							att1 = LT(1);
+							match(Attributes);
+							if ( inputState.guessing==0 ) {
+								atts = atts + att1.getText();
+							}
 						}
-						break;
+						else {
+							break _loop133;
+						}
+						
+					} while (true);
 					}
-					case LBracket:
-					{
-						ntype=bracketGroup(ntype, pos++);
-						break;
+					if ( inputState.guessing==0 ) {
+						
+						AggregateType atype = isUnion ? UnionType.create(fields, false) : RecordType.create(fields);
+						atype.memorySize(Machine.currentMachine);
+						decl = createTypeDecl("_T" + typeCounter++, atype);
+						type = decl.getType();
+						
 					}
-					default:
-					{
-						break _loop109;
-					}
-					}
-				} while (true);
+					break;
 				}
-				if ( inputState.guessing==0 ) {
-					declID = id.getText();
-				}
+				case Identifier:
 				{
-				if ((((LA(1) >= LITERAL___asm__ && LA(1) <= LITERAL___asm)))&&(allowGNUExtensions)) {
-					{
-					switch ( LA(1)) {
-					case LITERAL___asm__:
-					{
-						match(LITERAL___asm__);
-						break;
-					}
-					case LITERAL_asm:
-					{
-						match(LITERAL_asm);
-						break;
-					}
-					case LITERAL___asm:
-					{
-						match(LITERAL___asm);
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
+					n0 = LT(1);
+					match(Identifier);
+					if ( inputState.guessing==0 ) {
+						
+						decl = lookupTypeDecl(n0.getText());
+						if (decl == null) {
+						IncompleteType ictype = new IncompleteType();
+						if (noRecordType == null)
+						noRecordType = RecordType.create(new Vector<FieldDecl>(0));
+						if (noUnionType == null)
+						noUnionType = UnionType.create(new Vector<FieldDecl>(0), false);
+						decl = createTypeDecl(n0.getText(), ictype);
+						cg.addSymbol(decl);
+						ictype.setCompleteType(isUnion ? noUnionType : noRecordType);
+						}
+						type = decl.getType();
+						
 					}
 					{
 					switch ( LA(1)) {
-					case LParen:
+					case LBrace:
 					{
-						match(LParen);
-						match(StringLit);
+						match(LBrace);
+						structDeclarationList(fields);
+						match(RBrace);
 						{
-						_loop114:
+						_loop136:
 						do {
-							if ((LA(1)==StringLit)) {
-								match(StringLit);
+							if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
+								att2 = LT(1);
+								match(Attributes);
+								if ( inputState.guessing==0 ) {
+									atts = atts + att2.getText();
+								}
 							}
 							else {
-								break _loop114;
+								break _loop136;
 							}
 							
 						} while (true);
 						}
-						match(RParen);
+						if ( inputState.guessing==0 ) {
+							
+							if (!fatalError) {
+							Type           stype  = type;
+							AggregateType  atype  = isUnion ? UnionType.create(fields, false) : RecordType.create(fields);
+							IncompleteType ictype = lastIncompleteType(stype);
+							
+							atype.memorySize(Machine.currentMachine);
+							
+							if (ictype == null)
+							userError(Msg.MSG_Type_s_is_already_defined, n0.getText(), n0);
+							else {
+							ictype.setCompleteType(atype);
+							
+							Symtab      st = cg.getSymbolTable();
+							SymtabScope sc = st.getCurrentScope();
+							SymtabEntry se = sc.lookupSymbol(decl);
+							if (se == null)
+							cg.addSymbol(decl);
+							else
+							sc.reorder(se);
+							}
+							}
+							
+						}
 						break;
 					}
 					case KEYWORD_auto:
@@ -9169,11 +9987,557 @@ public C99Parser(ParserSharedInputState state) {
 					case KEYWORD__inline__:
 					case KEYWORD__inline:
 					case Identifier:
-					case LBrace:
+					case LParen:
 					case RParen:
+					case LBracket:
 					case Comma:
+					case Mult:
 					case Colon:
-					case Assign:
+					case Semi:
+					case LITERAL___restrict:
+					case Attributes:
+					{
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				if ( inputState.guessing==0 ) {
+					type = processAttributes(atts, type, LT(0));
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_36);
+				} else {
+				  throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("structOrUnionSpecifier");
+		}
+	}
+	
+	protected final Type  enumSpecifier() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("enumSpecifier");
+		try { // debugging
+			Token  att0 = null;
+			Token  n0 = null;
+			Token  att1 = null;
+			Token  n1 = null;
+			Token  att2 = null;
+			
+			Vector<EnumElementDecl> ev   = null;
+			String atts = "";
+			
+			
+			try {      // for error handling
+				match(KEYWORD_enum);
+				{
+				_loop155:
+				do {
+					if ((LA(1)==Attributes)) {
+						att0 = LT(1);
+						match(Attributes);
+						if ( inputState.guessing==0 ) {
+							atts = atts + att0.getText();
+						}
+					}
+					else {
+						break _loop155;
+					}
+					
+				} while (true);
+				}
+				{
+				switch ( LA(1)) {
+				case LBrace:
+				{
+					n0 = LT(1);
+					match(LBrace);
+					ev=enumeratorList();
+					match(RBrace);
+					{
+					_loop158:
+					do {
+						if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
+							att1 = LT(1);
+							match(Attributes);
+							if ( inputState.guessing==0 ) {
+								atts = atts + att1.getText();
+							}
+						}
+						else {
+							break _loop158;
+						}
+						
+					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						type = createEnumType(null, ev, n0);
+					}
+					break;
+				}
+				case Identifier:
+				{
+					n1 = LT(1);
+					match(Identifier);
+					{
+					switch ( LA(1)) {
+					case LBrace:
+					{
+						match(LBrace);
+						ev=enumeratorList();
+						match(RBrace);
+						{
+						_loop161:
+						do {
+							if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
+								att2 = LT(1);
+								match(Attributes);
+								if ( inputState.guessing==0 ) {
+									atts = atts + att2.getText();
+								}
+							}
+							else {
+								break _loop161;
+							}
+							
+						} while (true);
+						}
+						break;
+					}
+					case KEYWORD_auto:
+					case KEYWORD_char:
+					case KEYWORD_const:
+					case KEYWORD___const:
+					case KEYWORD_double:
+					case KEYWORD_enum:
+					case KEYWORD_extern:
+					case KEYWORD_float:
+					case KEYWORD_inline:
+					case KEYWORD_int:
+					case KEYWORD_long:
+					case KEYWORD_register:
+					case KEYWORD_restrict:
+					case KEYWORD_short:
+					case KEYWORD_signed:
+					case KEYWORD___signed__:
+					case KEYWORD_static:
+					case KEYWORD_struct:
+					case KEYWORD_typeof:
+					case KEYWORD_union:
+					case KEYWORD_unsigned:
+					case KEYWORD_void:
+					case KEYWORD_volatile:
+					case KEYWORD__volatile:
+					case KEYWORD__Bool:
+					case KEYWORD__Complex:
+					case KEYWORD__Imaginary:
+					case KEYWORD__inline__:
+					case KEYWORD__inline:
+					case Identifier:
+					case LParen:
+					case RParen:
+					case LBracket:
+					case Comma:
+					case Mult:
+					case Colon:
+					case Semi:
+					case LITERAL___restrict:
+					case Attributes:
+					{
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+					if ( inputState.guessing==0 ) {
+						type = createEnumType(n1.getText(), ev, n1);
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				if ( inputState.guessing==0 ) {
+					type = processAttributes(atts, type, LT(0));
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_36);
+				} else {
+				  throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("enumSpecifier");
+		}
+	}
+	
+	protected final void structDeclarationList(
+		Vector<FieldDecl> fields
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("structDeclarationList");
+		try { // debugging
+			
+			try {      // for error handling
+				{
+				_loop139:
+				do {
+					if ((_tokenSet_48.member(LA(1)))) {
+						structDeclaration(fields);
+					}
+					else {
+						break _loop139;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_49);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("structDeclarationList");
+		}
+	}
+	
+	protected final void structDeclaration(
+		Vector<FieldDecl> fields
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("structDeclaration");
+		try { // debugging
+			Token  n0 = null;
+			
+			Type      type = null;
+			FieldDecl fd   = null; 
+			
+			
+			try {      // for error handling
+				{
+				switch ( LA(1)) {
+				case KEYWORD_Extension:
+				{
+					match(KEYWORD_Extension);
+					break;
+				}
+				case KEYWORD_char:
+				case KEYWORD_const:
+				case KEYWORD___const:
+				case KEYWORD_double:
+				case KEYWORD_enum:
+				case KEYWORD_float:
+				case KEYWORD_int:
+				case KEYWORD_long:
+				case KEYWORD_restrict:
+				case KEYWORD_short:
+				case KEYWORD_signed:
+				case KEYWORD___signed__:
+				case KEYWORD_struct:
+				case KEYWORD_typeof:
+				case KEYWORD_union:
+				case KEYWORD_unsigned:
+				case KEYWORD_void:
+				case KEYWORD_volatile:
+				case KEYWORD__volatile:
+				case KEYWORD__Bool:
+				case KEYWORD__Complex:
+				case KEYWORD__Imaginary:
+				case Identifier:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				type=specifierQualifierList();
+				{
+				switch ( LA(1)) {
+				case Identifier:
+				case LParen:
+				case Mult:
+				case Colon:
+				case LITERAL___restrict:
+				case Attributes:
+				{
+					fd=structDeclarator(type);
+					if ( inputState.guessing==0 ) {
+						addField(fd, fields, LT(1));
+					}
+					{
+					_loop144:
+					do {
+						if ((LA(1)==Comma)) {
+							match(Comma);
+							fd=structDeclarator(type);
+							if ( inputState.guessing==0 ) {
+								addField(fd, fields, LT(1));
+							}
+						}
+						else {
+							break _loop144;
+						}
+						
+					} while (true);
+					}
+					break;
+				}
+				case Semi:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				n0 = LT(1);
+				match(Semi);
+				if ( inputState.guessing==0 ) {
+					
+					if (fd == null) { // Anonymous field.
+					fd = createFieldDecl(null, type, 0, fieldCounter++, n0);
+					addField(fd, fields, LT(1));
+					}
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_50);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("structDeclaration");
+		}
+	}
+	
+	protected final Type  specifierQualifierList() throws RecognitionException, TokenStreamException {
+		Type type = void_type;
+		
+		traceIn("specifierQualifierList");
+		try { // debugging
+			Token  n0 = null;
+			
+			int     saveBaseType      = baseType;
+			int     saveTypeQualifier = typeQualifier;
+			Type    saveBuildType     = buildType;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					baseType      = cStart;
+					typeQualifier = 0;
+					
+				}
+				{
+				int _cnt147=0;
+				_loop147:
+				do {
+					switch ( LA(1)) {
+					case KEYWORD_const:
+					case KEYWORD___const:
+					case KEYWORD_restrict:
+					case KEYWORD_volatile:
+					case KEYWORD__volatile:
+					{
+						typeQualifier();
+						break;
+					}
+					case KEYWORD_char:
+					case KEYWORD_double:
+					case KEYWORD_enum:
+					case KEYWORD_float:
+					case KEYWORD_int:
+					case KEYWORD_long:
+					case KEYWORD_short:
+					case KEYWORD_signed:
+					case KEYWORD___signed__:
+					case KEYWORD_struct:
+					case KEYWORD_typeof:
+					case KEYWORD_union:
+					case KEYWORD_unsigned:
+					case KEYWORD_void:
+					case KEYWORD__Bool:
+					case KEYWORD__Complex:
+					case KEYWORD__Imaginary:
+					{
+						typeSpecifier();
+						break;
+					}
+					default:
+						if (((LA(1)==Identifier) && (_tokenSet_51.member(LA(2))))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
+							n0 = LT(1);
+							match(Identifier);
+							if ( inputState.guessing==0 ) {
+								
+								String   name = n0.getText();
+								TypeName tn   = lookupTypedef(name);
+								buildType = tn.getType();
+								baseType = specifyBaseType(cOther, baseType);
+								
+							}
+						}
+					else {
+						if ( _cnt147>=1 ) { break _loop147; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					}
+					_cnt147++;
+				} while (true);
+				}
+				if ( inputState.guessing==0 ) {
+					
+					buildType = buildType(baseType, buildType); 
+					if (buildType == null) {
+					userError(Msg.MSG_Invalid_type, null, LT(1));
+					buildType = void_type;
+					}
+					type          = buildType;
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					baseType      = saveBaseType;
+					buildType     = saveBuildType;
+					typeQualifier = saveTypeQualifier;
+					reportError(ex);
+					consume();
+					fatalError = true;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return type;
+		} finally { // debugging
+			traceOut("specifierQualifierList");
+		}
+	}
+	
+	protected final FieldDecl  structDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		FieldDecl fd = null;
+		
+		traceIn("structDeclarator");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			
+			Expression expr1  = null;
+			FieldDecl  decl   = null;
+			String     saveId = declID;
+			String     name   = null;
+			Token      t      = null;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case Colon:
+				{
+					n0 = LT(1);
+					match(Colon);
+					expr1=constantExpression();
+					{
+					switch ( LA(1)) {
+					case Attributes:
+					{
+						type=getAttributes(type);
+						break;
+					}
+					case Comma:
+					case Semi:
+					{
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+					if ( inputState.guessing==0 ) {
+						
+						int bits = 0;
+						if (expr1 != null)
+						bits = getIntValue(expr1, n0);
+						fd = createFieldDecl(null, type, bits, fieldCounter++, n0);
+						
+					}
+					break;
+				}
+				case Identifier:
+				case LParen:
+				case Mult:
+				case LITERAL___restrict:
+				case Attributes:
+				{
+					if ( inputState.guessing==0 ) {
+						saveId = declID; t = LT(1);
+					}
+					type=declarator2(type);
+					if ( inputState.guessing==0 ) {
+						name = declID; declID = saveId;
+					}
+					{
+					switch ( LA(1)) {
+					case Colon:
+					{
+						n1 = LT(1);
+						match(Colon);
+						expr1=constantExpression();
+						break;
+					}
+					case Comma:
 					case Semi:
 					case Attributes:
 					{
@@ -9185,2387 +10549,14 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-				}
-				else if ((_tokenSet_41.member(LA(1)))) {
-				}
-				else {
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				
-				}
-				{
-				_loop116:
-				do {
-					if ((LA(1)==Attributes) && (_tokenSet_41.member(LA(2)))) {
-						att1 = LT(1);
-						match(Attributes);
-						if ( inputState.guessing==0 ) {
-							declAtts = declAtts + att1.getText();
-						}
-					}
-					else {
-						break _loop116;
-					}
-					
-				} while (true);
-				}
-				break;
-			}
-			case LParen:
-			{
-				match(LParen);
-				if ( inputState.guessing==0 ) {
-					
-					ictype = new IncompleteType();
-					ntype = type;
-					
-				}
-				xtype=declarator2(ictype);
-				match(RParen);
-				if ( inputState.guessing==0 ) {
-					
-					name = declID;
-					
-				}
-				{
-				_loop118:
-				do {
-					switch ( LA(1)) {
-					case LParen:
-					{
-						ntype=parenGroup(ntype);
-						if ( inputState.guessing==0 ) {
-							pos = 0;
-						}
-						break;
-					}
-					case LBracket:
-					{
-						ntype=bracketGroup(ntype, pos++);
-						break;
-					}
-					default:
-					{
-						break _loop118;
-					}
-					}
-				} while (true);
-				}
-				if ( inputState.guessing==0 ) {
-					
-					if (!fatalError) {
-					ictype.setCompleteType(ntype);
-					ntype = xtype;
-					ArrayType at = ntype.getCoreType().returnArrayType();
-					if (at != null) {
-					if (at.getElementType().isProcedureType())
-					userError(Msg.MSG_Array_of_functions_is_not_allowed, null, LT(0));
-					}
-					declID = name;
-					}
-					
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_41);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
-	}
-	
-	protected final Type  parenGroup(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype=type;
-		
-		
-		Vector<? extends Object> formals = null;
-		
-		
-		try {      // for error handling
-			match(LParen);
-			{
-			if ((LA(1)==RParen)) {
-			}
-			else {
-				boolean synPredMatched179 = false;
-				if (((LA(1)==KEYWORD_void) && (LA(2)==RParen))) {
-					int _m179 = mark();
-					synPredMatched179 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(KEYWORD_void);
-						match(RParen);
-						}
-					}
-					catch (RecognitionException pe) {
-						synPredMatched179 = false;
-					}
-					rewind(_m179);
-					inputState.guessing--;
-				}
-				if ( synPredMatched179 ) {
-					match(KEYWORD_void);
-				}
-				else {
-					boolean synPredMatched181 = false;
-					if ((((LA(1)==Identifier) && (LA(2)==RParen||LA(2)==Comma))&&(!isTypedef(LT(1).getText())))) {
-						int _m181 = mark();
-						synPredMatched181 = true;
-						inputState.guessing++;
-						try {
-							{
-							match(Identifier);
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched181 = false;
-						}
-						rewind(_m181);
-						inputState.guessing--;
-					}
-					if ( synPredMatched181 ) {
-						formals=identifierList();
-					}
-					else if ((_tokenSet_2.member(LA(1))) && (_tokenSet_45.member(LA(2)))) {
-						formals=parameterTypeList();
-					}
-					else {
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}}
-					}
-					match(RParen);
-					if ( inputState.guessing==0 ) {
-						
-						ntype = makeProcedureType(type, formals);
-						
-					}
-				}
-				catch (RecognitionException ex) {
-					if (inputState.guessing==0) {
-						reportError(ex);
-						consume();
-						consumeUntil(_tokenSet_43);
-					} else {
-					  throw ex;
-					}
-				}
-				return ntype;
-			}
-			
-	protected final Type  bracketGroup(
-		Type type, int pos
-	) throws RecognitionException, TokenStreamException {
-		Type ntype=type;
-		
-		Token  s0 = null;
-		Token  s1 = null;
-		Token  s2 = null;
-		
-		Expression expr1 = null;
-		
-		
-		try {      // for error handling
-			s0 = LT(1);
-			match(LBracket);
-			{
-			switch ( LA(1)) {
-			case RBracket:
-			{
-				if ( inputState.guessing==0 ) {
-					ntype = createArrayType(pos == 0, type, s0);
-				}
-				break;
-			}
-			case KEYWORD_static:
-			{
-				match(KEYWORD_static);
-				{
-				switch ( LA(1)) {
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_restrict:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				{
-					typeQualifierList();
-					break;
-				}
-				case KEYWORD_sizeof:
-				case KEYWORD_Extension:
-				case KEYWORD_alignof:
-				case KEYWORD_va_arg:
-				case KEYWORD_builtin_va_arg:
-				case KEYWORD_builtin_offsetof:
-				case Identifier:
-				case HexDoubleValue:
-				case HexFloatValue:
-				case HexLongDoubleValue:
-				case HexUnsignedIntValue:
-				case HexUnsignedLongIntValue:
-				case HexUnsignedLongLongIntValue:
-				case HexIntValue:
-				case HexLongIntValue:
-				case HexLongLongIntValue:
-				case DoubleValue:
-				case FloatValue:
-				case LongDoubleValue:
-				case UnsignedIntValue:
-				case UnsignedLongIntValue:
-				case UnsignedLongLongIntValue:
-				case IntValue:
-				case LongIntValue:
-				case LongLongIntValue:
-				case CharacterConstant:
-				case WideCharacterConstant:
-				case StringLit:
-				case WideStringLiteral:
-				case LParen:
-				case Dec:
-				case Inc:
-				case And:
-				case Mult:
-				case Plus:
-				case Sub:
-				case Comp:
-				case Not:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				expr1=assignmentExpression();
-				break;
-			}
-			case KEYWORD_const:
-			case KEYWORD___const:
-			case KEYWORD_restrict:
-			case KEYWORD_volatile:
-			case KEYWORD__volatile:
-			{
-				typeQualifierList();
-				{
-				if ((LA(1)==KEYWORD_static)) {
-					s1 = LT(1);
-					match(KEYWORD_static);
-					expr1=constantExpression();
-					if ( inputState.guessing==0 ) {
-						notImplementedError("static in array declaration ", s0);
-					}
-				}
-				else {
-					boolean synPredMatched173 = false;
-					if (((LA(1)==Mult) && (LA(2)==RBracket))) {
-						int _m173 = mark();
-						synPredMatched173 = true;
-						inputState.guessing++;
-						try {
-							{
-							match(Mult);
-							match(RBracket);
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched173 = false;
-						}
-						rewind(_m173);
-						inputState.guessing--;
-					}
-					if ( synPredMatched173 ) {
-						match(Mult);
-					}
-					else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_46.member(LA(2)))) {
-						expr1=assignmentExpression();
-					}
-					else {
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					if ( inputState.guessing==0 ) {
-						notImplementedError("static in array declaration ", s1);
-					}
-					break;
-				}
-				default:
-					boolean synPredMatched175 = false;
-					if (((LA(1)==Mult) && (LA(2)==RBracket))) {
-						int _m175 = mark();
-						synPredMatched175 = true;
-						inputState.guessing++;
-						try {
-							{
-							match(Mult);
-							match(RBracket);
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched175 = false;
-						}
-						rewind(_m175);
-						inputState.guessing--;
-					}
-					if ( synPredMatched175 ) {
-						s2 = LT(1);
-						match(Mult);
-						if ( inputState.guessing==0 ) {
-							ntype = createArrayType(pos == 0, type, s0);
-						}
-					}
-					else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_47.member(LA(2)))) {
-						expr1=constantExpression();
-						if ( inputState.guessing==0 ) {
-							ntype = createArrayType(pos == 0, type, expr1, s0);
-						}
-					}
-				else {
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				match(RBracket);
-			}
-			catch (RecognitionException ex) {
-				if (inputState.guessing==0) {
-					reportError(ex);
-					consume();
-					consumeUntil(_tokenSet_43);
-				} else {
-				  throw ex;
-				}
-			}
-			return ntype;
-		}
-		
-	protected final Type  structOrUnionSpecifier() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		Token  att0 = null;
-		Token  att1 = null;
-		Token  n0 = null;
-		Token  att2 = null;
-		
-		Vector<FieldDecl>   fields  = null;
-		boolean  isUnion = false;
-		TypeDecl decl    = null;
-		String   atts    = "";
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				fields = new Vector<FieldDecl>(8);
-				
-			}
-			{
-			switch ( LA(1)) {
-			case KEYWORD_struct:
-			{
-				match(KEYWORD_struct);
-				break;
-			}
-			case KEYWORD_union:
-			{
-				match(KEYWORD_union);
-				if ( inputState.guessing==0 ) {
-					isUnion = true;
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			{
-			_loop130:
-			do {
-				if ((LA(1)==Attributes)) {
-					att0 = LT(1);
-					match(Attributes);
-					if ( inputState.guessing==0 ) {
-						atts = atts + att0.getText();
-					}
-				}
-				else {
-					break _loop130;
-				}
-				
-			} while (true);
-			}
-			{
-			switch ( LA(1)) {
-			case LBrace:
-			{
-				match(LBrace);
-				structDeclarationList(fields);
-				match(RBrace);
-				{
-				_loop133:
-				do {
-					if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
-						att1 = LT(1);
-						match(Attributes);
-						if ( inputState.guessing==0 ) {
-							atts = atts + att1.getText();
-						}
-					}
-					else {
-						break _loop133;
-					}
-					
-				} while (true);
-				}
-				if ( inputState.guessing==0 ) {
-					
-					AggregateType atype = isUnion ? UnionType.create(fields, false) : RecordType.create(fields);
-					atype.memorySize(Machine.currentMachine);
-					decl = createTypeDecl("_T" + typeCounter++, atype);
-					type = decl.getType();
-					
-				}
-				break;
-			}
-			case Identifier:
-			{
-				n0 = LT(1);
-				match(Identifier);
-				if ( inputState.guessing==0 ) {
-					
-					decl = lookupTypeDecl(n0.getText());
-					if (decl == null) {
-					IncompleteType ictype = new IncompleteType();
-					if (noRecordType == null)
-					noRecordType = RecordType.create(new Vector<FieldDecl>(0));
-					if (noUnionType == null)
-					noUnionType = UnionType.create(new Vector<FieldDecl>(0), false);
-					decl = createTypeDecl(n0.getText(), ictype);
-					cg.addSymbol(decl);
-					ictype.setCompleteType(isUnion ? noUnionType : noRecordType);
-					}
-					type = decl.getType();
-					
-				}
-				{
-				switch ( LA(1)) {
-				case LBrace:
-				{
-					match(LBrace);
-					structDeclarationList(fields);
-					match(RBrace);
-					{
-					_loop136:
-					do {
-						if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
-							att2 = LT(1);
-							match(Attributes);
-							if ( inputState.guessing==0 ) {
-								atts = atts + att2.getText();
-							}
-						}
-						else {
-							break _loop136;
-						}
-						
-					} while (true);
-					}
-					if ( inputState.guessing==0 ) {
-						
-						if (!fatalError) {
-						Type           stype  = type;
-						AggregateType  atype  = isUnion ? UnionType.create(fields, false) : RecordType.create(fields);
-						IncompleteType ictype = lastIncompleteType(stype);
-						
-						atype.memorySize(Machine.currentMachine);
-						
-						if (ictype == null)
-						userError(Msg.MSG_Type_s_is_already_defined, n0.getText(), n0);
-						else {
-						ictype.setCompleteType(atype);
-						
-						Symtab      st = cg.getSymbolTable();
-						SymtabScope sc = st.getCurrentScope();
-						SymtabEntry se = sc.lookupSymbol(decl);
-						if (se == null)
-						cg.addSymbol(decl);
-						else
-						sc.reorder(se);
-						}
-						}
-						
-					}
-					break;
-				}
-				case KEYWORD_auto:
-				case KEYWORD_char:
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_extern:
-				case KEYWORD_float:
-				case KEYWORD_inline:
-				case KEYWORD_int:
-				case KEYWORD_long:
-				case KEYWORD_register:
-				case KEYWORD_restrict:
-				case KEYWORD_short:
-				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_static:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
-				case KEYWORD_unsigned:
-				case KEYWORD_void:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				case KEYWORD__Bool:
-				case KEYWORD__Complex:
-				case KEYWORD__Imaginary:
-				case KEYWORD__inline__:
-				case KEYWORD__inline:
-				case Identifier:
-				case LParen:
-				case RParen:
-				case LBracket:
-				case Comma:
-				case Mult:
-				case Colon:
-				case Semi:
-				case LITERAL___restrict:
-				case Attributes:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			if ( inputState.guessing==0 ) {
-				type = processAttributes(atts, type, LT(0));
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_36);
-			} else {
-			  throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final Type  enumSpecifier() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		Token  att0 = null;
-		Token  n0 = null;
-		Token  att1 = null;
-		Token  n1 = null;
-		Token  att2 = null;
-		
-		Vector<EnumElementDecl> ev   = null;
-		String atts = "";
-		
-		
-		try {      // for error handling
-			match(KEYWORD_enum);
-			{
-			_loop155:
-			do {
-				if ((LA(1)==Attributes)) {
-					att0 = LT(1);
-					match(Attributes);
-					if ( inputState.guessing==0 ) {
-						atts = atts + att0.getText();
-					}
-				}
-				else {
-					break _loop155;
-				}
-				
-			} while (true);
-			}
-			{
-			switch ( LA(1)) {
-			case LBrace:
-			{
-				n0 = LT(1);
-				match(LBrace);
-				ev=enumeratorList();
-				match(RBrace);
-				{
-				_loop158:
-				do {
-					if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
-						att1 = LT(1);
-						match(Attributes);
-						if ( inputState.guessing==0 ) {
-							atts = atts + att1.getText();
-						}
-					}
-					else {
-						break _loop158;
-					}
-					
-				} while (true);
-				}
-				if ( inputState.guessing==0 ) {
-					type = createEnumType(null, ev, n0);
-				}
-				break;
-			}
-			case Identifier:
-			{
-				n1 = LT(1);
-				match(Identifier);
-				{
-				switch ( LA(1)) {
-				case LBrace:
-				{
-					match(LBrace);
-					ev=enumeratorList();
-					match(RBrace);
-					{
-					_loop161:
-					do {
-						if ((LA(1)==Attributes) && (_tokenSet_36.member(LA(2)))) {
-							att2 = LT(1);
-							match(Attributes);
-							if ( inputState.guessing==0 ) {
-								atts = atts + att2.getText();
-							}
-						}
-						else {
-							break _loop161;
-						}
-						
-					} while (true);
-					}
-					break;
-				}
-				case KEYWORD_auto:
-				case KEYWORD_char:
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_extern:
-				case KEYWORD_float:
-				case KEYWORD_inline:
-				case KEYWORD_int:
-				case KEYWORD_long:
-				case KEYWORD_register:
-				case KEYWORD_restrict:
-				case KEYWORD_short:
-				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_static:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
-				case KEYWORD_unsigned:
-				case KEYWORD_void:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				case KEYWORD__Bool:
-				case KEYWORD__Complex:
-				case KEYWORD__Imaginary:
-				case KEYWORD__inline__:
-				case KEYWORD__inline:
-				case Identifier:
-				case LParen:
-				case RParen:
-				case LBracket:
-				case Comma:
-				case Mult:
-				case Colon:
-				case Semi:
-				case LITERAL___restrict:
-				case Attributes:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				if ( inputState.guessing==0 ) {
-					type = createEnumType(n1.getText(), ev, n1);
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			if ( inputState.guessing==0 ) {
-				type = processAttributes(atts, type, LT(0));
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_36);
-			} else {
-			  throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final void structDeclarationList(
-		Vector<FieldDecl> fields
-	) throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			{
-			_loop139:
-			do {
-				if ((_tokenSet_48.member(LA(1)))) {
-					structDeclaration(fields);
-				}
-				else {
-					break _loop139;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_49);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void structDeclaration(
-		Vector<FieldDecl> fields
-	) throws RecognitionException, TokenStreamException {
-		
-		Token  n0 = null;
-		
-		Type      type = null;
-		FieldDecl fd   = null; 
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case KEYWORD_Extension:
-			{
-				match(KEYWORD_Extension);
-				break;
-			}
-			case KEYWORD_char:
-			case KEYWORD_const:
-			case KEYWORD___const:
-			case KEYWORD_double:
-			case KEYWORD_enum:
-			case KEYWORD_float:
-			case KEYWORD_int:
-			case KEYWORD_long:
-			case KEYWORD_restrict:
-			case KEYWORD_short:
-			case KEYWORD_signed:
-			case KEYWORD___signed__:
-			case KEYWORD_struct:
-			case KEYWORD_typeof:
-			case KEYWORD_union:
-			case KEYWORD_unsigned:
-			case KEYWORD_void:
-			case KEYWORD_volatile:
-			case KEYWORD__volatile:
-			case KEYWORD__Bool:
-			case KEYWORD__Complex:
-			case KEYWORD__Imaginary:
-			case Identifier:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			type=specifierQualifierList();
-			{
-			switch ( LA(1)) {
-			case Identifier:
-			case LParen:
-			case Mult:
-			case Colon:
-			case LITERAL___restrict:
-			case Attributes:
-			{
-				fd=structDeclarator(type);
-				if ( inputState.guessing==0 ) {
-					addField(fd, fields, LT(1));
-				}
-				{
-				_loop144:
-				do {
-					if ((LA(1)==Comma)) {
-						match(Comma);
-						fd=structDeclarator(type);
-						if ( inputState.guessing==0 ) {
-							addField(fd, fields, LT(1));
-						}
-					}
-					else {
-						break _loop144;
-					}
-					
-				} while (true);
-				}
-				break;
-			}
-			case Semi:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			n0 = LT(1);
-			match(Semi);
-			if ( inputState.guessing==0 ) {
-				
-				if (fd == null) { // Anonymous field.
-				fd = createFieldDecl(null, type, 0, fieldCounter++, n0);
-				addField(fd, fields, LT(1));
-				}
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_50);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final Type  specifierQualifierList() throws RecognitionException, TokenStreamException {
-		Type type = void_type;
-		
-		Token  n0 = null;
-		
-		int     saveBaseType      = baseType;
-		int     saveTypeQualifier = typeQualifier;
-		Type    saveBuildType     = buildType;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				baseType      = cStart;
-				typeQualifier = 0;
-				
-			}
-			{
-			int _cnt147=0;
-			_loop147:
-			do {
-				switch ( LA(1)) {
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_restrict:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				{
-					typeQualifier();
-					break;
-				}
-				case KEYWORD_char:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_float:
-				case KEYWORD_int:
-				case KEYWORD_long:
-				case KEYWORD_short:
-				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
-				case KEYWORD_unsigned:
-				case KEYWORD_void:
-				case KEYWORD__Bool:
-				case KEYWORD__Complex:
-				case KEYWORD__Imaginary:
-				{
-					typeSpecifier();
-					break;
-				}
-				default:
-					if (((LA(1)==Identifier) && (_tokenSet_51.member(LA(2))))&&(isTypedef(LT(1).getText()) && (baseType == cStart))) {
-						n0 = LT(1);
-						match(Identifier);
-						if ( inputState.guessing==0 ) {
-							
-							String   name = n0.getText();
-							TypeName tn   = lookupTypedef(name);
-							buildType = tn.getType();
-							baseType = specifyBaseType(cOther, baseType);
-							
-						}
-					}
-				else {
-					if ( _cnt147>=1 ) { break _loop147; } else {throw new NoViableAltException(LT(1), getFilename());}
-				}
-				}
-				_cnt147++;
-			} while (true);
-			}
-			if ( inputState.guessing==0 ) {
-				
-				buildType = buildType(baseType, buildType); 
-				if (buildType == null) {
-				userError(Msg.MSG_Invalid_type, null, LT(1));
-				buildType = void_type;
-				}
-				type          = buildType;
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				baseType      = saveBaseType;
-				buildType     = saveBuildType;
-				typeQualifier = saveTypeQualifier;
-				reportError(ex);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return type;
-	}
-	
-	protected final FieldDecl  structDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		FieldDecl fd = null;
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		
-		Expression expr1  = null;
-		FieldDecl  decl   = null;
-		String     saveId = declID;
-		String     name   = null;
-		Token      t      = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case Colon:
-			{
-				n0 = LT(1);
-				match(Colon);
-				expr1=constantExpression();
-				{
-				switch ( LA(1)) {
-				case Attributes:
-				{
-					type=getAttributes(type);
-					break;
-				}
-				case Comma:
-				case Semi:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				if ( inputState.guessing==0 ) {
-					
-					int bits = 0;
-					if (expr1 != null)
-					bits = getIntValue(expr1, n0);
-					fd = createFieldDecl(null, type, bits, fieldCounter++, n0);
-					
-				}
-				break;
-			}
-			case Identifier:
-			case LParen:
-			case Mult:
-			case LITERAL___restrict:
-			case Attributes:
-			{
-				if ( inputState.guessing==0 ) {
-					saveId = declID; t = LT(1);
-				}
-				type=declarator2(type);
-				if ( inputState.guessing==0 ) {
-					name = declID; declID = saveId;
-				}
-				{
-				switch ( LA(1)) {
-				case Colon:
-				{
-					n1 = LT(1);
-					match(Colon);
-					expr1=constantExpression();
-					break;
-				}
-				case Comma:
-				case Semi:
-				case Attributes:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				{
-				switch ( LA(1)) {
-				case Attributes:
-				{
-					type=getAttributes(type);
-					break;
-				}
-				case Comma:
-				case Semi:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				if ( inputState.guessing==0 ) {
-					
-					int bits = 0;
-					if (expr1 != null)
-					bits = getIntValue(expr1, n1);
-					fd = createFieldDecl(name, type, bits, 0, t);
-					
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_38);
-			} else {
-			  throw ex;
-			}
-		}
-		return fd;
-	}
-	
-	protected final Type  getAttributes(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype = type;
-		
-		Token  att = null;
-		
-		try {      // for error handling
-			att = LT(1);
-			match(Attributes);
-			if ( inputState.guessing==0 ) {
-				ntype = processAttributes(att.getText(), type, att);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_38);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
-	}
-	
-	protected final Vector<EnumElementDecl>  enumeratorList() throws RecognitionException, TokenStreamException {
-		Vector<EnumElementDecl> ev = new Vector<EnumElementDecl>(10);
-		
-		
-		EnumElementDecl ed = null;
-		
-		
-		try {      // for error handling
-			ed=enumerator(ed);
-			if ( inputState.guessing==0 ) {
-				ev.addElement(ed);
-			}
-			{
-			_loop165:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
 					{
 					switch ( LA(1)) {
-					case Identifier:
+					case Attributes:
 					{
-						ed=enumerator(ed);
-						if ( inputState.guessing==0 ) {
-							ev.addElement(ed);
-						}
+						type=getAttributes(type);
 						break;
 					}
 					case Comma:
-					case RBrace:
-					{
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-				}
-				else {
-					break _loop165;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_49);
-			} else {
-			  throw ex;
-			}
-		}
-		return ev;
-	}
-	
-	protected final EnumElementDecl  enumerator(
-		EnumElementDecl last
-	) throws RecognitionException, TokenStreamException {
-		EnumElementDecl ed = null;
-		
-		Token  n0 = null;
-		
-		Expression expr1 = null;
-		
-		
-		try {      // for error handling
-			n0 = LT(1);
-			match(Identifier);
-			{
-			switch ( LA(1)) {
-			case Assign:
-			{
-				match(Assign);
-				expr1=constantExpression();
-				break;
-			}
-			case Comma:
-			case RBrace:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			if ( inputState.guessing==0 ) {
-				ed = buildEnumElementDecl(n0.getText(), last, expr1, n0);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_52);
-			} else {
-			  throw ex;
-			}
-		}
-		return ed;
-	}
-	
-	protected final void typeQualifierList() throws RecognitionException, TokenStreamException {
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				typeQualifier = 0;
-				
-			}
-			{
-			int _cnt188=0;
-			_loop188:
-			do {
-				if ((_tokenSet_53.member(LA(1)))) {
-					typeQualifier();
-				}
-				else {
-					if ( _cnt188>=1 ) { break _loop188; } else {throw new NoViableAltException(LT(1), getFilename());}
-				}
-				
-				_cnt188++;
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_54);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final Vector<String>  identifierList() throws RecognitionException, TokenStreamException {
-		Vector<String> ids = new Vector<String>(6);
-		
-		Token  n0 = null;
-		Token  n1 = null;
-		
-		try {      // for error handling
-			n0 = LT(1);
-			match(Identifier);
-			if ( inputState.guessing==0 ) {
-				ids.addElement(n0.getText());
-			}
-			{
-			_loop206:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					n1 = LT(1);
-					match(Identifier);
-					if ( inputState.guessing==0 ) {
-						ids.addElement(n1.getText());
-					}
-				}
-				else {
-					break _loop206;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
-			} else {
-			  throw ex;
-			}
-		}
-		return ids;
-	}
-	
-	protected final Vector<FormalDecl>  parameterTypeList() throws RecognitionException, TokenStreamException {
-		Vector<FormalDecl> p = null;;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				p = new Vector<FormalDecl>(8);
-				
-			}
-			parameterList(p);
-			{
-			switch ( LA(1)) {
-			case Comma:
-			{
-				match(Comma);
-				match(Varargs);
-				if ( inputState.guessing==0 ) {
-					p.addElement(new UnknownFormals());
-				}
-				break;
-			}
-			case RParen:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
-			} else {
-			  throw ex;
-			}
-		}
-		return p;
-	}
-	
-	protected final void parameterList(
-		Vector<FormalDecl> v
-	) throws RecognitionException, TokenStreamException {
-		
-		
-		FormalDecl fd      = null;
-		int        counter = 0;
-		
-		
-		try {      // for error handling
-			fd=parameterDeclaration(counter++);
-			if ( inputState.guessing==0 ) {
-				addParameter(fd, v, LT(0));
-			}
-			{
-			_loop197:
-			do {
-				if ((LA(1)==Comma) && (_tokenSet_2.member(LA(2)))) {
-					match(Comma);
-					fd=parameterDeclaration(counter++);
-					if ( inputState.guessing==0 ) {
-						addParameter(fd, v, LT(0));
-					}
-				}
-				else {
-					break _loop197;
-				}
-				
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_55);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final FormalDecl  parameterDeclaration(
-		int counter
-	) throws RecognitionException, TokenStreamException {
-		FormalDecl fd=null;
-		
-		
-		Type   type             = null;
-		int    saveStorageClass = storageClass;
-		String atts             = "";
-		
-		
-		try {      // for error handling
-			type=declarationSpecifiers();
-			if ( inputState.guessing==0 ) {
-				
-				storageClass  = saveStorageClass;
-				
-			}
-			{
-			boolean synPredMatched201 = false;
-			if (((_tokenSet_56.member(LA(1))) && (_tokenSet_57.member(LA(2))))) {
-				int _m201 = mark();
-				synPredMatched201 = true;
-				inputState.guessing++;
-				try {
-					{
-					formalDeclarator(type);
-					}
-				}
-				catch (RecognitionException pe) {
-					synPredMatched201 = false;
-				}
-				rewind(_m201);
-				inputState.guessing--;
-			}
-			if ( synPredMatched201 ) {
-				fd=formalDeclarator(type);
-			}
-			else if ((LA(1)==LParen||LA(1)==LBracket||LA(1)==Mult) && (_tokenSet_58.member(LA(2)))) {
-				type=abstractDeclarator(type);
-				{
-				switch ( LA(1)) {
-				case LITERAL___restrict:
-				{
-					match(LITERAL___restrict);
-					break;
-				}
-				case RParen:
-				case Comma:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				if ( inputState.guessing==0 ) {
-					fd = createFormalDecl(null, type, counter);
-				}
-			}
-			else if ((LA(1)==LITERAL___restrict) && (LA(2)==RParen||LA(2)==Comma)) {
-				match(LITERAL___restrict);
-				if ( inputState.guessing==0 ) {
-					fd = createFormalDecl(null, type, counter);
-				}
-			}
-			else if ((LA(1)==RParen||LA(1)==Comma)) {
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-			}
-			if ( inputState.guessing==0 ) {
-				
-				if ((fd == null) && (type != void_type))
-				fd = createFormalDecl(null, type, counter);
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_55);
-			} else {
-			  throw ex;
-			}
-		}
-		return fd;
-	}
-	
-	protected final FormalDecl  formalDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		FormalDecl decl = null;
-		
-		
-		String saveIdentifier = declID;
-		
-		
-		try {      // for error handling
-			type=declarator2(type);
-			if ( inputState.guessing==0 ) {
-				
-				decl = createFormalDecl(declID, type, 0);
-				declID = saveIdentifier;
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_59);
-			} else {
-			  throw ex;
-			}
-		}
-		return decl;
-	}
-	
-	protected final Type  directAbstractDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type ntype=type;
-		
-		
-		int pos = 0;
-		
-		
-		try {      // for error handling
-			{
-			int _cnt217=0;
-			_loop217:
-			do {
-				switch ( LA(1)) {
-				case LParen:
-				{
-					ntype=directFunction(ntype);
-					if ( inputState.guessing==0 ) {
-						pos = 0;
-					}
-					break;
-				}
-				case LBracket:
-				{
-					ntype=directArray(ntype, pos++);
-					break;
-				}
-				default:
-				{
-					if ( _cnt217>=1 ) { break _loop217; } else {throw new NoViableAltException(LT(1), getFilename());}
-				}
-				}
-				_cnt217++;
-			} while (true);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_21);
-			} else {
-			  throw ex;
-			}
-		}
-		return ntype;
-	}
-	
-	protected final Type  directFunction(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		Type pt = type;
-		
-		Token  l0 = null;
-		Token  l1 = null;
-		Token  l2 = null;
-		
-		Vector<FormalDecl> v      = null;
-		IncompleteType     ictype = null;
-		
-		
-		try {      // for error handling
-			if ((LA(1)==LParen) && (LA(2)==RParen)) {
-				l0 = LT(1);
-				match(LParen);
-				match(RParen);
-				if ( inputState.guessing==0 ) {
-					pt = createProcedureType(type, new Vector<FormalDecl>(0), l0);
-				}
-			}
-			else if ((LA(1)==LParen) && (LA(2)==LParen||LA(2)==LBracket||LA(2)==Mult)) {
-				l1 = LT(1);
-				match(LParen);
-				if ( inputState.guessing==0 ) {
-					
-					ictype = new IncompleteType();
-					
-				}
-				pt=abstractDeclarator(ictype);
-				match(RParen);
-				if ( inputState.guessing==0 ) {
-					
-					Type rt = ProcedureType.create(type, new Vector<FormalDecl>(0), null);
-					ictype.setCompleteType(rt);
-					
-				}
-			}
-			else if ((LA(1)==LParen) && (_tokenSet_2.member(LA(2)))) {
-				l2 = LT(1);
-				match(LParen);
-				v=parameterTypeList();
-				match(RParen);
-				if ( inputState.guessing==0 ) {
-					pt = createProcedureType(type, v, l2);
-				}
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_60);
-			} else {
-			  throw ex;
-			}
-		}
-		return pt;
-	}
-	
-	protected final Type  directArray(
-		Type type, int pos
-	) throws RecognitionException, TokenStreamException {
-		Type ntype = type;
-		
-		Token  s0 = null;
-		
-		Expression exp = null;
-		
-		
-		try {      // for error handling
-			s0 = LT(1);
-			match(LBracket);
-			{
-			if ((LA(1)==RBracket)) {
-				match(RBracket);
-				if ( inputState.guessing==0 ) {
-					ntype = createArrayType(pos == 0, type, s0);
-				}
-			}
-			else {
-				boolean synPredMatched222 = false;
-				if (((LA(1)==Mult) && (LA(2)==RBracket))) {
-					int _m222 = mark();
-					synPredMatched222 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(Mult);
-						match(RBracket);
-						}
-					}
-					catch (RecognitionException pe) {
-						synPredMatched222 = false;
-					}
-					rewind(_m222);
-					inputState.guessing--;
-				}
-				if ( synPredMatched222 ) {
-					match(Mult);
-					match(RBracket);
-					if ( inputState.guessing==0 ) {
-						ntype = createArrayType(pos == 0, type, s0);
-					}
-				}
-				else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_47.member(LA(2)))) {
-					exp=constantExpression();
-					match(RBracket);
-					if ( inputState.guessing==0 ) {
-						ntype = createArrayType(pos == 0, 0, getLongValue(exp, s0), ntype, s0);
-					}
-				}
-				else {
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-			}
-			catch (RecognitionException ex) {
-				if (inputState.guessing==0) {
-					reportError(ex);
-					consume();
-					consumeUntil(_tokenSet_60);
-				} else {
-				  throw ex;
-				}
-			}
-			return ntype;
-		}
-		
-	protected final int  initializerListItem(
-		Vector<Object> v, int nposi, Type type
-	) throws RecognitionException, TokenStreamException {
-		int npos = 0;
-		
-		Token  n1 = null;
-		
-		Vector<Object> positions = null;
-		Expression     expr      = null;
-		Type           ntype     = null;
-		
-		
-		try {      // for error handling
-			if ((_tokenSet_61.member(LA(1))) && (_tokenSet_62.member(LA(2)))) {
-				if ( inputState.guessing==0 ) {
-					
-					npos = nposi;
-					
-				}
-				{
-				switch ( LA(1)) {
-				case Dot:
-				case LBracket:
-				{
-					positions=designation();
-					break;
-				}
-				case KEYWORD_sizeof:
-				case KEYWORD_Extension:
-				case KEYWORD_alignof:
-				case KEYWORD_va_arg:
-				case KEYWORD_builtin_va_arg:
-				case KEYWORD_builtin_offsetof:
-				case Identifier:
-				case HexDoubleValue:
-				case HexFloatValue:
-				case HexLongDoubleValue:
-				case HexUnsignedIntValue:
-				case HexUnsignedLongIntValue:
-				case HexUnsignedLongLongIntValue:
-				case HexIntValue:
-				case HexLongIntValue:
-				case HexLongLongIntValue:
-				case DoubleValue:
-				case FloatValue:
-				case LongDoubleValue:
-				case UnsignedIntValue:
-				case UnsignedLongIntValue:
-				case UnsignedLongLongIntValue:
-				case IntValue:
-				case LongIntValue:
-				case LongLongIntValue:
-				case CharacterConstant:
-				case WideCharacterConstant:
-				case StringLit:
-				case WideStringLiteral:
-				case LParen:
-				case LBrace:
-				case Dec:
-				case Inc:
-				case And:
-				case Mult:
-				case Plus:
-				case Sub:
-				case Comp:
-				case Not:
-				{
-					break;
-				}
-				default:
-				{
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				}
-				}
-				if ( inputState.guessing==0 ) {
-					
-					ntype = findType(type, npos, positions, LT(1));
-					
-				}
-				expr=initializer(ntype);
-				if ( inputState.guessing==0 ) {
-					
-					npos = processInitializers(npos, type, v, expr, positions, LT(1));
-					positions = null;
-					
-				}
-			}
-			else if (((LA(1)==Identifier) && (LA(2)==Colon))&&(allowGNUExtensions)) {
-				n1 = LT(1);
-				match(Identifier);
-				match(Colon);
-				if ( inputState.guessing==0 ) {
-					
-					positions = new Vector<Object>(1);
-					positions.addElement(n1.getText());
-					ntype = findType(type, npos, positions, LT(1));
-					
-				}
-				expr=initializer(ntype);
-				if ( inputState.guessing==0 ) {
-					
-					npos = processInitializers(npos, type, v, expr, positions, LT(1));
-					positions = null;
-					
-				}
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_52);
-			} else {
-			  throw ex;
-			}
-		}
-		return npos;
-	}
-	
-	protected final Vector<Object>  designation() throws RecognitionException, TokenStreamException {
-		Vector<Object> positions = null;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				positions = new Vector<Object>(10);
-				
-			}
-			{
-			int _cnt234=0;
-			_loop234:
-			do {
-				if ((LA(1)==Dot||LA(1)==LBracket)) {
-					designator(positions);
-				}
-				else {
-					if ( _cnt234>=1 ) { break _loop234; } else {throw new NoViableAltException(LT(1), getFilename());}
-				}
-				
-				_cnt234++;
-			} while (true);
-			}
-			match(Assign);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_63);
-			} else {
-			  throw ex;
-			}
-		}
-		return positions;
-	}
-	
-	protected final void designator(
-		Vector<Object> v
-	) throws RecognitionException, TokenStreamException {
-		
-		Token  n0 = null;
-		
-		Expression expr = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case LBracket:
-			{
-				match(LBracket);
-				expr=constantExpression();
-				match(RBracket);
-				if ( inputState.guessing==0 ) {
-					v.addElement(expr);
-				}
-				break;
-			}
-			case Dot:
-			{
-				match(Dot);
-				n0 = LT(1);
-				match(Identifier);
-				if ( inputState.guessing==0 ) {
-					v.addElement(n0.getText());
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_64);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final Statement  statement() throws RecognitionException, TokenStreamException {
-		Statement stmt=errStmt;
-		
-		Token  s1 = null;
-		Token  s2 = null;
-		Token  l = null;
-		Token  lab = null;
-		
-		Expression expr1 = null;
-		Statement  stmt1 = null;
-		Token      t     = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_case:
-			{
-				s1 = LT(1);
-				match(KEYWORD_case);
-				expr1=constantExpression();
-				match(Colon);
-				stmt1=statement();
-				if ( inputState.guessing==0 ) {
-					stmt = buildCaseStmt(expr1, stmt1, s1);
-				}
-				break;
-			}
-			case KEYWORD_default:
-			{
-				s2 = LT(1);
-				match(KEYWORD_default);
-				match(Colon);
-				stmt1=statement();
-				if ( inputState.guessing==0 ) {
-					stmt = buildCaseStmt(null, stmt1, s2);
-				}
-				break;
-			}
-			case LBrace:
-			{
-				stmt=compoundStatement(false);
-				break;
-			}
-			case KEYWORD_if:
-			case KEYWORD_switch:
-			{
-				stmt=selectionStatement();
-				break;
-			}
-			case KEYWORD_do:
-			case KEYWORD_for:
-			case KEYWORD_while:
-			{
-				stmt=iterationStatement();
-				break;
-			}
-			case KEYWORD_break:
-			case KEYWORD_continue:
-			case KEYWORD_goto:
-			case KEYWORD_return:
-			{
-				stmt=jumpStatement();
-				break;
-			}
-			default:
-				boolean synPredMatched238 = false;
-				if (((LA(1)==Identifier) && (LA(2)==Colon))) {
-					int _m238 = mark();
-					synPredMatched238 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(Identifier);
-						match(Colon);
-						}
-					}
-					catch (RecognitionException pe) {
-						synPredMatched238 = false;
-					}
-					rewind(_m238);
-					inputState.guessing--;
-				}
-				if ( synPredMatched238 ) {
-					l = LT(1);
-					match(Identifier);
-					match(Colon);
-					if ( inputState.guessing==0 ) {
-						t = LT(1);
-					}
-					stmt1=statement();
-					if ( inputState.guessing==0 ) {
-						stmt = buildLabelStmt(l.getText(), stmt1, t);
-					}
-				}
-				else if (((LA(1)==KEYWORD_label))&&(allowGNUExtensions)) {
-					match(KEYWORD_label);
-					lab = LT(1);
-					match(Identifier);
-					match(Semi);
-					if ( inputState.guessing==0 ) {
-						getLabelDecl(lab.getText()); stmt = new NullStmt();
-					}
-				}
-				else if ((_tokenSet_65.member(LA(1))) && (_tokenSet_66.member(LA(2)))) {
-					stmt=expressionStatement();
-				}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_67);
-			} else {
-			  throw ex;
-			}
-		}
-		return stmt;
-	}
-	
-	protected final Statement  expressionStatement() throws RecognitionException, TokenStreamException {
-		Statement stmt=errStmt;
-		
-		Token  n0 = null;
-		
-		Expression expr   = null;
-		
-		
-		try {      // for error handling
-			{
-			switch ( LA(1)) {
-			case KEYWORD_sizeof:
-			case KEYWORD_Extension:
-			case KEYWORD_alignof:
-			case KEYWORD_va_arg:
-			case KEYWORD_builtin_va_arg:
-			case KEYWORD_builtin_offsetof:
-			case Identifier:
-			case HexDoubleValue:
-			case HexFloatValue:
-			case HexLongDoubleValue:
-			case HexUnsignedIntValue:
-			case HexUnsignedLongIntValue:
-			case HexUnsignedLongLongIntValue:
-			case HexIntValue:
-			case HexLongIntValue:
-			case HexLongLongIntValue:
-			case DoubleValue:
-			case FloatValue:
-			case LongDoubleValue:
-			case UnsignedIntValue:
-			case UnsignedLongIntValue:
-			case UnsignedLongLongIntValue:
-			case IntValue:
-			case LongIntValue:
-			case LongLongIntValue:
-			case CharacterConstant:
-			case WideCharacterConstant:
-			case StringLit:
-			case WideStringLiteral:
-			case LParen:
-			case Dec:
-			case Inc:
-			case And:
-			case Mult:
-			case Plus:
-			case Sub:
-			case Comp:
-			case Not:
-			{
-				expr=expression();
-				break;
-			}
-			case Semi:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			n0 = LT(1);
-			match(Semi);
-			if ( inputState.guessing==0 ) {
-				stmt = buildExpressionStmt(expr, n0);
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consumeUntil(Semi);
-				consume();
-				fatalError = true;
-				return null;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return stmt;
-	}
-	
-	protected final Statement  selectionStatement() throws RecognitionException, TokenStreamException {
-		Statement stmt=errStmt;
-		
-		Token  i = null;
-		Token  s = null;
-		
-		Expression expr  = null;
-		Statement  stmtt = null;
-		Statement  stmtf = null;
-		Token      token = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_if:
-			{
-				i = LT(1);
-				match(KEYWORD_if);
-				expr=enclosedExpression();
-				stmtt=statement();
-				{
-				boolean synPredMatched252 = false;
-				if (((LA(1)==KEYWORD_else) && (_tokenSet_5.member(LA(2))))) {
-					int _m252 = mark();
-					synPredMatched252 = true;
-					inputState.guessing++;
-					try {
-						{
-						match(KEYWORD_else);
-						}
-					}
-					catch (RecognitionException pe) {
-						synPredMatched252 = false;
-					}
-					rewind(_m252);
-					inputState.guessing--;
-				}
-				if ( synPredMatched252 ) {
-					match(KEYWORD_else);
-					stmtf=statement();
-				}
-				else if ((_tokenSet_67.member(LA(1))) && (_tokenSet_68.member(LA(2)))) {
-				}
-				else {
-					throw new NoViableAltException(LT(1), getFilename());
-				}
-				
-				}
-				if ( inputState.guessing==0 ) {
-					stmt = buildIfStmt(expr, stmtt, stmtf, i);
-				}
-				break;
-			}
-			case KEYWORD_switch:
-			{
-				s = LT(1);
-				match(KEYWORD_switch);
-				expr=enclosedExpression();
-				stmtt=statement();
-				if ( inputState.guessing==0 ) {
-					stmt = buildSwitchStmt(expr, stmtt, s);
-				}
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_67);
-			} else {
-			  throw ex;
-			}
-		}
-		return stmt;
-	}
-	
-	protected final Statement  iterationStatement() throws RecognitionException, TokenStreamException {
-		Statement stmt=errStmt;
-		
-		Token  w = null;
-		Token  d = null;
-		Token  f = null;
-		Token  n0 = null;
-		
-		Declaration decl  = null;
-		Type        type  = null;
-		Expression  expr1 = null;
-		Expression  expr2 = null;
-		Expression  expr3 = null;
-		
-		int  exprClnNum = 1;
-		
-		Statement   istmt = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_while:
-			{
-				w = LT(1);
-				match(KEYWORD_while);
-				expr1=enclosedExpression();
-				istmt=statement();
-				if ( inputState.guessing==0 ) {
-					stmt = buildWhileStmt(expr1, istmt, w);
-				}
-				break;
-			}
-			case KEYWORD_do:
-			{
-				d = LT(1);
-				match(KEYWORD_do);
-				istmt=statement();
-				match(KEYWORD_while);
-				expr1=enclosedExpression();
-				match(Semi);
-				if ( inputState.guessing==0 ) {
-					stmt = buildDoWhileStmt(expr1, istmt, d);
-				}
-				break;
-			}
-			case KEYWORD_for:
-			{
-				f = LT(1);
-				match(KEYWORD_for);
-				match(LParen);
-				{
-				if ((LA(1)==Semi)) {
-					match(Semi);
-				}
-				else {
-					boolean synPredMatched256 = false;
-					if ((((_tokenSet_2.member(LA(1))) && (_tokenSet_69.member(LA(2))))&&(allowC99Extensions))) {
-						int _m256 = mark();
-						synPredMatched256 = true;
-						inputState.guessing++;
-						try {
-							{
-							declarationSpecifiersChk();
-							}
-						}
-						catch (RecognitionException pe) {
-							synPredMatched256 = false;
-						}
-						rewind(_m256);
-						inputState.guessing--;
-					}
-					if ( synPredMatched256 ) {
-						type=declarationSpecifiers();
-						decl=declarator(type, 0);
-						match(Assign);
-						expr1=initializer(type);
-						match(Semi);
-						if ( inputState.guessing==0 ) {
-							expr1 = new AssignSimpleOp(type, genDeclAddress(decl), expr1);
-						}
-					}
-					else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_70.member(LA(2)))) {
-						expr1=expression();
-						match(Semi);
-					}
-					else {
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					{
-					switch ( LA(1)) {
-					case KEYWORD_sizeof:
-					case KEYWORD_Extension:
-					case KEYWORD_alignof:
-					case KEYWORD_va_arg:
-					case KEYWORD_builtin_va_arg:
-					case KEYWORD_builtin_offsetof:
-					case Identifier:
-					case HexDoubleValue:
-					case HexFloatValue:
-					case HexLongDoubleValue:
-					case HexUnsignedIntValue:
-					case HexUnsignedLongIntValue:
-					case HexUnsignedLongLongIntValue:
-					case HexIntValue:
-					case HexLongIntValue:
-					case HexLongLongIntValue:
-					case DoubleValue:
-					case FloatValue:
-					case LongDoubleValue:
-					case UnsignedIntValue:
-					case UnsignedLongIntValue:
-					case UnsignedLongLongIntValue:
-					case IntValue:
-					case LongIntValue:
-					case LongLongIntValue:
-					case CharacterConstant:
-					case WideCharacterConstant:
-					case StringLit:
-					case WideStringLiteral:
-					case LParen:
-					case Dec:
-					case Inc:
-					case And:
-					case Mult:
-					case Plus:
-					case Sub:
-					case Comp:
-					case Not:
-					{
-						expr2=expression();
-						break;
-					}
 					case Semi:
 					{
 						break;
@@ -11576,52 +10567,419 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-					match(Semi);
+					if ( inputState.guessing==0 ) {
+						
+						int bits = 0;
+						if (expr1 != null)
+						bits = getIntValue(expr1, n1);
+						fd = createFieldDecl(name, type, bits, 0, t);
+						
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_38);
+				} else {
+				  throw ex;
+				}
+			}
+			return fd;
+		} finally { // debugging
+			traceOut("structDeclarator");
+		}
+	}
+	
+	protected final Type  getAttributes(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype = type;
+		
+		traceIn("getAttributes");
+		try { // debugging
+			Token  att = null;
+			
+			try {      // for error handling
+				att = LT(1);
+				match(Attributes);
+				if ( inputState.guessing==0 ) {
+					ntype = processAttributes(att.getText(), type, att);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_38);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("getAttributes");
+		}
+	}
+	
+	protected final Vector<EnumElementDecl>  enumeratorList() throws RecognitionException, TokenStreamException {
+		Vector<EnumElementDecl> ev = new Vector<EnumElementDecl>(10);
+		
+		traceIn("enumeratorList");
+		try { // debugging
+			
+			EnumElementDecl ed = null;
+			
+			
+			try {      // for error handling
+				ed=enumerator(ed);
+				if ( inputState.guessing==0 ) {
+					ev.addElement(ed);
+				}
+				{
+				_loop165:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						{
+						switch ( LA(1)) {
+						case Identifier:
+						{
+							ed=enumerator(ed);
+							if ( inputState.guessing==0 ) {
+								ev.addElement(ed);
+							}
+							break;
+						}
+						case Comma:
+						case RBrace:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+					}
+					else {
+						break _loop165;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_49);
+				} else {
+				  throw ex;
+				}
+			}
+			return ev;
+		} finally { // debugging
+			traceOut("enumeratorList");
+		}
+	}
+	
+	protected final EnumElementDecl  enumerator(
+		EnumElementDecl last
+	) throws RecognitionException, TokenStreamException {
+		EnumElementDecl ed = null;
+		
+		traceIn("enumerator");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr1 = null;
+			
+			
+			try {      // for error handling
+				n0 = LT(1);
+				match(Identifier);
+				{
+				switch ( LA(1)) {
+				case Assign:
+				{
+					match(Assign);
+					expr1=constantExpression();
+					break;
+				}
+				case Comma:
+				case RBrace:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+				if ( inputState.guessing==0 ) {
+					ed = buildEnumElementDecl(n0.getText(), last, expr1, n0);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_52);
+				} else {
+				  throw ex;
+				}
+			}
+			return ed;
+		} finally { // debugging
+			traceOut("enumerator");
+		}
+	}
+	
+	protected final void typeQualifierList() throws RecognitionException, TokenStreamException {
+		
+		traceIn("typeQualifierList");
+		try { // debugging
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					typeQualifier = 0;
+					
+				}
+				{
+				int _cnt188=0;
+				_loop188:
+				do {
+					if ((_tokenSet_53.member(LA(1)))) {
+						typeQualifier();
+					}
+					else {
+						if ( _cnt188>=1 ) { break _loop188; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					
+					_cnt188++;
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_54);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("typeQualifierList");
+		}
+	}
+	
+	protected final Vector<String>  identifierList() throws RecognitionException, TokenStreamException {
+		Vector<String> ids = new Vector<String>(6);
+		
+		traceIn("identifierList");
+		try { // debugging
+			Token  n0 = null;
+			Token  n1 = null;
+			
+			try {      // for error handling
+				n0 = LT(1);
+				match(Identifier);
+				if ( inputState.guessing==0 ) {
+					ids.addElement(n0.getText());
+				}
+				{
+				_loop206:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						n1 = LT(1);
+						match(Identifier);
+						if ( inputState.guessing==0 ) {
+							ids.addElement(n1.getText());
+						}
+					}
+					else {
+						break _loop206;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_14);
+				} else {
+				  throw ex;
+				}
+			}
+			return ids;
+		} finally { // debugging
+			traceOut("identifierList");
+		}
+	}
+	
+	protected final Vector<FormalDecl>  parameterTypeList() throws RecognitionException, TokenStreamException {
+		Vector<FormalDecl> p = null;;
+		
+		traceIn("parameterTypeList");
+		try { // debugging
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					p = new Vector<FormalDecl>(8);
+					
+				}
+				parameterList(p);
+				{
+				switch ( LA(1)) {
+				case Comma:
+				{
+					match(Comma);
+					match(Varargs);
+					if ( inputState.guessing==0 ) {
+						p.addElement(new UnknownFormals());
+					}
+					break;
+				}
+				case RParen:
+				{
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_14);
+				} else {
+				  throw ex;
+				}
+			}
+			return p;
+		} finally { // debugging
+			traceOut("parameterTypeList");
+		}
+	}
+	
+	protected final void parameterList(
+		Vector<FormalDecl> v
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("parameterList");
+		try { // debugging
+			
+			FormalDecl fd      = null;
+			int        counter = 0;
+			
+			
+			try {      // for error handling
+				fd=parameterDeclaration(counter++);
+				if ( inputState.guessing==0 ) {
+					addParameter(fd, v, LT(0));
+				}
+				{
+				_loop197:
+				do {
+					if ((LA(1)==Comma) && (_tokenSet_2.member(LA(2)))) {
+						match(Comma);
+						fd=parameterDeclaration(counter++);
+						if ( inputState.guessing==0 ) {
+							addParameter(fd, v, LT(0));
+						}
+					}
+					else {
+						break _loop197;
+					}
+					
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_55);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("parameterList");
+		}
+	}
+	
+	protected final FormalDecl  parameterDeclaration(
+		int counter
+	) throws RecognitionException, TokenStreamException {
+		FormalDecl fd=null;
+		
+		traceIn("parameterDeclaration");
+		try { // debugging
+			
+			Type   type             = null;
+			int    saveStorageClass = storageClass;
+			String atts             = "";
+			
+			
+			try {      // for error handling
+				type=declarationSpecifiers();
+				if ( inputState.guessing==0 ) {
+					
+					storageClass  = saveStorageClass;
+					
+				}
+				{
+				boolean synPredMatched201 = false;
+				if (((_tokenSet_56.member(LA(1))) && (_tokenSet_57.member(LA(2))))) {
+					int _m201 = mark();
+					synPredMatched201 = true;
+					inputState.guessing++;
+					try {
+						{
+						formalDeclarator(type);
+						}
+					}
+					catch (RecognitionException pe) {
+						synPredMatched201 = false;
+					}
+					rewind(_m201);
+					inputState.guessing--;
+				}
+				if ( synPredMatched201 ) {
+					fd=formalDeclarator(type);
+				}
+				else if ((LA(1)==LParen||LA(1)==LBracket||LA(1)==Mult) && (_tokenSet_58.member(LA(2)))) {
+					type=abstractDeclarator(type);
 					{
 					switch ( LA(1)) {
-					case KEYWORD_sizeof:
-					case KEYWORD_Extension:
-					case KEYWORD_alignof:
-					case KEYWORD_va_arg:
-					case KEYWORD_builtin_va_arg:
-					case KEYWORD_builtin_offsetof:
-					case Identifier:
-					case HexDoubleValue:
-					case HexFloatValue:
-					case HexLongDoubleValue:
-					case HexUnsignedIntValue:
-					case HexUnsignedLongIntValue:
-					case HexUnsignedLongLongIntValue:
-					case HexIntValue:
-					case HexLongIntValue:
-					case HexLongLongIntValue:
-					case DoubleValue:
-					case FloatValue:
-					case LongDoubleValue:
-					case UnsignedIntValue:
-					case UnsignedLongIntValue:
-					case UnsignedLongLongIntValue:
-					case IntValue:
-					case LongIntValue:
-					case LongLongIntValue:
-					case CharacterConstant:
-					case WideCharacterConstant:
-					case StringLit:
-					case WideStringLiteral:
-					case LParen:
-					case Dec:
-					case Inc:
-					case And:
-					case Mult:
-					case Plus:
-					case Sub:
-					case Comp:
-					case Not:
+					case LITERAL___restrict:
 					{
-						expr3=expression();
+						match(LITERAL___restrict);
 						break;
 					}
 					case RParen:
+					case Comma:
 					{
 						break;
 					}
@@ -11631,34 +10989,309 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-					match(RParen);
-					{
+					if ( inputState.guessing==0 ) {
+						fd = createFormalDecl(null, type, counter);
+					}
+				}
+				else if ((LA(1)==LITERAL___restrict) && (LA(2)==RParen||LA(2)==Comma)) {
+					match(LITERAL___restrict);
+					if ( inputState.guessing==0 ) {
+						fd = createFormalDecl(null, type, counter);
+					}
+				}
+				else if ((LA(1)==RParen||LA(1)==Comma)) {
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+				}
+				if ( inputState.guessing==0 ) {
+					
+					if ((fd == null) && (type != void_type))
+					fd = createFormalDecl(null, type, counter);
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_55);
+				} else {
+				  throw ex;
+				}
+			}
+			return fd;
+		} finally { // debugging
+			traceOut("parameterDeclaration");
+		}
+	}
+	
+	protected final FormalDecl  formalDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		FormalDecl decl = null;
+		
+		traceIn("formalDeclarator");
+		try { // debugging
+			
+			String saveIdentifier = declID;
+			
+			
+			try {      // for error handling
+				type=declarator2(type);
+				if ( inputState.guessing==0 ) {
+					
+					decl = createFormalDecl(declID, type, 0);
+					declID = saveIdentifier;
+					
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_59);
+				} else {
+				  throw ex;
+				}
+			}
+			return decl;
+		} finally { // debugging
+			traceOut("formalDeclarator");
+		}
+	}
+	
+	protected final Type  directAbstractDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type ntype=type;
+		
+		traceIn("directAbstractDeclarator");
+		try { // debugging
+			
+			int pos = 0;
+			
+			
+			try {      // for error handling
+				{
+				int _cnt217=0;
+				_loop217:
+				do {
 					switch ( LA(1)) {
-					case KEYWORD_clone:
+					case LParen:
 					{
-						match(KEYWORD_clone);
-						match(LParen);
-						n0 = LT(1);
-						match(IntValue);
-						match(RParen);
+						ntype=directFunction(ntype);
 						if ( inputState.guessing==0 ) {
-							exprClnNum = (int)(Integer.parseInt (n0.getText()));
+							pos = 0;
 						}
 						break;
 					}
-					case KEYWORD_break:
-					case KEYWORD_case:
-					case KEYWORD_continue:
-					case KEYWORD_default:
-					case KEYWORD_do:
-					case KEYWORD_for:
-					case KEYWORD_goto:
-					case KEYWORD_if:
-					case KEYWORD_return:
+					case LBracket:
+					{
+						ntype=directArray(ntype, pos++);
+						break;
+					}
+					default:
+					{
+						if ( _cnt217>=1 ) { break _loop217; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					}
+					_cnt217++;
+				} while (true);
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_21);
+				} else {
+				  throw ex;
+				}
+			}
+			return ntype;
+		} finally { // debugging
+			traceOut("directAbstractDeclarator");
+		}
+	}
+	
+	protected final Type  directFunction(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		Type pt = type;
+		
+		traceIn("directFunction");
+		try { // debugging
+			Token  l0 = null;
+			Token  l1 = null;
+			Token  l2 = null;
+			
+			Vector<FormalDecl> v      = null;
+			IncompleteType     ictype = null;
+			
+			
+			try {      // for error handling
+				if ((LA(1)==LParen) && (LA(2)==RParen)) {
+					l0 = LT(1);
+					match(LParen);
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						pt = createProcedureType(type, new Vector<FormalDecl>(0), l0);
+					}
+				}
+				else if ((LA(1)==LParen) && (LA(2)==LParen||LA(2)==LBracket||LA(2)==Mult)) {
+					l1 = LT(1);
+					match(LParen);
+					if ( inputState.guessing==0 ) {
+						
+						ictype = new IncompleteType();
+						
+					}
+					pt=abstractDeclarator(ictype);
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						
+						Type rt = ProcedureType.create(type, new Vector<FormalDecl>(0), null);
+						ictype.setCompleteType(rt);
+						
+					}
+				}
+				else if ((LA(1)==LParen) && (_tokenSet_2.member(LA(2)))) {
+					l2 = LT(1);
+					match(LParen);
+					v=parameterTypeList();
+					match(RParen);
+					if ( inputState.guessing==0 ) {
+						pt = createProcedureType(type, v, l2);
+					}
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_60);
+				} else {
+				  throw ex;
+				}
+			}
+			return pt;
+		} finally { // debugging
+			traceOut("directFunction");
+		}
+	}
+	
+	protected final Type  directArray(
+		Type type, int pos
+	) throws RecognitionException, TokenStreamException {
+		Type ntype = type;
+		
+		traceIn("directArray");
+		try { // debugging
+			Token  s0 = null;
+			
+			Expression exp = null;
+			
+			
+			try {      // for error handling
+				s0 = LT(1);
+				match(LBracket);
+				{
+				if ((LA(1)==RBracket)) {
+					match(RBracket);
+					if ( inputState.guessing==0 ) {
+						ntype = createArrayType(pos == 0, type, s0);
+					}
+				}
+				else {
+					boolean synPredMatched222 = false;
+					if (((LA(1)==Mult) && (LA(2)==RBracket))) {
+						int _m222 = mark();
+						synPredMatched222 = true;
+						inputState.guessing++;
+						try {
+							{
+							match(Mult);
+							match(RBracket);
+							}
+						}
+						catch (RecognitionException pe) {
+							synPredMatched222 = false;
+						}
+						rewind(_m222);
+						inputState.guessing--;
+					}
+					if ( synPredMatched222 ) {
+						match(Mult);
+						match(RBracket);
+						if ( inputState.guessing==0 ) {
+							ntype = createArrayType(pos == 0, type, s0);
+						}
+					}
+					else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_47.member(LA(2)))) {
+						exp=constantExpression();
+						match(RBracket);
+						if ( inputState.guessing==0 ) {
+							ntype = createArrayType(pos == 0, 0, getLongValue(exp, s0), ntype, s0);
+						}
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+				}
+				catch (RecognitionException ex) {
+					if (inputState.guessing==0) {
+						reportError(ex);
+						consume();
+						consumeUntil(_tokenSet_60);
+					} else {
+					  throw ex;
+					}
+				}
+				return ntype;
+			} finally { // debugging
+				traceOut("directArray");
+			}
+		}
+		
+	protected final int  initializerListItem(
+		Vector<Object> v, int nposi, Type type
+	) throws RecognitionException, TokenStreamException {
+		int npos = 0;
+		
+		traceIn("initializerListItem");
+		try { // debugging
+			Token  n1 = null;
+			
+			Vector<Object> positions = null;
+			Expression     expr      = null;
+			Type           ntype     = null;
+			
+			
+			try {      // for error handling
+				if ((_tokenSet_61.member(LA(1))) && (_tokenSet_62.member(LA(2)))) {
+					if ( inputState.guessing==0 ) {
+						
+						npos = nposi;
+						
+					}
+					{
+					switch ( LA(1)) {
+					case Dot:
+					case LBracket:
+					{
+						positions=designation();
+						break;
+					}
 					case KEYWORD_sizeof:
-					case KEYWORD_switch:
-					case KEYWORD_label:
-					case KEYWORD_while:
 					case KEYWORD_Extension:
 					case KEYWORD_alignof:
 					case KEYWORD_va_arg:
@@ -11697,7 +11330,6 @@ public C99Parser(ParserSharedInputState state) {
 					case Sub:
 					case Comp:
 					case Not:
-					case Semi:
 					{
 						break;
 					}
@@ -11707,16 +11339,263 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-					istmt=statement();
 					if ( inputState.guessing==0 ) {
 						
-								 stmt = ((exprClnNum > 1) ? buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprClnNum) : buildForStmt (expr1, expr2, expr3, istmt, f));
+						ntype = findType(type, npos, positions, LT(1));
 						
+					}
+					expr=initializer(ntype);
+					if ( inputState.guessing==0 ) {
+						
+						npos = processInitializers(npos, type, v, expr, positions, LT(1));
+						positions = null;
+						
+					}
+				}
+				else if (((LA(1)==Identifier) && (LA(2)==Colon))&&(allowGNUExtensions)) {
+					n1 = LT(1);
+					match(Identifier);
+					match(Colon);
+					if ( inputState.guessing==0 ) {
+						
+						positions = new Vector<Object>(1);
+						positions.addElement(n1.getText());
+						ntype = findType(type, npos, positions, LT(1));
+						
+					}
+					expr=initializer(ntype);
+					if ( inputState.guessing==0 ) {
+						
+						npos = processInitializers(npos, type, v, expr, positions, LT(1));
+						positions = null;
+						
+					}
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_52);
+				} else {
+				  throw ex;
+				}
+			}
+			return npos;
+		} finally { // debugging
+			traceOut("initializerListItem");
+		}
+	}
+	
+	protected final Vector<Object>  designation() throws RecognitionException, TokenStreamException {
+		Vector<Object> positions = null;
+		
+		traceIn("designation");
+		try { // debugging
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					positions = new Vector<Object>(10);
+					
+				}
+				{
+				int _cnt234=0;
+				_loop234:
+				do {
+					if ((LA(1)==Dot||LA(1)==LBracket)) {
+						designator(positions);
+					}
+					else {
+						if ( _cnt234>=1 ) { break _loop234; } else {throw new NoViableAltException(LT(1), getFilename());}
+					}
+					
+					_cnt234++;
+				} while (true);
+				}
+				match(Assign);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_63);
+				} else {
+				  throw ex;
+				}
+			}
+			return positions;
+		} finally { // debugging
+			traceOut("designation");
+		}
+	}
+	
+	protected final void designator(
+		Vector<Object> v
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("designator");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr = null;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case LBracket:
+				{
+					match(LBracket);
+					expr=constantExpression();
+					match(RBracket);
+					if ( inputState.guessing==0 ) {
+						v.addElement(expr);
+					}
+					break;
+				}
+				case Dot:
+				{
+					match(Dot);
+					n0 = LT(1);
+					match(Identifier);
+					if ( inputState.guessing==0 ) {
+						v.addElement(n0.getText());
 					}
 					break;
 				}
 				default:
 				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_64);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("designator");
+		}
+	}
+	
+	protected final Statement  statement() throws RecognitionException, TokenStreamException {
+		Statement stmt=errStmt;
+		
+		traceIn("statement");
+		try { // debugging
+			Token  s1 = null;
+			Token  s2 = null;
+			Token  l = null;
+			Token  lab = null;
+			
+			Expression expr1 = null;
+			Statement  stmt1 = null;
+			Token      t     = null;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case KEYWORD_case:
+				{
+					s1 = LT(1);
+					match(KEYWORD_case);
+					expr1=constantExpression();
+					match(Colon);
+					stmt1=statement();
+					if ( inputState.guessing==0 ) {
+						stmt = buildCaseStmt(expr1, stmt1, s1);
+					}
+					break;
+				}
+				case KEYWORD_default:
+				{
+					s2 = LT(1);
+					match(KEYWORD_default);
+					match(Colon);
+					stmt1=statement();
+					if ( inputState.guessing==0 ) {
+						stmt = buildCaseStmt(null, stmt1, s2);
+					}
+					break;
+				}
+				case LBrace:
+				{
+					stmt=compoundStatement(false);
+					break;
+				}
+				case KEYWORD_if:
+				case KEYWORD_switch:
+				{
+					stmt=selectionStatement();
+					break;
+				}
+				case KEYWORD_do:
+				case KEYWORD_for:
+				case KEYWORD_while:
+				{
+					stmt=iterationStatement();
+					break;
+				}
+				case KEYWORD_break:
+				case KEYWORD_continue:
+				case KEYWORD_goto:
+				case KEYWORD_return:
+				{
+					stmt=jumpStatement();
+					break;
+				}
+				default:
+					boolean synPredMatched238 = false;
+					if (((LA(1)==Identifier) && (LA(2)==Colon))) {
+						int _m238 = mark();
+						synPredMatched238 = true;
+						inputState.guessing++;
+						try {
+							{
+							match(Identifier);
+							match(Colon);
+							}
+						}
+						catch (RecognitionException pe) {
+							synPredMatched238 = false;
+						}
+						rewind(_m238);
+						inputState.guessing--;
+					}
+					if ( synPredMatched238 ) {
+						l = LT(1);
+						match(Identifier);
+						match(Colon);
+						if ( inputState.guessing==0 ) {
+							t = LT(1);
+						}
+						stmt1=statement();
+						if ( inputState.guessing==0 ) {
+							stmt = buildLabelStmt(l.getText(), stmt1, t);
+						}
+					}
+					else if (((LA(1)==KEYWORD_label))&&(allowGNUExtensions)) {
+						match(KEYWORD_label);
+						lab = LT(1);
+						match(Identifier);
+						match(Semi);
+						if ( inputState.guessing==0 ) {
+							getLabelDecl(lab.getText()); stmt = new NullStmt();
+						}
+					}
+					else if ((_tokenSet_65.member(LA(1))) && (_tokenSet_66.member(LA(2)))) {
+						stmt=expressionStatement();
+					}
+				else {
 					throw new NoViableAltException(LT(1), getFilename());
 				}
 				}
@@ -11731,58 +11610,22 @@ public C99Parser(ParserSharedInputState state) {
 				}
 			}
 			return stmt;
+		} finally { // debugging
+			traceOut("statement");
 		}
-		
-	protected final Statement  jumpStatement() throws RecognitionException, TokenStreamException {
+	}
+	
+	protected final Statement  expressionStatement() throws RecognitionException, TokenStreamException {
 		Statement stmt=errStmt;
 		
-		Token  g = null;
-		Token  l = null;
-		Token  c = null;
-		Token  b = null;
-		Token  r = null;
-		
-		Expression expr = null;
-		
-		
-		try {      // for error handling
-			switch ( LA(1)) {
-			case KEYWORD_goto:
-			{
-				g = LT(1);
-				match(KEYWORD_goto);
-				l = LT(1);
-				match(Identifier);
-				match(Semi);
-				if ( inputState.guessing==0 ) {
-					stmt = buildGotoStmt(l.getText(), l);
-				}
-				break;
-			}
-			case KEYWORD_continue:
-			{
-				c = LT(1);
-				match(KEYWORD_continue);
-				match(Semi);
-				if ( inputState.guessing==0 ) {
-					stmt = buildContinueStmt(c);
-				}
-				break;
-			}
-			case KEYWORD_break:
-			{
-				b = LT(1);
-				match(KEYWORD_break);
-				match(Semi);
-				if ( inputState.guessing==0 ) {
-					stmt = buildBreakStmt(b);
-				}
-				break;
-			}
-			case KEYWORD_return:
-			{
-				r = LT(1);
-				match(KEYWORD_return);
+		traceIn("expressionStatement");
+		try { // debugging
+			Token  n0 = null;
+			
+			Expression expr   = null;
+			
+			
+			try {      // for error handling
 				{
 				switch ( LA(1)) {
 				case KEYWORD_sizeof:
@@ -11837,500 +11680,518 @@ public C99Parser(ParserSharedInputState state) {
 				}
 				}
 				}
+				n0 = LT(1);
 				match(Semi);
 				if ( inputState.guessing==0 ) {
-					stmt = buildReturnStmt(expr, r);
+					stmt = buildExpressionStmt(expr, n0);
 				}
-				break;
 			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consumeUntil(Semi);
-				consume();
-				fatalError = true;
-				return null;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return stmt;
-	}
-	
-	protected final void typedef() throws RecognitionException, TokenStreamException {
-		
-		
-		Type        type = null;
-		Declaration decl = null;
-		
-		
-		try {      // for error handling
-			match(KEYWORD_typedef);
-			type=declarationSpecifiers();
-			if ( inputState.guessing==0 ) {
-				
-				if (type == null) {
-				type = void_type;
-				userError(Msg.MSG_Invalid_type, null, LT(1));
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consumeUntil(Semi);
+					consume();
+					fatalError = true;
+					return null;
+					
+				} else {
+					throw ex;
 				}
-				
 			}
-			typeDeclarator(type);
-			{
-			_loop269:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					typeDeclarator(type);
-				}
-				else {
-					break _loop269;
-				}
-				
-			} while (true);
-			}
-			match(Semi);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consumeUntil(Semi);
-				consume();
-				fatalError = true;
-				
-			} else {
-				throw ex;
-			}
+			return stmt;
+		} finally { // debugging
+			traceOut("expressionStatement");
 		}
 	}
 	
-	protected final Expression  enclosedExpression() throws RecognitionException, TokenStreamException {
-		Expression expr = errExp;
+	protected final Statement  selectionStatement() throws RecognitionException, TokenStreamException {
+		Statement stmt=errStmt;
 		
-		Token  n0 = null;
-		
-		try {      // for error handling
-			n0 = LT(1);
-			match(LParen);
-			expr=expression();
-			match(RParen);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				consumeUntil(RParen);
-				consume();
-				fatalError = true;
-				return null;
-				
-			} else {
-				throw ex;
-			}
-		}
-		return expr;
-	}
-	
-	protected final void typeDeclarator(
-		Type type
-	) throws RecognitionException, TokenStreamException {
-		
-		
-		String saveIdentifier = declID;
-		
-		
-		try {      // for error handling
-			type=declarator2(type);
-			{
-			switch ( LA(1)) {
-			case Attributes:
-			{
-				type=getAttributes(type);
-				break;
-			}
-			case Comma:
-			case Semi:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
-			}
-			}
-			}
-			if ( inputState.guessing==0 ) {
-				
-				processTypeDeclarator(declID, type, LT(1));
-				declID = saveIdentifier;
-				
-			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_38);
-			} else {
-			  throw ex;
-			}
-		}
-	}
-	
-	protected final void translationUnit() throws RecognitionException, TokenStreamException {
-		
-		Token  l = null;
-		Token  p = null;
-		Token  er = null;
-		Token  wn = null;
-		Token  n0 = null;
-		
-		FileDecl            root   = null;
-		Vector<Declaration> rdecls = null;
-		Type                type   = null;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				cg.getSymbolTable().beginScope();
-				initialize();
-				root = new FileDecl(cg.getName());
-				rdecls = new Vector<Declaration>(23);
-				root.setDecls(rdecls);
-				cg.setAST(root);
-				
-			}
-			{
-			_loop274:
-			do {
+		traceIn("selectionStatement");
+		try { // debugging
+			Token  i = null;
+			Token  s = null;
+			
+			Expression expr  = null;
+			Statement  stmtt = null;
+			Statement  stmtf = null;
+			Token      token = null;
+			
+			
+			try {      // for error handling
 				switch ( LA(1)) {
-				case PPLine:
+				case KEYWORD_if:
 				{
-					l = LT(1);
-					match(PPLine);
-					if ( inputState.guessing==0 ) {
-						processLine(l.getText(), l);
-					}
-					break;
-				}
-				case StdArg:
-				{
-					match(StdArg);
-					if ( inputState.guessing==0 ) {
-						
-						if (!vaListDefined) {
-						vaListDefined = true;
-						cg.addRootSymbol(defineTypeName("va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
-						cg.addRootSymbol(defineTypeName("__va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
-						if (allowGNUExtensions) {
-						cg.addRootSymbol(defineTypeName("__gnuc_va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
+					i = LT(1);
+					match(KEYWORD_if);
+					expr=enclosedExpression();
+					stmtt=statement();
+					{
+					boolean synPredMatched252 = false;
+					if (((LA(1)==KEYWORD_else) && (_tokenSet_5.member(LA(2))))) {
+						int _m252 = mark();
+						synPredMatched252 = true;
+						inputState.guessing++;
+						try {
+							{
+							match(KEYWORD_else);
+							}
 						}
+						catch (RecognitionException pe) {
+							synPredMatched252 = false;
 						}
-						
+						rewind(_m252);
+						inputState.guessing--;
 					}
-					break;
-				}
-				case Pragma:
-				{
-					p = LT(1);
-					match(Pragma);
+					if ( synPredMatched252 ) {
+						match(KEYWORD_else);
+						stmtf=statement();
+					}
+					else if ((_tokenSet_67.member(LA(1))) && (_tokenSet_68.member(LA(2)))) {
+					}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					
+					}
 					if ( inputState.guessing==0 ) {
-						processPragma(p.getText(), p);
+						stmt = buildIfStmt(expr, stmtt, stmtf, i);
 					}
 					break;
 				}
-				case PPError:
+				case KEYWORD_switch:
 				{
-					er = LT(1);
-					match(PPError);
+					s = LT(1);
+					match(KEYWORD_switch);
+					expr=enclosedExpression();
+					stmtt=statement();
 					if ( inputState.guessing==0 ) {
-						userError(Msg.MSG_s, er.getText(), er);
+						stmt = buildSwitchStmt(expr, stmtt, s);
 					}
-					break;
-				}
-				case PPWarning:
-				{
-					wn = LT(1);
-					match(PPWarning);
-					if ( inputState.guessing==0 ) {
-						userWarning(Msg.MSG_s, wn.getText(), wn);
-					}
-					break;
-				}
-				case KEYWORD_Extension:
-				{
-					n0 = LT(1);
-					match(KEYWORD_Extension);
-					if ( inputState.guessing==0 ) {
-						
-						if (!allowGNUExtensions)
-						userWarning(Msg.MSG_Ignored_s, n0.getText(), n0);
-						
-					}
-					break;
-				}
-				case KEYWORD_typedef:
-				{
-					typedef();
-					break;
-				}
-				case KEYWORD_auto:
-				case KEYWORD_char:
-				case KEYWORD_const:
-				case KEYWORD___const:
-				case KEYWORD_double:
-				case KEYWORD_enum:
-				case KEYWORD_extern:
-				case KEYWORD_float:
-				case KEYWORD_inline:
-				case KEYWORD_int:
-				case KEYWORD_long:
-				case KEYWORD_register:
-				case KEYWORD_restrict:
-				case KEYWORD_short:
-				case KEYWORD_signed:
-				case KEYWORD___signed__:
-				case KEYWORD_static:
-				case KEYWORD_struct:
-				case KEYWORD_typeof:
-				case KEYWORD_union:
-				case KEYWORD_unsigned:
-				case KEYWORD_void:
-				case KEYWORD_volatile:
-				case KEYWORD__volatile:
-				case KEYWORD__Bool:
-				case KEYWORD__Complex:
-				case KEYWORD__Imaginary:
-				case KEYWORD__inline__:
-				case KEYWORD__inline:
-				case Identifier:
-				case LParen:
-				case Mult:
-				case Semi:
-				case LITERAL___restrict:
-				case Attributes:
-				{
-					ftnOrDecl();
 					break;
 				}
 				default:
 				{
-					break _loop274;
+					throw new NoViableAltException(LT(1), getFilename());
 				}
 				}
-			} while (true);
 			}
-			match(Token.EOF_TYPE);
-			if ( inputState.guessing==0 ) {
-				
-				finishTranslationUnit(root, rdecls, LT(0));
-				
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_67);
+				} else {
+				  throw ex;
+				}
 			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				if (classTrace)
-				ex.printStackTrace();
-				consumeUntil(EOF);
-				throw ex;
-				
-			} else {
-				throw ex;
-			}
-		}
-		catch (antlr.TokenStreamRecognitionException ex) {
-			if (inputState.guessing==0) {
-				
-				reportError(ex);
-				if (classTrace)
-				ex.printStackTrace();
-				consumeUntil(EOF);
-				throw ex;
-				
-			} else {
-				throw ex;
-			}
+			return stmt;
+		} finally { // debugging
+			traceOut("selectionStatement");
 		}
 	}
 	
-	protected final void ftnOrDecl() throws RecognitionException, TokenStreamException {
+	protected final Statement  iterationStatement() throws RecognitionException, TokenStreamException {
+		Statement stmt=errStmt;
 		
-		Token  att0 = null;
-		Token  n1 = null;
-		Token  n2 = null;
-		
-		Type          type  = int_type;
-		Type          dtype = int_type;
-		ProcedureType pt    = null;
-		Declaration   decl  = null;
-		Vector<Declaration> vars  = null;
-		Expression    expr  = null;
-		int           sc    = 0;
-		String        attrs = "";
-		Token         t     = null;
-		
-		
-		try {      // for error handling
-			if ( inputState.guessing==0 ) {
-				
-				declAtts     = "";
-				storageClass = cAuto;
-				
-			}
-			{
-			boolean synPredMatched278 = false;
-			if (((_tokenSet_2.member(LA(1))) && (_tokenSet_3.member(LA(2))))) {
-				int _m278 = mark();
-				synPredMatched278 = true;
-				inputState.guessing++;
-				try {
-					{
-					declarationSpecifiersChk();
-					}
-				}
-				catch (RecognitionException pe) {
-					synPredMatched278 = false;
-				}
-				rewind(_m278);
-				inputState.guessing--;
-			}
-			if ( synPredMatched278 ) {
-				type=declarationSpecifiers();
-				if ( inputState.guessing==0 ) {
-					
-					sc = storageClass;
-					if (sc == cAuto)
-					sc = cGlobal;
-					
-				}
-			}
-			else if ((_tokenSet_71.member(LA(1))) && (_tokenSet_72.member(LA(2)))) {
-			}
-			else {
-				throw new NoViableAltException(LT(1), getFilename());
-			}
+		traceIn("iterationStatement");
+		try { // debugging
+			Token  w = null;
+			Token  d = null;
+			Token  f = null;
+			Token  n0 = null;
 			
-			}
-			{
-			_loop280:
-			do {
-				if ((LA(1)==Attributes) && (_tokenSet_71.member(LA(2)))) {
-					att0 = LT(1);
-					match(Attributes);
-					if ( inputState.guessing==0 ) {
-						declAtts = declAtts + att0.getText();
-					}
-				}
-				else {
-					break _loop280;
-				}
-				
-			} while (true);
-			}
-			{
-			switch ( LA(1)) {
-			case Semi:
-			{
-				match(Semi);
-				if ( inputState.guessing==0 ) {
-					
-					declAtts = "";
-					
-				}
-				break;
-			}
-			case Identifier:
-			case LParen:
-			case Mult:
-			case LITERAL___restrict:
-			case Attributes:
-			{
-				dtype=declarator2(type);
-				if ( inputState.guessing==0 ) {
-					
-					t = LT(1);
-					attrs = declAtts;
-					declAtts = "";
-					pt = null;
-					if (dtype != null) {
-					Type ty = dtype.getCoreType();
-					if (ty.isProcedureType())
-					pt = (ProcedureType) ty;
-					}
-					
-				}
-				{
+			Declaration decl  = null;
+			Type        type  = null;
+			Expression  expr1 = null;
+			Expression  expr2 = null;
+			Expression  expr3 = null;
+			
+			int  exprClnNum = 1;
+			
+			Statement   istmt = null;
+			
+			
+			try {      // for error handling
 				switch ( LA(1)) {
-				case Semi:
+				case KEYWORD_while:
 				{
-					match(Semi);
+					w = LT(1);
+					match(KEYWORD_while);
+					expr1=enclosedExpression();
+					istmt=statement();
 					if ( inputState.guessing==0 ) {
-						
-						decl = defineDecl(declID, dtype, sc, t);
-						processAttributes(attrs, decl, t);
-						vars = new Vector<Declaration>(1);
-						vars.add(decl);
-						processTopDecls(vars, sc, t);
-						
+						stmt = buildWhileStmt(expr1, istmt, w);
 					}
 					break;
 				}
-				case Comma:
+				case KEYWORD_do:
 				{
-					match(Comma);
-					if ( inputState.guessing==0 ) {
-						
-						decl = defineDecl(declID, dtype, sc, t);
-						processAttributes(attrs, decl, t);
-						vars = new Vector<Declaration>(4);
-						vars.add(decl);
-						
-					}
-					initDeclaratorList(vars, type, sc);
-					n1 = LT(1);
+					d = LT(1);
+					match(KEYWORD_do);
+					istmt=statement();
+					match(KEYWORD_while);
+					expr1=enclosedExpression();
 					match(Semi);
 					if ( inputState.guessing==0 ) {
-						
-						processTopDecls(vars, sc, n1);
-						
+						stmt = buildDoWhileStmt(expr1, istmt, d);
 					}
 					break;
 				}
-				case Assign:
+				case KEYWORD_for:
 				{
-					match(Assign);
-					if ( inputState.guessing==0 ) {
-						
-						decl = defineDecl(declID, dtype, sc, t);
-						processAttributes(attrs, decl, t);
-						
+					f = LT(1);
+					match(KEYWORD_for);
+					match(LParen);
+					{
+					if ((LA(1)==Semi)) {
+						match(Semi);
 					}
-					expr=initializer(dtype);
-					if ( inputState.guessing==0 ) {
-						
-						processDeclInitializer(decl, dtype, expr, t);
-						vars = new Vector<Declaration>(4);
-						vars.add(decl);
-						
+					else {
+						boolean synPredMatched256 = false;
+						if ((((_tokenSet_2.member(LA(1))) && (_tokenSet_69.member(LA(2))))&&(allowC99Extensions))) {
+							int _m256 = mark();
+							synPredMatched256 = true;
+							inputState.guessing++;
+							try {
+								{
+								declarationSpecifiersChk();
+								}
+							}
+							catch (RecognitionException pe) {
+								synPredMatched256 = false;
+							}
+							rewind(_m256);
+							inputState.guessing--;
+						}
+						if ( synPredMatched256 ) {
+							type=declarationSpecifiers();
+							decl=declarator(type, 0);
+							match(Assign);
+							expr1=initializer(type);
+							match(Semi);
+							if ( inputState.guessing==0 ) {
+								expr1 = new AssignSimpleOp(type, genDeclAddress(decl), expr1);
+							}
+						}
+						else if ((_tokenSet_0.member(LA(1))) && (_tokenSet_70.member(LA(2)))) {
+							expr1=expression();
+							match(Semi);
+						}
+						else {
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						{
+						switch ( LA(1)) {
+						case KEYWORD_sizeof:
+						case KEYWORD_Extension:
+						case KEYWORD_alignof:
+						case KEYWORD_va_arg:
+						case KEYWORD_builtin_va_arg:
+						case KEYWORD_builtin_offsetof:
+						case Identifier:
+						case HexDoubleValue:
+						case HexFloatValue:
+						case HexLongDoubleValue:
+						case HexUnsignedIntValue:
+						case HexUnsignedLongIntValue:
+						case HexUnsignedLongLongIntValue:
+						case HexIntValue:
+						case HexLongIntValue:
+						case HexLongLongIntValue:
+						case DoubleValue:
+						case FloatValue:
+						case LongDoubleValue:
+						case UnsignedIntValue:
+						case UnsignedLongIntValue:
+						case UnsignedLongLongIntValue:
+						case IntValue:
+						case LongIntValue:
+						case LongLongIntValue:
+						case CharacterConstant:
+						case WideCharacterConstant:
+						case StringLit:
+						case WideStringLiteral:
+						case LParen:
+						case Dec:
+						case Inc:
+						case And:
+						case Mult:
+						case Plus:
+						case Sub:
+						case Comp:
+						case Not:
+						{
+							expr2=expression();
+							break;
+						}
+						case Semi:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						match(Semi);
+						{
+						switch ( LA(1)) {
+						case KEYWORD_sizeof:
+						case KEYWORD_Extension:
+						case KEYWORD_alignof:
+						case KEYWORD_va_arg:
+						case KEYWORD_builtin_va_arg:
+						case KEYWORD_builtin_offsetof:
+						case Identifier:
+						case HexDoubleValue:
+						case HexFloatValue:
+						case HexLongDoubleValue:
+						case HexUnsignedIntValue:
+						case HexUnsignedLongIntValue:
+						case HexUnsignedLongLongIntValue:
+						case HexIntValue:
+						case HexLongIntValue:
+						case HexLongLongIntValue:
+						case DoubleValue:
+						case FloatValue:
+						case LongDoubleValue:
+						case UnsignedIntValue:
+						case UnsignedLongIntValue:
+						case UnsignedLongLongIntValue:
+						case IntValue:
+						case LongIntValue:
+						case LongLongIntValue:
+						case CharacterConstant:
+						case WideCharacterConstant:
+						case StringLit:
+						case WideStringLiteral:
+						case LParen:
+						case Dec:
+						case Inc:
+						case And:
+						case Mult:
+						case Plus:
+						case Sub:
+						case Comp:
+						case Not:
+						{
+							expr3=expression();
+							break;
+						}
+						case RParen:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						match(RParen);
+						{
+						switch ( LA(1)) {
+						case KEYWORD_clone:
+						{
+							match(KEYWORD_clone);
+							match(LParen);
+							n0 = LT(1);
+							match(IntValue);
+							match(RParen);
+							if ( inputState.guessing==0 ) {
+								exprClnNum = (int)(Integer.parseInt (n0.getText()));
+							}
+							break;
+						}
+						case KEYWORD_break:
+						case KEYWORD_case:
+						case KEYWORD_continue:
+						case KEYWORD_default:
+						case KEYWORD_do:
+						case KEYWORD_for:
+						case KEYWORD_goto:
+						case KEYWORD_if:
+						case KEYWORD_return:
+						case KEYWORD_sizeof:
+						case KEYWORD_switch:
+						case KEYWORD_label:
+						case KEYWORD_while:
+						case KEYWORD_Extension:
+						case KEYWORD_alignof:
+						case KEYWORD_va_arg:
+						case KEYWORD_builtin_va_arg:
+						case KEYWORD_builtin_offsetof:
+						case Identifier:
+						case HexDoubleValue:
+						case HexFloatValue:
+						case HexLongDoubleValue:
+						case HexUnsignedIntValue:
+						case HexUnsignedLongIntValue:
+						case HexUnsignedLongLongIntValue:
+						case HexIntValue:
+						case HexLongIntValue:
+						case HexLongLongIntValue:
+						case DoubleValue:
+						case FloatValue:
+						case LongDoubleValue:
+						case UnsignedIntValue:
+						case UnsignedLongIntValue:
+						case UnsignedLongLongIntValue:
+						case IntValue:
+						case LongIntValue:
+						case LongLongIntValue:
+						case CharacterConstant:
+						case WideCharacterConstant:
+						case StringLit:
+						case WideStringLiteral:
+						case LParen:
+						case LBrace:
+						case Dec:
+						case Inc:
+						case And:
+						case Mult:
+						case Plus:
+						case Sub:
+						case Comp:
+						case Not:
+						case Semi:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						istmt=statement();
+						if ( inputState.guessing==0 ) {
+							
+									 stmt = ((exprClnNum > 1) ? buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprClnNum) : buildForStmt (expr1, expr2, expr3, istmt, f));
+							
+						}
+						break;
 					}
+					default:
+					{
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+				}
+				catch (RecognitionException ex) {
+					if (inputState.guessing==0) {
+						reportError(ex);
+						consume();
+						consumeUntil(_tokenSet_67);
+					} else {
+					  throw ex;
+					}
+				}
+				return stmt;
+			} finally { // debugging
+				traceOut("iterationStatement");
+			}
+		}
+		
+	protected final Statement  jumpStatement() throws RecognitionException, TokenStreamException {
+		Statement stmt=errStmt;
+		
+		traceIn("jumpStatement");
+		try { // debugging
+			Token  g = null;
+			Token  l = null;
+			Token  c = null;
+			Token  b = null;
+			Token  r = null;
+			
+			Expression expr = null;
+			
+			
+			try {      // for error handling
+				switch ( LA(1)) {
+				case KEYWORD_goto:
+				{
+					g = LT(1);
+					match(KEYWORD_goto);
+					l = LT(1);
+					match(Identifier);
+					match(Semi);
+					if ( inputState.guessing==0 ) {
+						stmt = buildGotoStmt(l.getText(), l);
+					}
+					break;
+				}
+				case KEYWORD_continue:
+				{
+					c = LT(1);
+					match(KEYWORD_continue);
+					match(Semi);
+					if ( inputState.guessing==0 ) {
+						stmt = buildContinueStmt(c);
+					}
+					break;
+				}
+				case KEYWORD_break:
+				{
+					b = LT(1);
+					match(KEYWORD_break);
+					match(Semi);
+					if ( inputState.guessing==0 ) {
+						stmt = buildBreakStmt(b);
+					}
+					break;
+				}
+				case KEYWORD_return:
+				{
+					r = LT(1);
+					match(KEYWORD_return);
 					{
 					switch ( LA(1)) {
-					case Comma:
+					case KEYWORD_sizeof:
+					case KEYWORD_Extension:
+					case KEYWORD_alignof:
+					case KEYWORD_va_arg:
+					case KEYWORD_builtin_va_arg:
+					case KEYWORD_builtin_offsetof:
+					case Identifier:
+					case HexDoubleValue:
+					case HexFloatValue:
+					case HexLongDoubleValue:
+					case HexUnsignedIntValue:
+					case HexUnsignedLongIntValue:
+					case HexUnsignedLongLongIntValue:
+					case HexIntValue:
+					case HexLongIntValue:
+					case HexLongLongIntValue:
+					case DoubleValue:
+					case FloatValue:
+					case LongDoubleValue:
+					case UnsignedIntValue:
+					case UnsignedLongIntValue:
+					case UnsignedLongLongIntValue:
+					case IntValue:
+					case LongIntValue:
+					case LongLongIntValue:
+					case CharacterConstant:
+					case WideCharacterConstant:
+					case StringLit:
+					case WideStringLiteral:
+					case LParen:
+					case Dec:
+					case Inc:
+					case And:
+					case Mult:
+					case Plus:
+					case Sub:
+					case Comp:
+					case Not:
 					{
-						match(Comma);
-						initDeclaratorList(vars, type, sc);
+						expr=expression();
 						break;
 					}
 					case Semi:
@@ -12343,41 +12204,575 @@ public C99Parser(ParserSharedInputState state) {
 					}
 					}
 					}
-					n2 = LT(1);
 					match(Semi);
 					if ( inputState.guessing==0 ) {
-						
-						processTopDecls(vars, sc, n2);
-						
+						stmt = buildReturnStmt(expr, r);
 					}
 					break;
 				}
 				default:
-					if (((_tokenSet_73.member(LA(1))))&&(pt != null)) {
-						ftnDef(pt, declID, attrs, sc);
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consumeUntil(Semi);
+					consume();
+					fatalError = true;
+					return null;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return stmt;
+		} finally { // debugging
+			traceOut("jumpStatement");
+		}
+	}
+	
+	protected final void typedef() throws RecognitionException, TokenStreamException {
+		
+		traceIn("typedef");
+		try { // debugging
+			
+			Type        type = null;
+			Declaration decl = null;
+			
+			
+			try {      // for error handling
+				match(KEYWORD_typedef);
+				type=declarationSpecifiers();
+				if ( inputState.guessing==0 ) {
+					
+					if (type == null) {
+					type = void_type;
+					userError(Msg.MSG_Invalid_type, null, LT(1));
 					}
-				else {
+					
+				}
+				typeDeclarator(type);
+				{
+				_loop269:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						typeDeclarator(type);
+					}
+					else {
+						break _loop269;
+					}
+					
+				} while (true);
+				}
+				match(Semi);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consumeUntil(Semi);
+					consume();
+					fatalError = true;
+					
+				} else {
+					throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("typedef");
+		}
+	}
+	
+	protected final Expression  enclosedExpression() throws RecognitionException, TokenStreamException {
+		Expression expr = errExp;
+		
+		traceIn("enclosedExpression");
+		try { // debugging
+			Token  n0 = null;
+			
+			try {      // for error handling
+				n0 = LT(1);
+				match(LParen);
+				expr=expression();
+				match(RParen);
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					consumeUntil(RParen);
+					consume();
+					fatalError = true;
+					return null;
+					
+				} else {
+					throw ex;
+				}
+			}
+			return expr;
+		} finally { // debugging
+			traceOut("enclosedExpression");
+		}
+	}
+	
+	protected final void typeDeclarator(
+		Type type
+	) throws RecognitionException, TokenStreamException {
+		
+		traceIn("typeDeclarator");
+		try { // debugging
+			
+			String saveIdentifier = declID;
+			
+			
+			try {      // for error handling
+				type=declarator2(type);
+				{
+				switch ( LA(1)) {
+				case Attributes:
+				{
+					type=getAttributes(type);
+					break;
+				}
+				case Comma:
+				case Semi:
+				{
+					break;
+				}
+				default:
+				{
 					throw new NoViableAltException(LT(1), getFilename());
 				}
 				}
 				}
-				break;
+				if ( inputState.guessing==0 ) {
+					
+					processTypeDeclarator(declID, type, LT(1));
+					declID = saveIdentifier;
+					
+				}
 			}
-			default:
-			{
-				throw new NoViableAltException(LT(1), getFilename());
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_38);
+				} else {
+				  throw ex;
+				}
 			}
-			}
-			}
+		} finally { // debugging
+			traceOut("typeDeclarator");
 		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_74);
-			} else {
-			  throw ex;
+	}
+	
+	protected final void translationUnit() throws RecognitionException, TokenStreamException {
+		
+		traceIn("translationUnit");
+		try { // debugging
+			Token  l = null;
+			Token  p = null;
+			Token  er = null;
+			Token  wn = null;
+			Token  n0 = null;
+			
+			FileDecl            root   = null;
+			Vector<Declaration> rdecls = null;
+			Type                type   = null;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					cg.getSymbolTable().beginScope();
+					initialize();
+					root = new FileDecl(cg.getName());
+					rdecls = new Vector<Declaration>(23);
+					root.setDecls(rdecls);
+					cg.setAST(root);
+					
+				}
+				{
+				_loop274:
+				do {
+					switch ( LA(1)) {
+					case PPLine:
+					{
+						l = LT(1);
+						match(PPLine);
+						if ( inputState.guessing==0 ) {
+							processLine(l.getText(), l);
+						}
+						break;
+					}
+					case StdArg:
+					{
+						match(StdArg);
+						if ( inputState.guessing==0 ) {
+							
+							if (!vaListDefined) {
+							vaListDefined = true;
+							cg.addRootSymbol(defineTypeName("va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
+							cg.addRootSymbol(defineTypeName("__va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
+							if (allowGNUExtensions) {
+							cg.addRootSymbol(defineTypeName("__gnuc_va_list", RefType.create(Machine.currentMachine.getVaListType(), RefAttr.VaList)));
+							}
+							}
+							
+						}
+						break;
+					}
+					case Pragma:
+					{
+						p = LT(1);
+						match(Pragma);
+						if ( inputState.guessing==0 ) {
+							processPragma(p.getText(), p);
+						}
+						break;
+					}
+					case PPError:
+					{
+						er = LT(1);
+						match(PPError);
+						if ( inputState.guessing==0 ) {
+							userError(Msg.MSG_s, er.getText(), er);
+						}
+						break;
+					}
+					case PPWarning:
+					{
+						wn = LT(1);
+						match(PPWarning);
+						if ( inputState.guessing==0 ) {
+							userWarning(Msg.MSG_s, wn.getText(), wn);
+						}
+						break;
+					}
+					case KEYWORD_Extension:
+					{
+						n0 = LT(1);
+						match(KEYWORD_Extension);
+						if ( inputState.guessing==0 ) {
+							
+							if (!allowGNUExtensions)
+							userWarning(Msg.MSG_Ignored_s, n0.getText(), n0);
+							
+						}
+						break;
+					}
+					case KEYWORD_typedef:
+					{
+						typedef();
+						break;
+					}
+					case KEYWORD_auto:
+					case KEYWORD_char:
+					case KEYWORD_const:
+					case KEYWORD___const:
+					case KEYWORD_double:
+					case KEYWORD_enum:
+					case KEYWORD_extern:
+					case KEYWORD_float:
+					case KEYWORD_inline:
+					case KEYWORD_int:
+					case KEYWORD_long:
+					case KEYWORD_register:
+					case KEYWORD_restrict:
+					case KEYWORD_short:
+					case KEYWORD_signed:
+					case KEYWORD___signed__:
+					case KEYWORD_static:
+					case KEYWORD_struct:
+					case KEYWORD_typeof:
+					case KEYWORD_union:
+					case KEYWORD_unsigned:
+					case KEYWORD_void:
+					case KEYWORD_volatile:
+					case KEYWORD__volatile:
+					case KEYWORD__Bool:
+					case KEYWORD__Complex:
+					case KEYWORD__Imaginary:
+					case KEYWORD__inline__:
+					case KEYWORD__inline:
+					case Identifier:
+					case LParen:
+					case Mult:
+					case Semi:
+					case LITERAL___restrict:
+					case Attributes:
+					{
+						ftnOrDecl();
+						break;
+					}
+					default:
+					{
+						break _loop274;
+					}
+					}
+				} while (true);
+				}
+				match(Token.EOF_TYPE);
+				if ( inputState.guessing==0 ) {
+					
+					finishTranslationUnit(root, rdecls, LT(0));
+					
+				}
 			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					if (classTrace)
+					ex.printStackTrace();
+					consumeUntil(EOF);
+					throw ex;
+					
+				} else {
+					throw ex;
+				}
+			}
+			catch (antlr.TokenStreamRecognitionException ex) {
+				if (inputState.guessing==0) {
+					
+					reportError(ex);
+					if (classTrace)
+					ex.printStackTrace();
+					consumeUntil(EOF);
+					throw ex;
+					
+				} else {
+					throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("translationUnit");
+		}
+	}
+	
+	protected final void ftnOrDecl() throws RecognitionException, TokenStreamException {
+		
+		traceIn("ftnOrDecl");
+		try { // debugging
+			Token  att0 = null;
+			Token  n1 = null;
+			Token  n2 = null;
+			
+			Type          type  = int_type;
+			Type          dtype = int_type;
+			ProcedureType pt    = null;
+			Declaration   decl  = null;
+			Vector<Declaration> vars  = null;
+			Expression    expr  = null;
+			int           sc    = 0;
+			String        attrs = "";
+			Token         t     = null;
+			
+			
+			try {      // for error handling
+				if ( inputState.guessing==0 ) {
+					
+					declAtts     = "";
+					storageClass = cAuto;
+					
+				}
+				{
+				boolean synPredMatched278 = false;
+				if (((_tokenSet_2.member(LA(1))) && (_tokenSet_3.member(LA(2))))) {
+					int _m278 = mark();
+					synPredMatched278 = true;
+					inputState.guessing++;
+					try {
+						{
+						declarationSpecifiersChk();
+						}
+					}
+					catch (RecognitionException pe) {
+						synPredMatched278 = false;
+					}
+					rewind(_m278);
+					inputState.guessing--;
+				}
+				if ( synPredMatched278 ) {
+					type=declarationSpecifiers();
+					if ( inputState.guessing==0 ) {
+						
+						sc = storageClass;
+						if (sc == cAuto)
+						sc = cGlobal;
+						
+					}
+				}
+				else if ((_tokenSet_71.member(LA(1))) && (_tokenSet_72.member(LA(2)))) {
+				}
+				else {
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				
+				}
+				{
+				_loop280:
+				do {
+					if ((LA(1)==Attributes) && (_tokenSet_71.member(LA(2)))) {
+						att0 = LT(1);
+						match(Attributes);
+						if ( inputState.guessing==0 ) {
+							declAtts = declAtts + att0.getText();
+						}
+					}
+					else {
+						break _loop280;
+					}
+					
+				} while (true);
+				}
+				{
+				switch ( LA(1)) {
+				case Semi:
+				{
+					match(Semi);
+					if ( inputState.guessing==0 ) {
+						
+						declAtts = "";
+						
+					}
+					break;
+				}
+				case Identifier:
+				case LParen:
+				case Mult:
+				case LITERAL___restrict:
+				case Attributes:
+				{
+					dtype=declarator2(type);
+					if ( inputState.guessing==0 ) {
+						
+						t = LT(1);
+						attrs = declAtts;
+						declAtts = "";
+						pt = null;
+						if (dtype != null) {
+						Type ty = dtype.getCoreType();
+						if (ty.isProcedureType())
+						pt = (ProcedureType) ty;
+						}
+						
+					}
+					{
+					switch ( LA(1)) {
+					case Semi:
+					{
+						match(Semi);
+						if ( inputState.guessing==0 ) {
+							
+							decl = defineDecl(declID, dtype, sc, t);
+							processAttributes(attrs, decl, t);
+							vars = new Vector<Declaration>(1);
+							vars.add(decl);
+							processTopDecls(vars, sc, t);
+							
+						}
+						break;
+					}
+					case Comma:
+					{
+						match(Comma);
+						if ( inputState.guessing==0 ) {
+							
+							decl = defineDecl(declID, dtype, sc, t);
+							processAttributes(attrs, decl, t);
+							vars = new Vector<Declaration>(4);
+							vars.add(decl);
+							
+						}
+						initDeclaratorList(vars, type, sc);
+						n1 = LT(1);
+						match(Semi);
+						if ( inputState.guessing==0 ) {
+							
+							processTopDecls(vars, sc, n1);
+							
+						}
+						break;
+					}
+					case Assign:
+					{
+						match(Assign);
+						if ( inputState.guessing==0 ) {
+							
+							decl = defineDecl(declID, dtype, sc, t);
+							processAttributes(attrs, decl, t);
+							
+						}
+						expr=initializer(dtype);
+						if ( inputState.guessing==0 ) {
+							
+							processDeclInitializer(decl, dtype, expr, t);
+							vars = new Vector<Declaration>(4);
+							vars.add(decl);
+							
+						}
+						{
+						switch ( LA(1)) {
+						case Comma:
+						{
+							match(Comma);
+							initDeclaratorList(vars, type, sc);
+							break;
+						}
+						case Semi:
+						{
+							break;
+						}
+						default:
+						{
+							throw new NoViableAltException(LT(1), getFilename());
+						}
+						}
+						}
+						n2 = LT(1);
+						match(Semi);
+						if ( inputState.guessing==0 ) {
+							
+							processTopDecls(vars, sc, n2);
+							
+						}
+						break;
+					}
+					default:
+						if (((_tokenSet_73.member(LA(1))))&&(pt != null)) {
+							ftnDef(pt, declID, attrs, sc);
+						}
+					else {
+						throw new NoViableAltException(LT(1), getFilename());
+					}
+					}
+					}
+					break;
+				}
+				default:
+				{
+					throw new NoViableAltException(LT(1), getFilename());
+				}
+				}
+				}
+			}
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_74);
+				} else {
+				  throw ex;
+				}
+			}
+		} finally { // debugging
+			traceOut("ftnOrDecl");
 		}
 	}
 	
@@ -12385,58 +12780,63 @@ public C99Parser(ParserSharedInputState state) {
 		ProcedureType pt, String name, String attrs, int sc
 	) throws RecognitionException, TokenStreamException {
 		
-		
-		Token       t    = LT(1);
-		BlockStmt   stmt = null;
-		RoutineDecl rd   = null;
-		
-		
-		try {      // for error handling
-			{
-			_loop286:
-			do {
-				if ((_tokenSet_2.member(LA(1)))) {
-					krArg(pt);
+		traceIn("ftnDef");
+		try { // debugging
+			
+			Token       t    = LT(1);
+			BlockStmt   stmt = null;
+			RoutineDecl rd   = null;
+			
+			
+			try {      // for error handling
+				{
+				_loop286:
+				do {
+					if ((_tokenSet_2.member(LA(1)))) {
+						krArg(pt);
+					}
+					else {
+						break _loop286;
+					}
+					
+				} while (true);
 				}
-				else {
-					break _loop286;
+				if ( inputState.guessing==0 ) {
+					
+					rd = (RoutineDecl) defineDecl(name, pt, sc, t);
+					processAttributes(attrs, rd, t);
+					cg.getSymbolTable().beginScope();
+					if (!fatalError) {
+					int l = pt.numFormals();
+					for (int i = 0; i < l; i++)
+					cg.addSymbol(pt.getFormal(i));
+					
+					rd.setSourceLineNumber(t.getLine());
+					currentFunction = rd;
+					cpp.setCurrentFtn(rd.getName());
+					}
+					
 				}
-				
-			} while (true);
-			}
-			if ( inputState.guessing==0 ) {
-				
-				rd = (RoutineDecl) defineDecl(name, pt, sc, t);
-				processAttributes(attrs, rd, t);
-				cg.getSymbolTable().beginScope();
-				if (!fatalError) {
-				int l = pt.numFormals();
-				for (int i = 0; i < l; i++)
-				cg.addSymbol(pt.getFormal(i));
-				
-				rd.setSourceLineNumber(t.getLine());
-				currentFunction = rd;
-				cpp.setCurrentFtn(rd.getName());
+				stmt=compoundStatement(true);
+				if ( inputState.guessing==0 ) {
+					
+					finishFunction(rd, stmt, sc, t);
+					cg.getSymbolTable().endScope();
+					labels.clear();
+					
 				}
-				
 			}
-			stmt=compoundStatement(true);
-			if ( inputState.guessing==0 ) {
-				
-				finishFunction(rd, stmt, sc, t);
-				cg.getSymbolTable().endScope();
-				labels.clear();
-				
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_74);
+				} else {
+				  throw ex;
+				}
 			}
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_74);
-			} else {
-			  throw ex;
-			}
+		} finally { // debugging
+			traceOut("ftnDef");
 		}
 	}
 	
@@ -12444,59 +12844,64 @@ public C99Parser(ParserSharedInputState state) {
 		ProcedureType pt
 	) throws RecognitionException, TokenStreamException {
 		
-		
-		Type       type = null;
-		FormalDecl fd   = null;
-		
-		
-		try {      // for error handling
-			type=declarationSpecifiers();
-			fd=formalDeclarator(type);
-			if ( inputState.guessing==0 ) {
-				
-				if (!fatalError) {
-				String     name = fd.getName();
-				FormalDecl fd2  = pt.getFormal(name);
-				if (fd2 == null)
-				userError(Msg.MSG_Invalid_parameter_s, name, LT(0));
-				fd2.setType(fd.getType());
-				}
-				
-			}
-			{
-			_loop289:
-			do {
-				if ((LA(1)==Comma)) {
-					match(Comma);
-					fd=formalDeclarator(type);
-					if ( inputState.guessing==0 ) {
-						
-						if (!fatalError) {
-						String     name = fd.getName();
-						FormalDecl fd2  = pt.getFormal(name);
-						if (fd2 == null)
-						userError(Msg.MSG_Invalid_parameter_s, name, LT(0));
-						fd2.setType(fd.getType());
-						}
-						
+		traceIn("krArg");
+		try { // debugging
+			
+			Type       type = null;
+			FormalDecl fd   = null;
+			
+			
+			try {      // for error handling
+				type=declarationSpecifiers();
+				fd=formalDeclarator(type);
+				if ( inputState.guessing==0 ) {
+					
+					if (!fatalError) {
+					String     name = fd.getName();
+					FormalDecl fd2  = pt.getFormal(name);
+					if (fd2 == null)
+					userError(Msg.MSG_Invalid_parameter_s, name, LT(0));
+					fd2.setType(fd.getType());
 					}
+					
 				}
-				else {
-					break _loop289;
+				{
+				_loop289:
+				do {
+					if ((LA(1)==Comma)) {
+						match(Comma);
+						fd=formalDeclarator(type);
+						if ( inputState.guessing==0 ) {
+							
+							if (!fatalError) {
+							String     name = fd.getName();
+							FormalDecl fd2  = pt.getFormal(name);
+							if (fd2 == null)
+							userError(Msg.MSG_Invalid_parameter_s, name, LT(0));
+							fd2.setType(fd.getType());
+							}
+							
+						}
+					}
+					else {
+						break _loop289;
+					}
+					
+				} while (true);
 				}
-				
-			} while (true);
+				match(Semi);
 			}
-			match(Semi);
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_73);
-			} else {
-			  throw ex;
+			catch (RecognitionException ex) {
+				if (inputState.guessing==0) {
+					reportError(ex);
+					consume();
+					consumeUntil(_tokenSet_73);
+				} else {
+				  throw ex;
+				}
 			}
+		} finally { // debugging
+			traceOut("krArg");
 		}
 	}
 	
