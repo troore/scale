@@ -1,6 +1,9 @@
 2012-5-1
 首先定义工程目录为：SCALERELEASE = scale
 
+$(SCALERELEASE)/scale/clef/stmt/:
+添加CloneForLoopStmt.java模块。
+
 $(SCALERELEASE)/scale/frontend/c/c99.g:
 iterationStatement
 <
