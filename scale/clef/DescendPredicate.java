@@ -115,12 +115,6 @@ public abstract class DescendPredicate implements Predicate
   public void visitFloatLiteral(FloatLiteral n)                       { visitLiteral(n); }
   public void visitFloatType(FloatType n)                             { visitRealType(n); }
   public void visitForLoopStmt(ForLoopStmt n)                         { visitTestLoopStmt(n); }
-
-/**
- * visitCloneForLoopStmt is added by troore.
- */
-  public void visitCloneForLoopStmt(CloneForLoopStmt n)					  { visitTestLoopStmt(n); }
-
   public void visitFormalDecl(FormalDecl n)                           { visitVariableDecl(n); }
   public void visitForwardProcedureDecl(ForwardProcedureDecl n)       { visitProcedureDecl(n); }
   public void visitGotoStmt(GotoStmt n)                               { visitStatement(n); }

@@ -6573,8 +6573,6 @@ protected iterationStatement returns [Statement stmt=errStmt]
   Expression  expr2 = null;
   Expression  expr3 = null;
   
-  Expression  exprThdNum = null;
-
   Statement   istmt = null;
 } :
     w:KEYWORD_while expr1=enclosedExpression istmt=statement
@@ -6587,10 +6585,7 @@ protected iterationStatement returns [Statement stmt=errStmt]
    | {allowC99Extensions}? (declarationSpecifiersChk)=> type = declarationSpecifiers decl = declarator[type, 0] Assign expr1 = initializer[type] Semi
      { expr1 = new AssignSimpleOp(type, genDeclAddress(decl), expr1); }
    | expr1=expression Semi
-   ) (expr2=expression)? Semi (expr3=expression)? RParen ((KEYWORD_clone)=> KEYWORD_clone LParen exprThdNum=expression RParen)? istmt=statement
-     { 
-		 stmt = ((exprThdNum == null) ? buildForStmt (expr1, expr2, expr3, istmt, f) : buildCloneForStmt (expr1, expr2, expr3, istmt, f, exprThdNum));
-     }
+   ) (expr2=expression)? Semi (expr3=expression)? RParen istmt=statement  { stmt = buildForStmt (expr1, expr2, expr3, istmt, f); }
  ;
 
 protected enclosedExpression returns [Expression expr = errExp] :

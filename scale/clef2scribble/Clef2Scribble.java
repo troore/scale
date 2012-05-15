@@ -1640,13 +1640,6 @@ public class Clef2Scribble extends scale.clef.ErrorPredicate
     endNewStmt();
   }
   
-  public void visitCloneForLoopStmt (CloneForLoopStmt cs)
-  {
-	 /**
-	  * TODO: See visitForLoopStmt above, you'll get it.
-	  */
-  }
-
   private Expr extractStep(ExprTuple inc_r, VariableDecl iv)
   {
     if (iv == null)

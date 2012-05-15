@@ -1875,13 +1875,6 @@ public final class Clef2C implements scale.clef.Predicate
     genStatements(stmt.getStmt());
   }
   
-  public void visitCloneForLoopStmt (CloneForLoopStmt stmt)
-  {
-	 /**
-	  * TODO: See visitForLoopStmt above, you'll get it.
-	  */
-  }
-
   public void visitBreakStmt(BreakStmt n)
   {
     emit.emit(Keyword_BREAK);
