@@ -50,6 +50,11 @@ public class IdValueOp extends IdReferenceOp
     p.visitIdValueOp(this);
   }
 
+  public Expression copy(SpecialClonePredicate p, int i)
+  {
+    return p.copyIdValueOp(this, i);
+  }
+
   /**
    * Returns true if the IdValueOp represents a constant value.
    */

@@ -37,6 +37,11 @@ public class EvalStmt extends Statement
     p.visitEvalStmt(this);
   }
 
+  public EvalStmt copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyEvalStmt(this, i);
+  }
+
   /**
    * Return the expression to be evaluated.
    */

@@ -31,4 +31,9 @@ public class AssignSimpleOp extends AssignmentOp
   {
     p.visitAssignSimpleOp(this);
   }
+
+  public AssignSimpleOp copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyAssignSimpleOp(this, i);
+  }
 }

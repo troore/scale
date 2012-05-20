@@ -7,25 +7,19 @@ import scale.clef.expr.*;
 import scale.clef.stmt.*;
 import scale.clef.type.*;
 
+import scale.callGraph.ClefClone;
+
 /**
  * This is an abstract class that implements a recursive descent visit
- * of a Clef AST class tree.
- * <p>
- * $Id: DescendPredicate.java,v 1.68 2007-10-04 19:58:02 burrill Exp $
- * <p>
- * Copyright 2007 by the
- * <a href="http://ali-www.cs.umass.edu/">Scale Compiler Group</a>,<br>
- * <a href="http://www.cs.umass.edu/">Department of Computer Science</a><br>
- * <a href="http://www.umass.edu/">University of Massachusetts</a>,<br>
- * Amherst MA. 01003, USA<br>
- * All Rights Reserved.<br>
- * <p>
+ * of a Clef AST class tree to find to be Cloned nodes.
+ * 
+ * $Id: CloneSpecialPredicate.java, 2012-05-16 troore $
+ *
  * Sub-classes should implement override methods for the leaf nodes
  * that matter to them.
- * <p>
- * @see scale.clef
+ * 
  */
-public abstract class DescendPredicate implements Predicate
+public abstract class SearchCloneNodesPredicate implements Predicate
 {
   /**
    * Visit all of the Node elements of a Vector.
@@ -33,10 +27,15 @@ public abstract class DescendPredicate implements Predicate
   public void visitChildren(Node parent)
   {
     int l = parent.numChildren();
-    for (int i = 0; i < l; i++) {
+
+    for (int i = 0; i < l; i++) 
+	{
       Node child = parent.getChild(i);
+
       if (child != null)
-        child.visit(this);
+	  {
+		  child.visit(this);
+	  }
     }
   }
 
@@ -116,12 +115,7 @@ public abstract class DescendPredicate implements Predicate
   public void visitFloatType(FloatType n)                             { visitRealType(n); }
   public void visitForLoopStmt(ForLoopStmt n)                         { visitTestLoopStmt(n); }
 
-/**
- * visitCloneForLoopStmt is added by troore.
- */
-  public void visitCloneForLoopStmt(CloneForLoopStmt n)				  { visitCloneTestLoopStmt(n); }
-  public void visitCloneTestLoopStmt(CloneTestLoopStmt n)			  { visitCloneLoopStmt(n); }
-  public void visitCloneLoopStmt(CloneLoopStmt n)					  { visitStatement(n); }
+  abstract public void visitCloneForLoopStmt(CloneForLoopStmt n);
 
   public void visitFormalDecl(FormalDecl n)                           { visitVariableDecl(n); }
   public void visitForwardProcedureDecl(ForwardProcedureDecl n)       { visitProcedureDecl(n); }

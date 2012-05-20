@@ -34,6 +34,8 @@ CLASSFILES := 	$(DEST)/Statement.class \
 		$(DEST)/ExitStmt.class \
 		$(DEST)/ForLoopStmt.class \
 		$(DEST)/CloneForLoopStmt.class \
+		$(DEST)/CloneTestLoopStmt.class \
+		$(DEST)/CloneLoopStmt.class \
 		$(DEST)/GotoStmt.class \
 		$(DEST)/IfStmt.class \
 		$(DEST)/IfThenElseStmt.class \

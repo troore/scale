@@ -20,7 +20,9 @@ DEST       := $(CLASSDEST)/$(PACKAGE)
 
 CLASSFILES :=	$(DEST)/CallGraph.class \
 		$(DEST)/ClefCalls.class \
-		$(DEST)/Suite.class
+		$(DEST)/Suite.class \
+		$(DEST)/ClefSearchCloneNodes.class \
+		$(DEST)/ClefClone.class 
 
 callgraph: java
 

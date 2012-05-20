@@ -630,6 +630,11 @@ public class VariableDecl extends ValueDecl
     p.visitVariableDecl(this);
   }
 
+  public  VariableDecl copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyVariableDecl(this, i);
+  }
+
   /**
    * Return the initializer for this variable or null.
    */

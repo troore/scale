@@ -51,10 +51,24 @@ public class BlockStmt extends Statement
     return scope;
   }
 
+/**
+ * Patched by troore.
+ * Remove a statement at index of i to the current block. 
+ */
+  public Vector<Statement> getStmts ()
+  {
+	  return stmts;
+  }
+
   public void visit(Predicate p)
   {
     p.visitBlockStmt(this);
   }
+
+ /* public void copy (SpecialClonePredicate p)
+  {
+	  p.copyBlockStmt (this);
+  }*/
 
   /**
    * Return the number of statements in the block.
@@ -113,6 +127,15 @@ public class BlockStmt extends Statement
   public void insertStmt(Statement s, int i)
   {
     stmts.insertElementAt(s, i);
+  }
+
+/**
+ * Patched by troore.
+ * Remove a statement at index of i to the current block. 
+ */
+  public void removeStmt(int i)
+  {
+	  stmts.remove(i);
   }
 
   /**

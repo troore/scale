@@ -29,7 +29,10 @@ CLASSFILES :=	$(DEST)/Node.class \
 		$(DEST)/LiteralMap.class \
 		$(DEST)/PureFunctionAnnotation.class \
 		$(DEST)/Clef2C.class \
-		$(DEST)/Display.class
+		$(DEST)/Display.class \
+		$(DEST)/SearchCloneNodesPredicate.class \
+		$(DEST)/SpecialClonePredicate.class 
+		
 
 MODULES    := type decl expr stmt symtab
 

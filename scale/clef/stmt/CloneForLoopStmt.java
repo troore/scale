@@ -12,7 +12,7 @@ import scale.clef.type.*;
  * number member.
  */
 
-public class CloneForLoopStmt extends TestLoopStmt
+public class CloneForLoopStmt extends CloneTestLoopStmt
 {
   /**
    * The initialization expression.
@@ -23,17 +23,12 @@ public class CloneForLoopStmt extends TestLoopStmt
    */
   private Expression exprInc;
 
-  /**
-   * Number of threads
-   */
-  private int clnNum;
-
+  
   public CloneForLoopStmt(Statement s, Expression eInit, Expression eTest, Expression eInc, int clnNum)
   {
-    super(s, eTest);
+    super(s, eTest, clnNum, 4); //4 is temporaty or default slice number.
     setExprInit(eInit);
     setExprInc(eInc);
-	this.clnNum = clnNum;
   }
 
   public void visit(Predicate p)
@@ -57,15 +52,7 @@ public class CloneForLoopStmt extends TestLoopStmt
     return getExpr();
   }
   
-  /**
-   * Return the clone number
-   */
-  public final int getClnNum()
-  {
-	return clnNum;  
-  }
-
-  /**
+   /**
    * Return the increment expression.
    */
   public final Expression getExprInc()
@@ -93,10 +80,11 @@ public class CloneForLoopStmt extends TestLoopStmt
   /**
    * Specify the increment expression.
    */
-  protected final void setExprInc(Expression expr)
+  public final void setExprInc(Expression expr)
   {
     this.exprInc = expr;
   }
+
 
   /**
    * Return the specified AST child of this node.

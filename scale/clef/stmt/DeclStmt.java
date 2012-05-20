@@ -35,6 +35,11 @@ public class DeclStmt extends Statement
     p.visitDeclStmt(this);
   }
 
+  public DeclStmt copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyDeclStmt(this, i);
+  }
+
   /**
    * Return the declaration.
    */

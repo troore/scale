@@ -94,6 +94,11 @@ public abstract class Expression extends Node
     p.visitExpression(this);
   }
 
+  public Expression copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyExpression(this, i);
+  }
+
   public final Type getType()
   {
     return type;

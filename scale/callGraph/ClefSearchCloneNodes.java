@@ -14,7 +14,7 @@ import scale.clef.symtab.*;
  * This class is used to proceed some Clef AST's Loop Nodes which need clone operations.
  * $Id: ClefSearchCloneNodes.java, 2012-05-14	troore $
  */
-public class ClefSearchCloneNodes extends scale.clef.DescendPredicate
+public class ClefSearchCloneNodes extends scale.clef.SearchCloneNodesPredicate
 {
 	private CallGraph   cg; /* The call graph that is being built. */
 	private RoutineDecl cn; /* Current call node */
@@ -35,10 +35,49 @@ public class ClefSearchCloneNodes extends scale.clef.DescendPredicate
 		root.visit(this);
 	}
 
-	public void visitDeclaration(Declaration n)
+	public void visitCloneForLoopStmt (CloneForLoopStmt n)
 	{
-		// Shorten search - do not call visitNode() because we don't need
-		// to visit the children of most declarations.
+		/*
+		 * Modify the increment expression of this clone for statement
+		 * according to its clnNum.
+		 */
+		long clnNum = n.getClnNum ();
+		Expression exprInc = n.getExprInc ();
+
+		if (exprInc instanceof AssignSimpleOp)
+		{
+			Expression rhs = ((AssignSimpleOp)exprInc).getRhs ();
+			if (rhs instanceof AdditionOp)
+			{
+				Expression expr2 = ((AdditionOp)rhs).getExpr2 ();
+				if (expr2 instanceof IntLiteral)
+				{
+					((IntLiteral)expr2).setValue ((long)clnNum);
+				}
+			}
+		}
+		else if ((exprInc instanceof PreIncrementOp) || (exprInc instanceof PostIncrementOp))
+		{
+			IdValueOp id = (IdValueOp)((PostIncrementOp)exprInc).getExpr ();
+			Declaration decl = id.getDecl ();
+			Type type = id.getType ();
+
+			Expression e1 = new IdValueOp (decl);
+			Expression e2 = LiteralMap.put ((long)clnNum, type);
+			Expression rhs = new AdditionOp (type, e1, e2);
+			Expression lhs = new IdAddressOp (PointerType.create (type), decl);
+			Expression expr = new AssignSimpleOp (type, lhs, rhs);
+
+			n.setExprInc (expr);
+		}
+		else
+		{
+		}
+
+		/*
+		 * Visit its statements of this for's BlockStmt and operate clone if necessary.
+		 */
+		new ClefClone (n);
 	}
 
 	public void visitFileDecl(FileDecl f)
@@ -57,76 +96,4 @@ public class ClefSearchCloneNodes extends scale.clef.DescendPredicate
 		}
 	}
 
-	public void visitType(Type n)
-	{
-		// shorten search - avoid calling visitNode()
-	}
-
-	public void visitRoutineDecl(RoutineDecl rd)
-	{
-		if ((rd instanceof ForwardProcedureDecl)  || rd.isSpecification())
-			return;
-
-		cn = rd;
-
-		Statement s = rd.getBody();
-
-		if (s != null)
-			s.visit(this);
-	}
-
-	public void visitIdReferenceOp(IdReferenceOp id) 
-	{
-	/*	Declaration decl = id.getDecl();
-		if (decl.isRoutineDecl())
-			cg.addFunction((RoutineDecl) decl);*/
-	}
-
-	public void visitCallOp(CallOp fun) 
-	{
-	/*	Expression ftn = fun.getRoutine();
-
-		if (ftn instanceof IdAddressOp) {
-			RoutineDecl rd = (RoutineDecl) ((IdReferenceOp) ftn).getDecl();
-			cg.addCallee(cn, rd);
-		} else { // call by function pointer
-			ProcedureType pt = (ProcedureType) ftn.getPointedToCore();
-			Type          rt = pt.getReturnType();
-			cn.addCandidate(rt);
-		}*/
-
-		// Check if the arguments contain calls to other routines.
-
-		int l = fun.getNumArgs();
-		for (int i = 0; i < l; i++)
-			fun.getArg(i).visit(this);
-	}
-
-	public void visitValueDecl(ValueDecl vd)
-	{
-		Expression exp = vd.getValue();
-
-		if (exp != null)
-			exp.visit(this);
-	}
-
-	public void visitAggregationElements(AggregationElements ag)
-	{
-		Vector<Object> ea = ag.getElementVector();
-		int            l  = ea.size();
-		for (int i = 0; i < l; i++) {
-			Object x = ea.elementAt(i);
-			if (x instanceof Node) {
-				Node el = (Node) x;
-				el.visit(this);
-			}
-		}
-	}
-
-	public void visitAddressLiteral(AddressLiteral al)
-	{
-	/*	Declaration d = al.getDecl();
-		if (d != null)
-			cg.addTopLevelDecl(d);*/
-	}
 }

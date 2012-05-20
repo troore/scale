@@ -345,6 +345,11 @@ public abstract class Declaration extends Node implements Comparable
     p.visitDeclaration(this);
   }
 
+  public Declaration copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyDeclaration(this, i);
+  }
+
   /**
    * Return the name of the Declaration.
    */

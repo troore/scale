@@ -62,6 +62,8 @@ public abstract class Node extends Root
    */
   public abstract void visit(Predicate p);
 
+  //public abstract Node copy (SpecialClonePredicate p, int i);
+
   /**
    * Return the Type associated with this Node.
    */

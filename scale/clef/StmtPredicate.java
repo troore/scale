@@ -38,6 +38,8 @@ public interface StmtPredicate
   public void visitDoLoopStmt(DoLoopStmt n);
   public void visitForLoopStmt(ForLoopStmt n);
 
+  public void visitCloneLoopStmt(CloneLoopStmt n);
+  public void visitCloneTestLoopStmt(CloneTestLoopStmt n);
   public void visitCloneForLoopStmt(CloneForLoopStmt n);
 
   public void visitBreakStmt(BreakStmt n);

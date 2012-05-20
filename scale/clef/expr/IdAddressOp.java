@@ -51,6 +51,12 @@ public class IdAddressOp extends IdReferenceOp
   {
     p.visitIdAddressOp(this);
   }
+  
+  public IdAddressOp copy(SpecialClonePredicate p, int i)
+  {
+    return p.copyIdAddressOp(this, i);
+  }
+
 
   /**
    * This method suite computes the value of a constant expression.

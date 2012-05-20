@@ -72,6 +72,11 @@ public abstract class Statement extends Node
     p.visitStatement(this);
   }
 
+  public Statement copy(SpecialClonePredicate p, int i)
+  {
+	  return p.copyStatement(this, i);
+  }
+
   /**
    * Return the source line number associated with this node or -1 if not known.
    */

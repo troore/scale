@@ -605,6 +605,10 @@ public final class Clef2C implements scale.clef.Predicate
   public void visitIfStmt(IfStmt d) {}
   public void visitTestLoopStmt(TestLoopStmt d) {}
   public void visitLoopStmt(LoopStmt d) {}
+
+  public void visitCloneTestLoopStmt(CloneTestLoopStmt d) {}
+  public void visitCloneLoopStmt(CloneLoopStmt d) {}
+
   public void visitStatement(Statement d) {}
   public void visitVarArgOp(VarArgOp d) {}
   public void visitTernaryOp(TernaryOp d) {}

@@ -41,6 +41,12 @@ public class ForLoopStmt extends TestLoopStmt
     p.visitForLoopStmt(this);
   }
 
+  
+  public ForLoopStmt copy(SpecialClonePredicate p, Expression slcExpr, int i)
+  {
+	  return p.copyForLoopStmt(this, slcExpr, i);
+  }
+
   /**
    * Return the initialization expression.
    */
